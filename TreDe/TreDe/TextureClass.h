@@ -4,7 +4,8 @@
 #include <map>
 
 #define Texture TextureClass::GetInstance()
-
+// This does the same stuff and works the same way as the ModelClass,
+// except for textures (Y)
 class TextureClass
 {
 public:

@@ -9,7 +9,7 @@ SettingsClass* SettingsClass::GetInstance()
 		mInstance = new SettingsClass();
 	return mInstance;
 }
-
+// Reads the settings file and sets the data to the values in it
 bool SettingsClass::Initialize()
 {
 	fstream in;
@@ -31,7 +31,7 @@ bool SettingsClass::Initialize()
 
 	return true;
 }
-
+// Switch to fullscreen
 void SettingsClass::SwitchFullscreen()
 {
 	if(mData->mIsFullscreen)
@@ -39,13 +39,14 @@ void SettingsClass::SwitchFullscreen()
 	else
 		mData->mIsFullscreen = true;
 }
-
+// Sets the resolution to the values sent as parameters
 void SettingsClass::SetResolution(unsigned int width, unsigned int height)
 {
 	mData->mWidth = width;
 	mData->mHeight = height;
 }
-
+// This class doesn't include d3dutilities, just because I didn't want to include it all over the place
+// Which is why it's not using the SafeDelete stuff
 void SettingsClass::Shutdown()
 {
 	if(mData)

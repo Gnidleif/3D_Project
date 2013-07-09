@@ -13,7 +13,7 @@ ModelClass* ModelClass::GetInstance()
 
 void ModelClass::Shutdown()
 {
-	for(auto& it(mTerrainModels.begin()); it != mTerrainModels.end(); ++it)
+	for(auto& it(mTerrainModels.begin()); it != mTerrainModels.end(); ++it) // Magic
 	{
 		SafeDelete(it->second);
 	}
@@ -30,11 +30,11 @@ void ModelClass::Shutdown()
 TerrainModel* ModelClass::GetTerrainModel(std::string key)
 {
 	TerrainModel* tm = nullptr;
-	if(mTerrainModels[key])
+	if(mTerrainModels[key]) // If the object at the key exists, return it
 	{
 		tm = mTerrainModels[key];
 	}
-	else
+	else // Otherwise create it and return the new object
 	{
 		tm = new TerrainModel(key);
 		mTerrainModels[key] = tm;

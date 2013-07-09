@@ -4,14 +4,15 @@
 #include <fstream>
 
 #define Settings SettingsClass::GetInstance()
-
+// Struct holding the current values of the relevant variables
 struct SettingsData
 {
 	unsigned int mWidth, mHeight;
 	bool mIsFullscreen;
 };
 
-
+// Singleton used to switch between resolutions/fullscreen of the program
+// It's a singleton because the same instance of this object is used in the d3d11app/direct3d/main-classes
 class SettingsClass
 {
 public: // Public functions

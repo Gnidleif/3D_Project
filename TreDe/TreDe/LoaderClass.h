@@ -11,7 +11,9 @@
 
 #define Loader LoaderClass::GetInstance()
 
-struct GenericMaterial // Glöm inte sätta in plattformen sen
+// A struct used to hold various material-related variables,
+// only used together with objectloading using Assimp, since Assimp requires material-stuff
+struct GenericMaterial
 {
 	Material mMaterial;
 	std::string mDiffMapName;
@@ -31,18 +33,20 @@ struct GenericMaterial // Glöm inte sätta in plattformen sen
 		this->mName = "";
 	}
 };
-
+// This class loads 3D-objects for the ModelClass-class
 class LoaderClass
 {
 public:
+	// Yes, it's another Singleton, whatever, I do what I want
 	static LoaderClass* GetInstance();
 	void Shutdown();
+	// The device is needed to set the vertex/indexbuffers of the meshes that this class creates
 	void Initialize(ID3D11Device* device);
-	
+	// Function used to load the heightmap
 	void CreateHeightMap(
 		TerrainMesh* &mesh,
-		std::string fileName, 
-		float normFactor, 
+		std::string fileName,
+		float normFactor,
 		int texRepeat);
 
 	bool CreateStaticObject(

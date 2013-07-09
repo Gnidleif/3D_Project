@@ -5,7 +5,8 @@
 #include <map>
 
 #define Model ModelClass::GetInstance()
-
+// Singleton used to hold the various 3D-objects in the program
+// Used to avoid the same type of model being created more than once
 class ModelClass
 {
 public:
@@ -16,7 +17,7 @@ public:
 
 private:
 	static ModelClass* mInstance;
-	ID3D11Device* mDevice;
+	// These two <map>s contains the actual models, the key is the filepath
 	std::map<std::string, TerrainModel*> mTerrainModels;
 	std::map<std::string, StaticModel*> mStaticModels;
 

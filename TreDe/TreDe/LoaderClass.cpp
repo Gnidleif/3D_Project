@@ -280,7 +280,6 @@ bool LoaderClass::CreateStaticObject(
 	string logName("../Data/StaticMeshLoader.log");
 	DefaultLogger::create(logName.c_str(), Logger::VERBOSE);
 
-	//bool isTriangulated(true);
 	const aiScene* scene = importer.ReadFile(
 		filename,
 		aiProcess_ConvertToLeftHanded |
@@ -341,15 +340,13 @@ bool LoaderClass::CreateStaticObject(
 			tempMesh->SetVertexBuffer(mDevice, &tempMesh->GetVertices()[0], tempMesh->GetVertices().size());
 			tempMesh->SetIndexBuffer(mDevice, &tempMesh->GetIndices()[0], tempMesh->GetIndices().size());
 
-			// 5907 vertices
-			// 20190 indices
 			meshes.push_back(tempMesh);
 		}
 	}
 	DefaultLogger::kill();
 	return true;
 }
-
+// Function used to create the various materials that a mesh might have
 void LoaderClass::ReadMaterials(const aiScene* scene, vector<GenericMaterial>& materials)
 {
 	if(scene->HasMaterials())

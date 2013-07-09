@@ -17,6 +17,7 @@ void TextClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* devCon)
 	this->mDevCon = devCon;
 
 	FW1CreateFactory(FW1_VERSION, &mFW1Factory);
+	// Comic sans mayhaps?
 	mFW1Factory->CreateFontWrapper(mDevice, L"Lucida Console", &mFontWrapper);
 }
 
@@ -48,12 +49,12 @@ void TextClass::Update(float dt)
 {
 	for(auto& it(mTimedTexts.begin()); it != mTimedTexts.end(); ++it)
 	{
-		it->second.mTime -= dt;
-		if(it->second.mTime <= 0)
+		it->second.mTime -= dt; // Decreases the time by the deltaTime
+		if(it->second.mTime <= 0) // If below 0 it disappears again
 		{
 			SafeDelete(it->second.mText);
 			mTimedTexts.erase(it);
-			break;
+			break; // Needs a break or it fucks shit up when looping
 		}
 	}
 }
@@ -73,10 +74,11 @@ void TextClass::Draw()
 
 void TextClass::AddConstantText(std::string key, std::string text, float posX, float posY, float size, int color)
 {
-	if(mConstantTexts.find(key) != mConstantTexts.end())
+	if(mConstantTexts.find(key) != mConstantTexts.end()) // First removes the old key
 	{
 		this->RemoveConstantText(key);
 	}
+	// And adds it again
 	this->mConstantTexts[key] = ConstantText(this->StringToWChar(text), posX, posY, size, color);
 }
 
@@ -88,7 +90,7 @@ void TextClass::AddTimedText(std::string key, std::string text, float posX, floa
 	}
 	this->mTimedTexts[key] = TimedText(this->StringToWChar(text), posX, posY, size, color, time);
 }
-
+// This class really is just a clusterfuck.. Needs some reworking
 bool TextClass::RemoveConstantText(std::string key)
 {
 	for(auto& it(mConstantTexts.begin()); it != mConstantTexts.end(); ++it)

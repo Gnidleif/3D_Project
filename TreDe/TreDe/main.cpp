@@ -13,7 +13,7 @@
 
 #include <iostream>
 using namespace std;
-
+// The main class, used to handle the "game-loop" and initializing/shutdown of various static classes
 class Main : public D3D11App
 {
 public:
@@ -110,7 +110,7 @@ void Main::Update(float dt)
 	BYTE* lpInput = nullptr;
 	Text->Update(dt);
 	mGame->Update(dt);
-
+	// Not really optimal to put this here, but whatever
 	if(lpInput = D3D11App::mDirectInput->GetKeyboardState())
 	{
 		if(lpInput[DIK_1] && 0x80)
@@ -132,17 +132,15 @@ void Main::Update(float dt)
 		{
 			SendMessage(mhMainWnd, WM_DESTROY, 0, 0);
 		}
-		//else if(lpInput[DIK_SPACE] && 0x80)
-		//{
-		//	this->SwitchPaused();
-		//}
+		// If any button is pressed that isn't in any of the above buttons,
+		// the input-stuff for the player is checked through the game-object instead
 		else
 		{
 			mGame->ControlPlayer(D3D11App::mDirectInput);
 		}
 	}
 }
-
+// Draw function, I don't know or care that much about what's going on here, as long as it works
 void Main::Draw()
 {
 	mDirect3D->GetDevCon()->ClearRenderTargetView(mDirect3D->GetRTView(), reinterpret_cast<const float*>(&Colors::Cyan));
@@ -156,7 +154,7 @@ void Main::Draw()
 	mGame->Draw(mDirect3D->GetDevCon());
 	mSkyBox->Draw(mDirect3D->GetDevCon(), mGame->GetPlayerCam());
 
-	// Should be drawn last to show text :P
+	// If the text isn't drawn last, objects in the world might hide it
 	Text->Draw();
 
 	mDirect3D->GetSwapChain()->Present(1, 0);
@@ -165,7 +163,7 @@ void Main::Draw()
 void Main::OnResize()
 {
 	D3D11App::OnResize();
-
+	// Converts the height/width of the resolution to strings and puts them as a constant text to be shown
 	string screenX = Text->IntToString(Settings->GetData()->mWidth);
 	string screenY = Text->IntToString(Settings->GetData()->mHeight);
 	Text->AddConstantText("ScreenDims", "Resolution: " + screenX + "x" + screenY, 20.0f, 110.0f, 20.0f, TextColors::Red);
