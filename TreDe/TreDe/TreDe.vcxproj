@@ -1,0 +1,165 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{C9F96446-F096-40EA-8B71-07DF8D29FDF5}</ProjectGuid>
+    <RootNamespace>TreDe</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v100</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>$(SolutionDir)/External/assimp/include;$(SolutionDir)/External/FW1FontWrapper_1_1/include;$(SolutionDir)/External/DirectX/include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LibraryPath>$(SolutionDir)/External/assimp/libs/x86;$(SolutionDir)/External/FW1FontWrapper_1_1/libs/x86;$(SolutionDir)/External/DirectX/libs/x86;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)/Game/$(PlatformName)$(Configuration)/</OutDir>
+    <IntDir>$(SolutionDir)/Temp/$(ProjectName)$(PlatformName)$(Configuration)/</IntDir>
+    <TargetName>$(ProjectName)$(PlatformName)$(Configuration)</TargetName>
+    <ExecutablePath>$(SolutionDir)/External/DirectX/utilities/bin/x86;$(ExecutablePath)</ExecutablePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <ProgramDataBaseFileName>$(TargetDir)$(TargetName).pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>Effects11D.lib;assimpd.lib;FW1FontWrapper.lib;d3d11.lib;d3dx11d.lib;dxerr.lib;D3DCompiler.lib;dxgi.lib;dxguid.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>libcmt.lib</IgnoreSpecificDefaultLibraries>
+      <ProgramDatabaseFile>$(TargetDir)$(TargetName).pdb</ProgramDatabaseFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="D3D11App.h" />
+    <ClInclude Include="d3dUtilities.h" />
+    <ClInclude Include="Direct3D.h" />
+    <ClInclude Include="DirectInput.h" />
+    <ClInclude Include="Effects.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="GameTimer.h" />
+    <ClInclude Include="GeometryCreator.h" />
+    <ClInclude Include="InputLayouts.h" />
+    <ClInclude Include="LoaderClass.h" />
+    <ClInclude Include="ModelClass.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="StaticEntity.h" />
+    <ClInclude Include="StaticModel.h" />
+    <ClInclude Include="TerrainEntity.h" />
+    <ClInclude Include="TerrainModel.h" />
+    <ClInclude Include="VertexDef.h" />
+    <ClInclude Include="SkyBox.h" />
+    <ClInclude Include="TextClass.h" />
+    <ClInclude Include="LightDef.h" />
+    <ClInclude Include="MathHelper.h" />
+    <ClInclude Include="SettingsClass.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="TextureClass.h" />
+    <ClInclude Include="VirtualEntity.h" />
+    <ClInclude Include="Meshes.h" />
+    <ClInclude Include="VirtualModel.h" />
+    <ClInclude Include="xnacollision.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="D3D11App.cpp" />
+    <ClCompile Include="d3dUtilities.cpp" />
+    <ClCompile Include="Direct3D.cpp" />
+    <ClCompile Include="DirectInput.cpp" />
+    <ClCompile Include="Effects.cpp" />
+    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameTimer.cpp" />
+    <ClCompile Include="GeometryCreator.cpp" />
+    <ClCompile Include="InputLayouts.cpp" />
+    <ClCompile Include="LoaderClass.cpp" />
+    <ClCompile Include="ModelClass.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="SkyBox.cpp" />
+    <ClCompile Include="StaticEntity.cpp" />
+    <ClCompile Include="StaticModel.cpp" />
+    <ClCompile Include="TerrainEntity.cpp" />
+    <ClCompile Include="TerrainModel.cpp" />
+    <ClCompile Include="VirtualEntity.cpp" />
+    <ClCompile Include="Meshes.cpp" />
+    <ClCompile Include="TextClass.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="MathHelper.cpp" />
+    <ClCompile Include="SettingsClass.cpp" />
+    <ClCompile Include="TextureClass.cpp" />
+    <ClCompile Include="VirtualModel.cpp" />
+    <ClCompile Include="xnacollision.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\Data\FX\Sky\Sky.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">fxc /T fx_5_0 /Fo "%(RelativeDir)\%(Filename).fxo" "%(FullPath)"</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">fxc compile for release: %(FullPath)</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RelativeDir)\%(Filename).fxo</Outputs>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Data\FX\LightDef.fx" />
+    <CustomBuild Include="..\Data\FX\Terrain\Terrain.fx">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">fxc /Fc /Od /Zi /T fx_5_0 /Fo "%(RelativeDir)\%(Filename).fxo" "%(FullPath)"</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">fxc compile for debug: %(FullPath)</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RelativeDir)\%(Filename).fxo</Outputs>
+      <FileType>Document</FileType>
+    </CustomBuild>
+    <CustomBuild Include="..\Data\FX\NormalMap\NormalMap.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">fxc /Fc /Od /Zi /T fx_5_0 /Fo "%(RelativeDir)\%(Filename).fxo" "%(FullPath)"</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">fxc compile for debug: %(FullPath)</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RelativeDir)\%(Filename).fxo</Outputs>
+    </CustomBuild>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
