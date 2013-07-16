@@ -6,6 +6,7 @@ Controls:
 - A - Strafe left
 - S - Move backwards
 - D - Strafe right
+- Alt+Enter - Sexy sexy fullscreen
 - 1 - Set window size to 800x600 resolution
 - 2 - Set window size to 1024x768 resolution
 - 3 - Set window size to 1600x900 resolution
