@@ -93,6 +93,7 @@ public:
 
 public: // Techniques
 	ID3DX11EffectTechnique* mNormalSolidTech;
+	ID3DX11EffectTechnique* mNormalSolidAlphaTech;
 	ID3DX11EffectTechnique* mNormalWireTech;
 
 private:

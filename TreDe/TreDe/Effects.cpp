@@ -67,6 +67,7 @@ NormalEffect::NormalEffect(ID3D11Device* device, string filename)
 {
 	// Techniques
 	this->mNormalSolidTech = mFX->GetTechniqueByName("NormalMapSolidTech");
+	this->mNormalSolidAlphaTech = mFX->GetTechniqueByName("NormalMapSolidAlphaTech");
 	this->mNormalWireTech = mFX->GetTechniqueByName("NormalMapWireTech");
 
 	// Variables

@@ -19,7 +19,8 @@ D3D11App::D3D11App(HINSTANCE hInstance)
 	mMinimized(false),
 	mMaximized(false),
 	mResizing(false),
-	mIsFullscreen(false)
+	mIsFullscreen(false),
+	mDirectInput(nullptr)
 {
 	// Bind pointer to this object
 	gd3d11App = this;
@@ -53,8 +54,8 @@ bool D3D11App::Initialize()
 		return false;
 
 	SettingsData lSettings = *Settings->GetData();
-	mcWidth = lSettings.mWidth;
-	mcHeight = lSettings.mHeight;
+	mcWidth = (int)lSettings.mWidth;
+	mcHeight = (int)lSettings.mHeight;
 	mIsFullscreen = lSettings.mIsFullscreen;
 
 	//-------------------------------------------
@@ -77,7 +78,7 @@ bool D3D11App::Initialize()
 	if(!mDirectInput)
 		return false;
 
-	if(!mDirectInput->Initialize(&mhAppInst, &mhMainWnd, mcWidth, mcHeight))
+	if(!mDirectInput->Initialize(&mhAppInst, &mhMainWnd, &mcWidth, &mcHeight))
 		return false;
 
 	return true;

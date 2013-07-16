@@ -13,7 +13,7 @@ DirectInput::DirectInput(void)
 }
 
 bool DirectInput::Initialize(HINSTANCE* appInstance, HWND* mainWindow,
-	int& _clientWidth, int& _clientHeight)
+							 int* cWidth, int* cHeight)
 {
 	// Create Direct Input object
 	HRESULT hr = DirectInput8Create(	
@@ -53,8 +53,8 @@ bool DirectInput::Initialize(HINSTANCE* appInstance, HWND* mainWindow,
 	hr = mDiMouse->SetCooperativeLevel(*mainWindow,
 		DISCL_EXCLUSIVE | DISCL_NOWINKEY | DISCL_FOREGROUND);
 
-	mcWidth = &_clientWidth;
-	mcHeight = &_clientHeight;
+	mcWidth = cWidth;
+	mcHeight = cHeight;
 
 	return true;
 }

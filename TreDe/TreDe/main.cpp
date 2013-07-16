@@ -25,6 +25,7 @@ public:
 	void OnResize();
 
 private:
+	BYTE* mInput;
 	Game* mGame;
 	SkyBox* mSkyBox;
 };
@@ -55,7 +56,8 @@ Main::Main(HINSTANCE hInst)
 	: 
 	D3D11App(hInst),
 	mGame(new Game()),
-	mSkyBox(new SkyBox())
+	mSkyBox(new SkyBox()),
+	mInput(nullptr)
 {
 	mMainWndCaption = "3D2 AwesomesauceMegaSuperTruperBanana Project";
 }
@@ -107,28 +109,26 @@ bool Main::Initialize()
 
 void Main::Update(float dt)
 {
-	BYTE* lpInput = nullptr;
-	Text->Update(dt);
-	mGame->Update(dt);
 	// Not really optimal to put this here, but whatever
-	if(lpInput = D3D11App::mDirectInput->GetKeyboardState())
+	if(mInput == D3D11App::mDirectInput->GetKeyboardState())
 	{
-		if(lpInput[DIK_1] && 0x80)
+		//BYTE* lpInput = D3D11App::mDirectInput->GetKeyboardState();
+		if(mInput[DIK_1] && 0x80)
 		{
 			Settings->SetResolution(800, 600);
 			D3D11App::SwitchResolution();
 		}
-		else if(lpInput[DIK_2] && 0x80)
+		else if(mInput[DIK_2] && 0x80)
 		{
 			Settings->SetResolution(1024, 768);
 			D3D11App::SwitchResolution();
 		}
-		else if(lpInput[DIK_3] && 0x80)
+		else if(mInput[DIK_3] && 0x80)
 		{
 			Settings->SetResolution(1600, 900);
 			D3D11App::SwitchResolution();
 		}
-		else if(lpInput[DIK_ESCAPE] && 0x80)
+		else if(mInput[DIK_ESCAPE] && 0x80)
 		{
 			SendMessage(mhMainWnd, WM_DESTROY, 0, 0);
 		}
@@ -139,6 +139,10 @@ void Main::Update(float dt)
 			mGame->ControlPlayer(D3D11App::mDirectInput);
 		}
 	}
+	// Kind of an ugly solution to a bug that changed the resolution on startup for some reason
+	mInput = D3D11App::mDirectInput->GetKeyboardState();
+	Text->Update(dt);
+	mGame->Update(dt);
 }
 // Draw function, I don't know or care that much about what's going on here, as long as it works
 void Main::Draw()

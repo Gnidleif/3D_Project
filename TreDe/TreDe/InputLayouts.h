@@ -1,7 +1,6 @@
 #ifndef INPUTLAYOUTS_H
 #define INPUTLAYOUTS_H
 #include "VertexDef.h"
-#include <map>
 
 class InputLayouts
 {
@@ -14,6 +13,7 @@ private:
 		static const D3D11_INPUT_ELEMENT_DESC PosNorTex[3];
 		static const D3D11_INPUT_ELEMENT_DESC PosNorTexTan[4];
 		static const D3D11_INPUT_ELEMENT_DESC Particle[5];
+		static const D3D11_INPUT_ELEMENT_DESC PosNorTexTanSkin[6];
 	};
 
 public:
@@ -25,5 +25,7 @@ public:
 	static ID3D11InputLayout* mPosNor;
 	static ID3D11InputLayout* mPosNorTex;
 	static ID3D11InputLayout* mPosNorTexTan;
+	static ID3D11InputLayout* mParticle;
+	static ID3D11InputLayout* mPosNorTexTanSkin;
 };
 #endif

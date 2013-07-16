@@ -45,6 +45,24 @@ namespace VertexDef
 			: mPos(pos), mNormal(normal), mTexCoord(texCoord), mTangentU(tangentU) {}
 	};
 
+	struct PosNorTexTanSkin
+	{
+		XMFLOAT3 mPos;
+		XMFLOAT3 mNormal;
+		XMFLOAT2 mTexCoord;
+		XMFLOAT4 mTangentU;
+		BYTE mBoneIndices[4];
+		PosNorTexTanSkin() {}
+		PosNorTexTanSkin(XMFLOAT3 pos, XMFLOAT3 normal, XMFLOAT2 texCoord, XMFLOAT4 tangentU, BYTE* boneIndices)
+			: mPos(pos), mNormal(normal), mTexCoord(texCoord), mTangentU(tangentU)
+		{
+			for(UINT i(0); i != 4; ++i)
+			{
+				mBoneIndices[i] = boneIndices[i];
+			}
+		}
+	};
+
 	struct Particle
 	{
 		XMFLOAT3 mInitPos;

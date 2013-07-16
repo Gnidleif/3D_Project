@@ -20,7 +20,7 @@ void Game::Initialize()
 	mTerrain->Initialize(XMFLOAT3(0.0f, 0.0f, 0.0f), 1.0f);
 
 	mPlatform = new StaticEntity("../Data/Models/Static/Platform1/Platform1.obj", "../Data/Models/Static/Platform1/");
-	mPlatform->Initialize(XMFLOAT3(50.0f, 50.0f, 50.0f), 0.01f);
+	mPlatform->Initialize(XMFLOAT3(100.0f, 20.0f, 100.0f), 0.05f);
 
 	Text->AddConstantText("PlayerInfo", "Name: " + mPlayer->GetName(), 20.0f, 20.0f, 20.0f, TextColors::White);
 }
@@ -41,7 +41,7 @@ void Game::Draw(ID3D11DeviceContext* devCon)
 	ID3DX11EffectTechnique* activeTech = Effects::TerrainFX->mTerrainSolidTech;
 	mTerrain->Draw(devCon, activeTech, mPlayer->GetCamera());
 
-	activeTech = Effects::NormalFX->mNormalSolidTech;
+	activeTech = Effects::NormalFX->mNormalSolidAlphaTech;
 	mPlatform->Draw(devCon, activeTech, mPlayer->GetCamera());
 }
 

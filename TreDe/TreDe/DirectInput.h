@@ -9,6 +9,7 @@
 #pragma comment (lib, "dxguid.lib")
 
 #include <dinput.h>
+#include "SettingsClass.h"
 
 class DirectInput
 {
@@ -18,7 +19,7 @@ public:
 	~DirectInput(void) {}
 
 	bool Initialize(HINSTANCE* appInstance, HWND* mainWindow,
-		 int& _clientWidth, int& _clientHeight);
+		int* cWidth, int* cHeight);
 	void Shutdown();
 	void Update();
 

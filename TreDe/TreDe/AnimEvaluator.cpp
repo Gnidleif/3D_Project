@@ -24,7 +24,7 @@ AnimEvaluator::AnimEvaluator(const aiAnimation* animation)
 	this->mTicksPerSec = static_cast<float>(animation->mTicksPerSecond != 0.0f ? animation->mTicksPerSecond : 100.0f);
 	this->mDuration = static_cast<float>(animation->mDuration);
 
-	this->SetChannelsSize(animation->mNumChannels);
+	mChannels.resize(animation->mNumChannels);
 	for(UINT i(0); i != mChannels.size(); ++i)
 	{
 		mChannels[i].mName = animation->mChannels[i]->mNodeName.data;

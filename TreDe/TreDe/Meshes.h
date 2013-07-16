@@ -74,7 +74,7 @@ private:
 	std::vector<VertexDef::PosNorTex> mVertices;
 };
 
-// Generic mesh, used for non-moving, non-terrain models
+// Static mesh, used for non-moving, non-terrain models
 class StaticMesh : public VirtualMesh
 {
 public:
@@ -90,5 +90,15 @@ public:
 
 private:
 	std::vector<VertexDef::PosNorTexTan> mVertices;
+};
+
+// Skinned mesh, used for animated stuff
+class SkinnedMesh : public VirtualMesh
+{
+public:
+	SkinnedMesh() : VirtualMesh() {}
+	~SkinnedMesh() {}
+
+public:
 };
 #endif

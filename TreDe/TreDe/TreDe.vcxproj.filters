@@ -123,6 +123,9 @@
     <ClInclude Include="AnimEvaluator.h">
       <Filter>ObjectClasses</Filter>
     </ClInclude>
+    <ClInclude Include="SkinData.h">
+      <Filter>ObjectClasses</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameTimer.cpp">
@@ -207,6 +210,9 @@
       <Filter>ObjectClasses\Entities</Filter>
     </ClCompile>
     <ClCompile Include="AnimEvaluator.cpp">
+      <Filter>ObjectClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="SkinData.cpp">
       <Filter>ObjectClasses</Filter>
     </ClCompile>
   </ItemGroup>

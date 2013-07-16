@@ -36,12 +36,24 @@ const D3D11_INPUT_ELEMENT_DESC InputLayouts::InputLayoutDesc::Particle[5] =
 	{"TYPE", 0, DXGI_FORMAT_R32_UINT, 0, 36, D3D11_INPUT_PER_VERTEX_DATA, 0},
 };
 
+const D3D11_INPUT_ELEMENT_DESC InputLayouts::InputLayoutDesc::PosNorTexTanSkin[6] =
+{
+	{"POSITION",     0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0},
+	{"NORMAL",       0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
+	{"TEXCOORD",     0, DXGI_FORMAT_R32G32_FLOAT,    0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0},
+	{"TANGENT",      0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 32, D3D11_INPUT_PER_VERTEX_DATA, 0},
+	{"WEIGHTS",		 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 48, D3D11_INPUT_PER_VERTEX_DATA, 0},
+	{"BONEINDICES",  0, DXGI_FORMAT_R8G8B8A8_UINT, 0, 60, D3D11_INPUT_PER_VERTEX_DATA, 0}
+};
+
 // Initialization of inputlayouts
 
 ID3D11InputLayout* InputLayouts::mPos = nullptr;
 ID3D11InputLayout* InputLayouts::mPosNor = nullptr;
 ID3D11InputLayout* InputLayouts::mPosNorTex = nullptr;
 ID3D11InputLayout* InputLayouts::mPosNorTexTan = nullptr;
+ID3D11InputLayout* InputLayouts::mParticle = nullptr;
+ID3D11InputLayout* InputLayouts::mPosNorTexTanSkin = nullptr;
 
 void InputLayouts::Initialize(ID3D11Device* device)
 {
@@ -94,4 +106,6 @@ void InputLayouts::Shutdown()
 	SafeRelease(mPosNor);
 	SafeRelease(mPosNorTex);
 	SafeRelease(mPosNorTexTan);
+	SafeRelease(mParticle);
+	SafeRelease(mPosNorTexTanSkin);
 }

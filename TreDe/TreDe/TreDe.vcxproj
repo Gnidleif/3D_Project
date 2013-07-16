@@ -89,6 +89,7 @@
     <ClInclude Include="LoaderClass.h" />
     <ClInclude Include="ModelClass.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="SkinData.h" />
     <ClInclude Include="SkinDef.h" />
     <ClInclude Include="StaticEntity.h" />
     <ClInclude Include="StaticModel.h" />
@@ -122,6 +123,7 @@
     <ClCompile Include="LoaderClass.cpp" />
     <ClCompile Include="ModelClass.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="SkinData.cpp" />
     <ClCompile Include="SkyBox.cpp" />
     <ClCompile Include="StaticEntity.cpp" />
     <ClCompile Include="StaticModel.cpp" />
