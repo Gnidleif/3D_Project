@@ -53,6 +53,13 @@ public:
 		std::vector<GenericMaterial>& materials,
 		std::vector<StaticMesh*>& meshes,
 		std::string filename);
+	// Loader->CreateSkinnedObject(mGenMats, mMeshes, filename, mSkinData);
+
+	bool CreateSkinnedObject(
+		std::vector<GenericMaterial>& materials,
+		std::vector<SkinnedMesh*>& meshes,
+		std::string filename,
+		SkinData& skinData);
 
 private:
 	static LoaderClass* mInstance;
@@ -65,10 +72,12 @@ private:
 	void CalcNormals();
 	void CalcTexCoords(int repeat);
 
-	// Static mesh functions
-	void ReadMaterials(const aiScene* scene, std::vector<GenericMaterial>& materials);
+	// Skinned functions
+	SkinDef::Bone* CreateBoneTree(aiNode* node, SkinDef::Bone* parent, SkinData& skinData);
+	void CreateAnimations(const aiScene* scene, SkinData& skinData);
 
 	// Shared functions
+	void CreateMaterials(const aiScene* scene, std::vector<GenericMaterial>& materials);
 
 private:
 	// Terrain members

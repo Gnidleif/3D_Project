@@ -15,14 +15,14 @@ public:
 	void SwitchPlayForward();
 	void Evaluate(float time, std::map<std::string, SkinDef::Bone*>& bones);
 
-//public: // Get functions
-//	std::string GetName() const { return this->mName; }
+public: // Get functions
+	std::string GetName() const { return this->mName; }
 //
 //	UINT GetAnimIndexer() const { return this->mAnimIndexer; }
 //
 //	float GetLastTime() const { return this->mLastTime; }
 //	float GetTicksPerSec() const { return this->mTicksPerSec; }
-//	float GetDuration() const { return this->mDuration; }
+	//float GetDuration() const { return this->mDuration; }
 //
 //	bool GetPlayForward() const { return this->mPlayForward; }
 //
@@ -41,6 +41,9 @@ public:
 
 
 //public: // Set functions
+	//void InsertTransformation(XMFLOAT4X4 transformation) { this->mTransforms.push_back(transformation); }
+
+
 //	void SetName(std::string name) { this->mName = name; }
 //
 //	void SetAnimIndexer(UINT animIndexer) { this->mAnimIndexer = animIndexer; }

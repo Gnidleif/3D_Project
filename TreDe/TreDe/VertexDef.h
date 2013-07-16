@@ -51,10 +51,11 @@ namespace VertexDef
 		XMFLOAT3 mNormal;
 		XMFLOAT2 mTexCoord;
 		XMFLOAT4 mTangentU;
+		XMFLOAT3 mWeights;
 		BYTE mBoneIndices[4];
 		PosNorTexTanSkin() {}
-		PosNorTexTanSkin(XMFLOAT3 pos, XMFLOAT3 normal, XMFLOAT2 texCoord, XMFLOAT4 tangentU, BYTE* boneIndices)
-			: mPos(pos), mNormal(normal), mTexCoord(texCoord), mTangentU(tangentU)
+		PosNorTexTanSkin(XMFLOAT3 pos, XMFLOAT3 normal, XMFLOAT2 texCoord, XMFLOAT4 tangentU, XMFLOAT3 weights, BYTE* boneIndices)
+			: mPos(pos), mNormal(normal), mTexCoord(texCoord), mTangentU(tangentU), mWeights(weights)
 		{
 			for(UINT i(0); i != 4; ++i)
 			{

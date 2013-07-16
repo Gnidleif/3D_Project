@@ -16,6 +16,36 @@ public:
 	void CalcBoneMatrices();
 	UINT GetAnimIndex(std::string name);
 
+public:
+	void SetSkeleton(SkinDef::Bone* skeleton) { this->mSkeleton = skeleton; }
+	void SetBoneName(UINT index, std::string name) { this->mBones[index]->mName = name; }
+	void InsertBoneName(std::string key, SkinDef::Bone* bone) { this->mBoneNames[key] = bone; }
+	void InsertBoneIndice(std::string key, UINT index) { this->mBoneIndices[key] = index; }
+	void InsertAnimation(AnimEvaluator item) { this->mAnimations.push_back(item); }
+	void InsertAnimNameID(std::string key, UINT id) { this->mAnimNameID[key] = id; }
+	void InsertBone(SkinDef::Bone* bone) { this->mBones.push_back(bone); }
+	void SetTransformSize(UINT size) { this->mTransforms.resize(size); }
+	void SetTransforms(std::vector<XMFLOAT4X4> transforms) { this->mTransforms = transforms; }
+
+public:
+	std::vector<AnimEvaluator> GetAnimations() { return this->mAnimations; }
+	AnimEvaluator GetAnimation(int index) { return this->mAnimations[index]; }
+	std::map<std::string, SkinDef::Bone*> GetBoneNames() const { return this->mBoneNames; }
+	std::vector<SkinDef::Bone*> GetBones() const { return this->mBones; }
+	SkinDef::Bone* GetBone(UINT index) const { return this->mBones[index]; }
+
+	std::vector<XMFLOAT4X4>& GetTransforms(float dt) 
+	{ return mAnimations[mCurrAnimIndex].GetTransformation(dt); }
+
+	std::vector<XMFLOAT4X4>& GetTransforms(float dt, UINT animIndex)
+	{ return mAnimations[animIndex].GetTransformation(dt); }
+
+	std::vector<XMFLOAT4X4>& GetTransforms(float dt, UINT animIndex, UINT start, UINT end)
+	{ return mAnimations[animIndex].GetTransformation(dt, start, end); }
+
+	std::vector<XMFLOAT4X4>& GetTransforms(float dt, UINT animIndex, UINT start, UINT end, bool playForward)
+	{ return mAnimations[animIndex].GetTransformation(dt, start, end, playForward); }
+
 private:
 	void UpdateTransforms(SkinDef::Bone* node);
 

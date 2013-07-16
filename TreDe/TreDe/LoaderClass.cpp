@@ -294,7 +294,7 @@ bool LoaderClass::CreateStaticObject(
 
 	if(scene->HasMeshes())
 	{		
-		ReadMaterials(scene, materials);
+		CreateMaterials(scene, materials);
 
 		for(UINT curMesh(0); curMesh != scene->mNumMeshes; ++curMesh)
 		{
@@ -346,8 +346,205 @@ bool LoaderClass::CreateStaticObject(
 	DefaultLogger::kill();
 	return true;
 }
+
+// Functions related to SkinnedObjects
+bool LoaderClass::CreateSkinnedObject(
+	std::vector<GenericMaterial>& materials,
+	std::vector<SkinnedMesh*>& meshes,
+	std::string filename,
+	SkinData& skinData)
+{
+	using namespace Assimp;
+	Importer importer;
+	string logName("../Data/StaticMeshLoader.log");
+	DefaultLogger::create(logName.c_str(), Logger::VERBOSE);
+
+	const aiScene* scene = importer.ReadFile(
+		filename,
+		aiProcess_ConvertToLeftHanded |
+		aiProcessPreset_TargetRealtime_Quality);
+
+	if(!scene)
+	{
+		DefaultLogger::get()->info("Reading static object file failed!");
+		DefaultLogger::kill();
+		return false;
+	}
+
+	if(scene->HasMeshes())
+	{
+		SkinDef::Bone* skeleton = CreateBoneTree(scene->mRootNode, nullptr, skinData);
+		CreateAnimations(scene, skinData);
+		CreateMaterials(scene, materials);
+
+		for(UINT curMesh(0); curMesh != scene->mNumMeshes; ++curMesh)
+		{
+			SkinnedMesh* tempMesh = new SkinnedMesh();
+			aiMesh* mesh(scene->mMeshes[curMesh]);
+			aiString meshName(mesh->mName);
+
+			UINT numVertices(mesh->mNumVertices);
+			UINT numFaces(mesh->mNumFaces);
+
+			std::vector<VertexDef::PosNorTexTanSkin> vertices;
+			for(UINT i(0); i != numVertices; ++i)
+			{
+				VertexDef::PosNorTexTanSkin vertex;
+				vertex.mPos			= XMFLOAT3(mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z);
+				vertex.mNormal		= XMFLOAT3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z);
+				vertex.mTexCoord	= XMFLOAT2(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y);
+				vertex.mTangentU	= XMFLOAT4(-1.0f, -1.0f, -1.0f, -1.0f);
+
+				if(mesh->HasTangentsAndBitangents())
+				{
+					vertex.mTangentU = XMFLOAT4(mesh->mTangents[i].x, mesh->mTangents[i].y, mesh->mTangents[i].z, -1.0f);
+				}
+
+				vertex.mBoneIndices[0] = vertex.mBoneIndices[1] = vertex.mBoneIndices[2] = vertex.mBoneIndices[3] = 0;
+				vertex.mWeights = XMFLOAT3(0.0f, 0.0f, 0.0f);
+
+				vertices.push_back(vertex);
+			}
+
+			vector<UINT> indices;
+			for(UINT i(0); i != numFaces; ++i)
+			{
+				for(UINT j(0); j < 3; ++j)
+				{
+					indices.push_back(mesh->mFaces[i].mIndices[j]);
+				}
+			}
+
+			for(UINT i(0); i != mesh->mNumBones; ++i)
+			{
+				aiBone* bone = mesh->mBones[i];
+				auto& it = skinData.GetBoneNames().find(bone->mName.data);
+
+				if(it != skinData.GetBoneNames().end())
+				{
+					bool skip = false;
+					for(UINT j(0); j != skinData.GetBones().size(); ++j)
+					{
+						std::string boneName = bone->mName.data;
+						if(skinData.GetBone(j)->mName == boneName)
+						{
+							skip = true;
+							break;
+						}
+					}
+
+					if(!skip)
+					{
+						std::string test = it->second->mName;
+						it->second->mOffset = SkinDef::ReadAiMatrix(bone->mOffsetMatrix);
+						XMMATRIX offsetMatrix = XMLoadFloat4x4(&it->second->mOffset);
+						offsetMatrix = XMMatrixTranspose(offsetMatrix);
+						XMStoreFloat4x4(&it->second->mOffset, offsetMatrix);
+
+						skinData.InsertBone(it->second);
+						skinData.InsertBoneIndice(it->first, skinData.GetBones().size()-1);
+					}
+				}
+				// Check here later if anything messes up, this looks weird
+				for(UINT j(0); j != bone->mNumWeights; ++j)
+				{
+					if(vertices[bone->mWeights[j].mVertexId].mWeights.x == 0.0f)
+					{
+						vertices[bone->mWeights[j].mVertexId].mBoneIndices[0] = skinData.GetBones().size()-1;
+						vertices[bone->mWeights[j].mVertexId].mWeights.x = bone->mWeights[j].mWeight;
+					}
+					else if(vertices[bone->mWeights[j].mVertexId].mWeights.y == 0.0f)
+					{
+						vertices[bone->mWeights[j].mVertexId].mBoneIndices[1] = skinData.GetBones().size()-1;
+						vertices[bone->mWeights[j].mVertexId].mWeights.y = bone->mWeights[j].mWeight;
+					}
+					else if(vertices[bone->mWeights[j].mVertexId].mWeights.z == 0.0f)
+					{
+						vertices[bone->mWeights[j].mVertexId].mBoneIndices[2] = skinData.GetBones().size()-1;
+						vertices[bone->mWeights[j].mVertexId].mWeights.z = bone->mWeights[j].mWeight;
+					}
+					else 
+					{
+						vertices[bone->mWeights[j].mVertexId].mBoneIndices[3] = skinData.GetBones().size()-1;
+					}
+				}
+			}
+			tempMesh->SetIndiceSize(indices.size());
+			tempMesh->SetIndices(indices);
+
+			tempMesh->SetVerticeSize(vertices.size());
+			tempMesh->SetVertices(vertices);
+
+			tempMesh->SetMaterialIndex(mesh->mMaterialIndex);
+
+			tempMesh->SetVertexBuffer(mDevice, &tempMesh->GetVertices()[0], tempMesh->GetVertices().size());
+			tempMesh->SetIndexBuffer(mDevice, &tempMesh->GetIndices()[0], tempMesh->GetIndices().size());
+
+			meshes.push_back(tempMesh);
+		}
+		// What is this even? Använder sig inte av trans-vectorn
+		//skinData.SetTransformSize(skinData.GetBones().size());
+		//float timeStep = 1.0f/30.0f;
+
+		//std::vector<XMFLOAT4X4> transforms;
+		//for(UINT i(0); i != skinData.GetAnimations().size(); ++i)
+		//{
+		//	skinData.SetAnimIndex(i);
+		//	float dt = 0.0f;
+		//	for(float tick(0); tick != skinData.GetAnimation(i).GetDuration(); ++tick)
+		//	{
+		//		dt += timeStep;
+		//		skinData.CalcTransform(dt);
+		//		skinData.GetAnimation(i).InsertTransformation(XMFLOAT4X4());
+		//		std::vector<XMFLOAT4X4>& trans = skinData.GetAnimation(i).GetTransform().back();
+		//	}
+		//}
+	}
+
+	DefaultLogger::kill();
+	return true;
+}
+
+SkinDef::Bone* LoaderClass::CreateBoneTree(aiNode* node, SkinDef::Bone* parent, SkinData& skinData)
+{
+	SkinDef::Bone* internalNode = new SkinDef::Bone();
+	internalNode->mName = node->mName.data;
+	internalNode->mParent = parent;
+	skinData.InsertBoneName(internalNode->mName, internalNode);
+	
+	internalNode->mLocalTrans = SkinDef::ReadAiMatrix(node->mTransformation);
+
+	XMMATRIX LocTransfTransp = XMLoadFloat4x4(&internalNode->mLocalTrans);
+	LocTransfTransp = XMMatrixTranspose(LocTransfTransp);
+	XMStoreFloat4x4(&internalNode->mLocalTrans, LocTransfTransp);
+	internalNode->mOrigLocalTrans = internalNode->mLocalTrans;
+
+	SkinDef::CalculateBoneToWorld(internalNode);
+
+	for(UINT i(0); i != node->mNumChildren; ++i)
+	{
+		internalNode->mChildren.push_back(CreateBoneTree(node->mChildren[i], internalNode, skinData));
+	}
+	return internalNode;
+}
+
+void LoaderClass::CreateAnimations(const aiScene* scene, SkinData& skinData)
+{
+	for(UINT i(0); i != scene->mNumAnimations; ++i)
+	{
+		skinData.InsertAnimation(AnimEvaluator(scene->mAnimations[i]));
+	}
+
+	for(UINT i(0); i != skinData.GetAnimations().size(); ++i)
+	{
+		skinData.InsertAnimNameID(skinData.GetAnimation(i).GetName(), i);
+	}
+
+	skinData.SetAnimation("Idle");
+}
+
 // Function used to create the various materials that a mesh might have
-void LoaderClass::ReadMaterials(const aiScene* scene, vector<GenericMaterial>& materials)
+void LoaderClass::CreateMaterials(const aiScene* scene, vector<GenericMaterial>& materials)
 {
 	if(scene->HasMaterials())
 	{
