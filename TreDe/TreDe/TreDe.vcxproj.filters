@@ -117,6 +117,12 @@
     <ClInclude Include="StaticEntity.h">
       <Filter>ObjectClasses\Entities</Filter>
     </ClInclude>
+    <ClInclude Include="SkinDef.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimEvaluator.h">
+      <Filter>ObjectClasses</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameTimer.cpp">
@@ -199,6 +205,9 @@
     </ClCompile>
     <ClCompile Include="StaticEntity.cpp">
       <Filter>ObjectClasses\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimEvaluator.cpp">
+      <Filter>ObjectClasses</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

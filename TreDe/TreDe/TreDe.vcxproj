@@ -75,6 +75,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AnimEvaluator.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="D3D11App.h" />
     <ClInclude Include="d3dUtilities.h" />
@@ -88,6 +89,7 @@
     <ClInclude Include="LoaderClass.h" />
     <ClInclude Include="ModelClass.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="SkinDef.h" />
     <ClInclude Include="StaticEntity.h" />
     <ClInclude Include="StaticModel.h" />
     <ClInclude Include="TerrainEntity.h" />
@@ -106,6 +108,7 @@
     <ClInclude Include="xnacollision.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AnimEvaluator.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="D3D11App.cpp" />
     <ClCompile Include="d3dUtilities.cpp" />

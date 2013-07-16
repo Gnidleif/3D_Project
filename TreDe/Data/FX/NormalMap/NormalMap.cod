@@ -136,7 +136,7 @@ fxgroup
                 dcl_output o4.xyzw
                 dcl_temps 6
                 
-                #line 57 "C:\Users\Gnidleif\Documents\Visual Studio 2010\Projects\TreDe v2\TreDe\Data\FX\NormalMap\NormalMap.fx"
+                #line 57 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\NormalMap\NormalMap.fx"
                 mul r0.xyzw, cb0[0].xyzw, cb0[4].xxxx
                 mul r1.xyzw, cb0[1].xyzw, cb0[4].yyyy
                 add r0.xyzw, r0.xyzw, r1.xyzw
@@ -261,7 +261,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 1
                 
-                #line 73 "C:\Users\Gnidleif\Documents\Visual Studio 2010\Projects\TreDe v2\TreDe\Data\FX\NormalMap\NormalMap.fx"
+                #line 73 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\NormalMap\NormalMap.fx"
                 sample_indexable(texture2d)(float,float,float,float) r0.xyzw, v3.xyxx, t0.xyzw, s0  // texColor<0:Inf,1:Inf,2:Inf,3:Inf>
                 nop 
                 mov o0.xyzw, r0.xyzw  // PSScene<0:Inf,1:Inf,2:Inf,3:Inf>
@@ -355,7 +355,7 @@ fxgroup
                 dcl_output o4.xyzw
                 dcl_temps 6
                 
-                #line 57 "C:\Users\Gnidleif\Documents\Visual Studio 2010\Projects\TreDe v2\TreDe\Data\FX\NormalMap\NormalMap.fx"
+                #line 57 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\NormalMap\NormalMap.fx"
                 mul r0.xyzw, cb0[0].xyzw, cb0[4].xxxx
                 mul r1.xyzw, cb0[1].xyzw, cb0[4].yyyy
                 add r0.xyzw, r0.xyzw, r1.xyzw
@@ -480,7 +480,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 1
                 
-                #line 73 "C:\Users\Gnidleif\Documents\Visual Studio 2010\Projects\TreDe v2\TreDe\Data\FX\NormalMap\NormalMap.fx"
+                #line 73 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\NormalMap\NormalMap.fx"
                 sample_indexable(texture2d)(float,float,float,float) r0.xyzw, v3.xyxx, t0.xyzw, s0  // texColor<0:Inf,1:Inf,2:Inf,3:Inf>
                 nop 
                 mov o0.xyzw, r0.xyzw  // PSScene<0:Inf,1:Inf,2:Inf,3:Inf>
