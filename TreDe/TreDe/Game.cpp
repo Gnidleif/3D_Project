@@ -36,7 +36,7 @@ void Game::Update(float dt)
 	mPlayer->Update(dt);
 }
 
-void Game::Draw(ID3D11DeviceContext* devCon)
+void Game::SolidDraw(ID3D11DeviceContext* devCon)
 {
 	ID3DX11EffectTechnique* activeTech = Effects::TerrainFX->mTerrainSolidTech;
 	mTerrain->Draw(devCon, activeTech, mPlayer->GetCamera());
@@ -45,7 +45,25 @@ void Game::Draw(ID3D11DeviceContext* devCon)
 	mPlatform->Draw(devCon, activeTech, mPlayer->GetCamera());
 }
 
+void Game::WireDraw(ID3D11DeviceContext* devCon)
+{
+	ID3DX11EffectTechnique* activeTech = Effects::TerrainFX->mTerrainWireTech;
+	mTerrain->Draw(devCon, activeTech, mPlayer->GetCamera());
+
+	activeTech = Effects::NormalFX->mNormalWireTech;
+	mPlatform->Draw(devCon, activeTech, mPlayer->GetCamera());
+}
+
 void Game::ControlPlayer(DirectInput* di)
 {
-	mPlayer->Control(di);
+	if(di->GetKeyboardState()[DIK_R] && 0x80)
+	{
+		mPlatform->SetScale(0.05f);
+	}
+	else if(di->GetKeyboardState()[DIK_F] && 0x80)
+	{
+		mPlatform->SetScale(0.1f);
+	}
+	else
+		mPlayer->Control(di);
 }

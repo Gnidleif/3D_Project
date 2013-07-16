@@ -25,6 +25,11 @@ public:
 	void OnResize();
 
 private:
+	void SwitchDrawSolid();
+
+private:
+	float mDrawCooldown;
+	bool mDrawSolid;
 	BYTE* mInput;
 	Game* mGame;
 	SkyBox* mSkyBox;
@@ -57,7 +62,9 @@ Main::Main(HINSTANCE hInst)
 	D3D11App(hInst),
 	mGame(new Game()),
 	mSkyBox(new SkyBox()),
-	mInput(nullptr)
+	mInput(nullptr),
+	mDrawSolid(true),
+	mDrawCooldown(0.0f)
 {
 	mMainWndCaption = "3D2 AwesomesauceMegaSuperTruperBanana Project";
 }
@@ -109,6 +116,7 @@ bool Main::Initialize()
 
 void Main::Update(float dt)
 {
+	mDrawCooldown += dt;
 	// Not really optimal to put this here, but whatever
 	if(mInput == D3D11App::mDirectInput->GetKeyboardState())
 	{
@@ -127,6 +135,10 @@ void Main::Update(float dt)
 		{
 			Settings->SetResolution(1600, 900);
 			D3D11App::SwitchResolution();
+		}
+		else if(mInput[DIK_E] && 0x80 && mDrawCooldown > 2.0f)
+		{
+			this->SwitchDrawSolid();
 		}
 		else if(mInput[DIK_ESCAPE] && 0x80)
 		{
@@ -155,7 +167,11 @@ void Main::Draw()
 	mDirect3D->GetDevCon()->OMSetDepthStencilState(0, 0);
 	mDirect3D->GetDevCon()->OMSetBlendState(0, blendFactor, 0xffffffff);
 
-	mGame->Draw(mDirect3D->GetDevCon());
+	if(mDrawSolid)
+		mGame->SolidDraw(mDirect3D->GetDevCon());
+	else
+		mGame->WireDraw(mDirect3D->GetDevCon());
+
 	mSkyBox->Draw(mDirect3D->GetDevCon(), mGame->GetPlayerCam());
 
 	// If the text isn't drawn last, objects in the world might hide it
@@ -174,4 +190,13 @@ void Main::OnResize()
 
 	mGame->GetPlayerCam()->SetLens(0.25f*MathHelper::pi, D3D11App::AspectRatio(), 1.0f, MathHelper::infinity);
 	mGame->GetPlayerCam()->ComputeFrustum();
+}
+
+void Main::SwitchDrawSolid()
+{
+	mDrawCooldown = 0.0f;
+	if(mDrawSolid)
+		mDrawSolid = false;
+	else
+		mDrawSolid = true;
 }

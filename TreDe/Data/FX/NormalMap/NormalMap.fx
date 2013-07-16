@@ -69,11 +69,16 @@ PSIn VSScene(VSIn input)
 };
 
 float4 PSScene(PSIn input,
-			   uniform bool alphaClip) : SV_Target
+			   uniform bool alphaClip,
+			   uniform bool useTex) : SV_Target
 {
-	float4 texColor = gDiffMap.Sample(samLinear, input.TexC);
-	float3 normMapSamp = gNormMap.Sample(samLinear, input.TexC).rgb;
-	float3 bumpNormal = NormalSampleToWorldSpace(normMapSamp, input.Normal, input.TangentW);
+	float4 texColor = float4(1.0f, 0.0f, 0.0f, 1.0f);
+	if(useTex)
+	{
+		texColor = gDiffMap.Sample(samLinear, input.TexC);
+		float3 normMapSamp = gNormMap.Sample(samLinear, input.TexC).rgb;
+		float3 bumpNormal = NormalSampleToWorldSpace(normMapSamp, input.Normal, input.TangentW);
+	}
 
 	if(alphaClip) // If alpha clipping is true
 		clip(texColor.a - 0.1f);
@@ -101,7 +106,7 @@ technique11 NormalMapSolidTech
 	{
 		SetVertexShader( CompileShader(vs_5_0, VSScene()));
 		SetGeometryShader(NULL);
-		SetPixelShader( CompileShader(ps_5_0, PSScene(false)));
+		SetPixelShader( CompileShader(ps_5_0, PSScene(false, true)));
 		SetRasterizerState(Solidframe);
 	}
 };
@@ -112,7 +117,7 @@ technique11 NormalMapSolidAlphaTech
 	{
 		SetVertexShader( CompileShader(vs_5_0, VSScene()));
 		SetGeometryShader(NULL);
-		SetPixelShader( CompileShader(ps_5_0, PSScene(true)));
+		SetPixelShader( CompileShader(ps_5_0, PSScene(true, true)));
 		SetRasterizerState(Solidframe);
 	}
 };
@@ -123,7 +128,7 @@ technique11 NormalMapWireTech
 	{
 		SetVertexShader( CompileShader(vs_5_0, VSScene()));
 		SetGeometryShader(NULL);
-		SetPixelShader( CompileShader(ps_5_0, PSScene(false)));
+		SetPixelShader( CompileShader(ps_5_0, PSScene(false, false)));
 		SetRasterizerState(Wireframe);
 	}
 };

@@ -91,6 +91,9 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="SkinData.h" />
     <ClInclude Include="SkinDef.h" />
+    <ClInclude Include="SkinnedModel.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="StaticEntity.h" />
     <ClInclude Include="StaticModel.h" />
     <ClInclude Include="TerrainEntity.h" />
@@ -124,6 +127,9 @@
     <ClCompile Include="ModelClass.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="SkinData.cpp" />
+    <ClCompile Include="SkinnedModel.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="SkyBox.cpp" />
     <ClCompile Include="StaticEntity.cpp" />
     <ClCompile Include="StaticModel.cpp" />

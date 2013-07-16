@@ -79,20 +79,25 @@ PSIn VSScene(VSIn input)
 	return output;
 };
 
-float4 PSScene(PSIn input) : SV_Target
+float4 PSScene(PSIn input,
+			   uniform bool useTex) : SV_Target
 {
 	//samLinear
-	float4 c0 = gTex0.Sample(samLinear, input.Tiled);
-	float4 c1 = gTex1.Sample(samLinear, input.Tiled);
-	float4 c2 = gTex2.Sample(samLinear, input.Tiled);
-	float4 c3 = gTex3.Sample(samLinear, input.Tiled);
+	float4 texColor = float4(1.0f, 1.0f, 1.0f, 1.0f);
+	if(useTex)
+	{
+		float4 c0 = gTex0.Sample(samLinear, input.Tiled);
+		float4 c1 = gTex1.Sample(samLinear, input.Tiled);
+		float4 c2 = gTex2.Sample(samLinear, input.Tiled);
+		float4 c3 = gTex3.Sample(samLinear, input.Tiled);
 
-	float4 blend = gBlendMap.Sample(samLinear, input.Stretched);
+		float4 blend = gBlendMap.Sample(samLinear, input.Stretched);
 
-	float4 texColor = c0;
-	texColor = lerp(texColor, c1, blend.r);
-	texColor = lerp(texColor, c2, blend.g);
-	texColor = lerp(texColor, c3, blend.b);
+		texColor = c0;
+		texColor = lerp(texColor, c1, blend.r);
+		texColor = lerp(texColor, c2, blend.g);
+		texColor = lerp(texColor, c3, blend.b);
+	}
 
 	// Materials later
 	return texColor;
@@ -125,7 +130,7 @@ technique11 TerrainSolidTech
 	{
 		SetVertexShader( CompileShader(vs_5_0, VSScene()));
 		SetGeometryShader(NULL);
-		SetPixelShader( CompileShader(ps_5_0, PSScene()));
+		SetPixelShader( CompileShader(ps_5_0, PSScene(true)));
 		SetRasterizerState(Solidframe);
 	}
 };
@@ -136,7 +141,7 @@ technique11 TerrainWireTech
 	{
 		SetVertexShader( CompileShader(vs_5_0, VSScene()));
 		SetGeometryShader(NULL);
-		SetPixelShader( CompileShader(ps_5_0, PSScene()));
+		SetPixelShader( CompileShader(ps_5_0, PSScene(false)));
 		SetRasterizerState(Wireframe);
 		SetDepthStencilState(NoDepthWrites, 0);
 	}
