@@ -352,7 +352,7 @@ bool LoaderClass::CreateSkinnedObject(
 	std::vector<GenericMaterial>& materials,
 	std::vector<SkinnedMesh*>& meshes,
 	std::string filename,
-	SkinData& skinData)
+	SkinData* &skinData)
 {
 	using namespace Assimp;
 	Importer importer;
@@ -374,6 +374,8 @@ bool LoaderClass::CreateSkinnedObject(
 	if(scene->HasMeshes())
 	{
 		SkinDef::Bone* skeleton = CreateBoneTree(scene->mRootNode, nullptr, skinData);
+		skinData->SetSkeleton(skeleton);
+		//std::map<std::string, SkinDef::Bone*> boneNames = skinData.GetBoneNames();
 		CreateAnimations(scene, skinData);
 		CreateMaterials(scene, materials);
 
@@ -415,18 +417,20 @@ bool LoaderClass::CreateSkinnedObject(
 				}
 			}
 
+			std::map<std::string, SkinDef::Bone*> tempBoneNames = skinData->GetBoneNames();
 			for(UINT i(0); i != mesh->mNumBones; ++i)
 			{
 				aiBone* bone = mesh->mBones[i];
-				auto& it = skinData.GetBoneNames().find(bone->mName.data);
+				auto it = tempBoneNames.find(bone->mName.data);
+				auto end = tempBoneNames.end();
 
-				if(it != skinData.GetBoneNames().end())
+				if(it != end)
 				{
 					bool skip = false;
-					for(UINT j(0); j != skinData.GetBones().size(); ++j)
+					for(UINT j(0); j != skinData->GetBones().size(); ++j)
 					{
 						std::string boneName = bone->mName.data;
-						if(skinData.GetBone(j)->mName == boneName)
+						if(skinData->GetBone(j)->mName == boneName)
 						{
 							skip = true;
 							break;
@@ -441,8 +445,8 @@ bool LoaderClass::CreateSkinnedObject(
 						offsetMatrix = XMMatrixTranspose(offsetMatrix);
 						XMStoreFloat4x4(&it->second->mOffset, offsetMatrix);
 
-						skinData.InsertBone(it->second);
-						skinData.InsertBoneIndice(it->first, skinData.GetBones().size()-1);
+						skinData->InsertBone(it->second);
+						skinData->InsertBoneIndice(it->first, skinData->GetBones().size()-1);
 					}
 				}
 				// Check here later if anything messes up, this looks weird
@@ -450,22 +454,22 @@ bool LoaderClass::CreateSkinnedObject(
 				{
 					if(vertices[bone->mWeights[j].mVertexId].mWeights.x == 0.0f)
 					{
-						vertices[bone->mWeights[j].mVertexId].mBoneIndices[0] = skinData.GetBones().size()-1;
+						vertices[bone->mWeights[j].mVertexId].mBoneIndices[0] = skinData->GetBones().size()-1;
 						vertices[bone->mWeights[j].mVertexId].mWeights.x = bone->mWeights[j].mWeight;
 					}
 					else if(vertices[bone->mWeights[j].mVertexId].mWeights.y == 0.0f)
 					{
-						vertices[bone->mWeights[j].mVertexId].mBoneIndices[1] = skinData.GetBones().size()-1;
+						vertices[bone->mWeights[j].mVertexId].mBoneIndices[1] = skinData->GetBones().size()-1;
 						vertices[bone->mWeights[j].mVertexId].mWeights.y = bone->mWeights[j].mWeight;
 					}
 					else if(vertices[bone->mWeights[j].mVertexId].mWeights.z == 0.0f)
 					{
-						vertices[bone->mWeights[j].mVertexId].mBoneIndices[2] = skinData.GetBones().size()-1;
+						vertices[bone->mWeights[j].mVertexId].mBoneIndices[2] = skinData->GetBones().size()-1;
 						vertices[bone->mWeights[j].mVertexId].mWeights.z = bone->mWeights[j].mWeight;
 					}
 					else 
 					{
-						vertices[bone->mWeights[j].mVertexId].mBoneIndices[3] = skinData.GetBones().size()-1;
+						vertices[bone->mWeights[j].mVertexId].mBoneIndices[3] = skinData->GetBones().size()-1;
 					}
 				}
 			}
@@ -482,35 +486,46 @@ bool LoaderClass::CreateSkinnedObject(
 
 			meshes.push_back(tempMesh);
 		}
-		// What is this even? Använder sig inte av trans-vectorn
-		//skinData.SetTransformSize(skinData.GetBones().size());
-		//float timeStep = 1.0f/30.0f;
 
-		//std::vector<XMFLOAT4X4> transforms;
-		//for(UINT i(0); i != skinData.GetAnimations().size(); ++i)
-		//{
-		//	skinData.SetAnimIndex(i);
-		//	float dt = 0.0f;
-		//	for(float tick(0); tick != skinData.GetAnimation(i).GetDuration(); ++tick)
-		//	{
-		//		dt += timeStep;
-		//		skinData.CalcTransform(dt);
-		//		skinData.GetAnimation(i).InsertTransformation(XMFLOAT4X4());
-		//		std::vector<XMFLOAT4X4>& trans = skinData.GetAnimation(i).GetTransform().back();
-		//	}
-		//}
+		skinData->SetTransformSize(skinData->GetBones().size());
+		float timeStep = 1.0f/30.0f;
+
+		for(UINT i(0); i != skinData->GetAnimations().size(); ++i)
+		{
+			skinData->SetAnimIndex(i);
+			float dt = 0;
+			for(float ticks(0.0f); ticks < skinData->GetAnimation(i).GetDuration(); ticks += skinData->GetAnimation(i).GetTicksPerSec()/30.0f)
+			{
+				dt += timeStep;
+				skinData->CalcTransform(dt);
+				skinData->InsertAnimTransform(i, std::vector<XMFLOAT4X4>());
+				std::vector<XMFLOAT4X4> trans = skinData->GetAnimation(i).GetTransVector().back();
+
+				for(UINT j(0); j != skinData->GetTransVector().size(); ++j)
+				{
+					XMMATRIX offset = XMLoadFloat4x4(&skinData->GetBone(i)->mOffset);
+					XMMATRIX global = XMLoadFloat4x4(&skinData->GetBone(i)->mGlobalTrans);
+					XMMATRIX rotation = XMMatrixMultiply(offset, global);
+
+					XMFLOAT4X4 rotation4x4;
+					XMStoreFloat4x4(&rotation4x4, rotation);
+					trans.push_back(rotation4x4);
+				}
+				skinData->SetTransforms(trans);
+			}
+		}
 	}
 
 	DefaultLogger::kill();
 	return true;
 }
 
-SkinDef::Bone* LoaderClass::CreateBoneTree(aiNode* node, SkinDef::Bone* parent, SkinData& skinData)
+SkinDef::Bone* LoaderClass::CreateBoneTree(aiNode* node, SkinDef::Bone* parent, SkinData* &skinData)
 {
 	SkinDef::Bone* internalNode = new SkinDef::Bone();
 	internalNode->mName = node->mName.data;
 	internalNode->mParent = parent;
-	skinData.InsertBoneName(internalNode->mName, internalNode);
+	skinData->InsertBoneName(internalNode->mName, internalNode);
 	
 	internalNode->mLocalTrans = SkinDef::ReadAiMatrix(node->mTransformation);
 
@@ -528,19 +543,19 @@ SkinDef::Bone* LoaderClass::CreateBoneTree(aiNode* node, SkinDef::Bone* parent, 
 	return internalNode;
 }
 
-void LoaderClass::CreateAnimations(const aiScene* scene, SkinData& skinData)
+void LoaderClass::CreateAnimations(const aiScene* scene, SkinData* &skinData)
 {
 	for(UINT i(0); i != scene->mNumAnimations; ++i)
 	{
-		skinData.InsertAnimation(AnimEvaluator(scene->mAnimations[i]));
+		skinData->InsertAnimation(AnimEvaluator(scene->mAnimations[i]));
 	}
 
-	for(UINT i(0); i != skinData.GetAnimations().size(); ++i)
+	for(UINT i(0); i != skinData->GetAnimations().size(); ++i)
 	{
-		skinData.InsertAnimNameID(skinData.GetAnimation(i).GetName(), i);
+		skinData->InsertAnimNameID(skinData->GetAnimation(i).GetName(), i);
 	}
 
-	skinData.SetAnimation("Idle");
+	skinData->SetAnimation("Idle");
 }
 
 // Function used to create the various materials that a mesh might have

@@ -58,7 +58,7 @@ ID3D11InputLayout* InputLayouts::mPosNorTexTanSkin = nullptr;
 void InputLayouts::Initialize(ID3D11Device* device)
 {
 	D3DX11_PASS_DESC pd = {};
-
+	// Skybox
 	Effects::SkyFX->mSkyTech->GetPassByIndex(0)->GetDesc(&pd);
 	device->CreateInputLayout(
 		InputLayoutDesc::Pos, 
@@ -66,7 +66,7 @@ void InputLayouts::Initialize(ID3D11Device* device)
 		pd.pIAInputSignature,
 		pd.IAInputSignatureSize,
 		&mPos);
-
+	// Terrain
 	Effects::TerrainFX->mTerrainSolidTech->GetPassByIndex(0)->GetDesc(&pd);
 	device->CreateInputLayout(
 		InputLayoutDesc::PosNorTex,
@@ -82,8 +82,16 @@ void InputLayouts::Initialize(ID3D11Device* device)
 		pd.pIAInputSignature,
 		pd.IAInputSignatureSize,
 		&mPosNorTex);
-
+	// Static normal
 	Effects::NormalFX->mNormalSolidTech->GetPassByIndex(0)->GetDesc(&pd);
+	device->CreateInputLayout(
+		InputLayoutDesc::PosNorTexTan,
+		4,
+		pd.pIAInputSignature,
+		pd.IAInputSignatureSize,
+		&mPosNorTexTan);
+
+	Effects::NormalFX->mNormalSolidAlphaTech->GetPassByIndex(0)->GetDesc(&pd);
 	device->CreateInputLayout(
 		InputLayoutDesc::PosNorTexTan,
 		4,
@@ -98,6 +106,30 @@ void InputLayouts::Initialize(ID3D11Device* device)
 		pd.pIAInputSignature,
 		pd.IAInputSignatureSize,
 		&mPosNorTexTan);
+	// Skinned normal 
+	Effects::NormalFX->mNormalSolidTech->GetPassByIndex(0)->GetDesc(&pd);
+	device->CreateInputLayout(
+		InputLayoutDesc::PosNorTexTanSkin,
+		6,
+		pd.pIAInputSignature,
+		pd.IAInputSignatureSize,
+		&mPosNorTexTanSkin);
+
+	Effects::NormalFX->mNormalSolidAlphaTech->GetPassByIndex(0)->GetDesc(&pd);
+	device->CreateInputLayout(
+		InputLayoutDesc::PosNorTexTanSkin,
+		6,
+		pd.pIAInputSignature,
+		pd.IAInputSignatureSize,
+		&mPosNorTexTanSkin);
+
+	Effects::NormalFX->mNormalWireTech->GetPassByIndex(0)->GetDesc(&pd);
+	device->CreateInputLayout(
+		InputLayoutDesc::PosNorTexTanSkin,
+		6,
+		pd.pIAInputSignature,
+		pd.IAInputSignatureSize,
+		&mPosNorTexTanSkin);
 }
 
 void InputLayouts::Shutdown()

@@ -7,6 +7,7 @@
 #include "Player.h"
 #include "TerrainEntity.h"
 #include "StaticEntity.h"
+#include "SkinnedEntity.h"
 
 class Game
 {
@@ -26,5 +27,6 @@ private:
 	Player* mPlayer;
 	TerrainEntity* mTerrain;
 	StaticEntity* mPlatform;
+	SkinnedEntity* mCharacter;
 };
 #endif

@@ -12,6 +12,7 @@ Game::~Game()
 	SafeDelete(mPlayer);
 	SafeDelete(mTerrain);
 	SafeDelete(mPlatform);
+	SafeDelete(mCharacter);
 }
 
 void Game::Initialize()
@@ -22,6 +23,9 @@ void Game::Initialize()
 	mPlatform = new StaticEntity("../Data/Models/Static/Platform1/Platform1.obj", "../Data/Models/Static/Platform1/");
 	mPlatform->Initialize(XMFLOAT3(100.0f, 20.0f, 100.0f), 0.05f);
 
+	mCharacter = new SkinnedEntity("../Data/Models/Skinned/Character/Character.dae", "../Data/Models/Skinned/Character/");
+	mCharacter->Initialize(XMFLOAT3(150.0f, 20.0f, 100.0f), 1.0f);
+	//
 	Text->AddConstantText("PlayerInfo", "Name: " + mPlayer->GetName(), 20.0f, 20.0f, 20.0f, TextColors::White);
 }
 
@@ -33,6 +37,7 @@ void Game::Update(float dt)
 	//rotation += dt;
 	//mTerrain->RotateXYZ(XMFLOAT3(rotation, rotation, rotation));
 
+	mCharacter->Update(dt);
 	mPlayer->Update(dt);
 }
 

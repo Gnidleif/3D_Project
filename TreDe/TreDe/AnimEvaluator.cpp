@@ -17,7 +17,7 @@ AnimEvaluator::AnimEvaluator(const aiAnimation* animation)
 	if(mName.size() == 0)
 	{
 		std::ostringstream ss;
-		ss << "Animation" << mAnimIndexer;
+		ss << "animation" << mAnimIndexer;
 		mName = ss.str();
 	}
 

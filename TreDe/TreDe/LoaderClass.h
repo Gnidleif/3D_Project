@@ -59,7 +59,7 @@ public:
 		std::vector<GenericMaterial>& materials,
 		std::vector<SkinnedMesh*>& meshes,
 		std::string filename,
-		SkinData& skinData);
+		SkinData* &skinData);
 
 private:
 	static LoaderClass* mInstance;
@@ -73,8 +73,8 @@ private:
 	void CalcTexCoords(int repeat);
 
 	// Skinned functions
-	SkinDef::Bone* CreateBoneTree(aiNode* node, SkinDef::Bone* parent, SkinData& skinData);
-	void CreateAnimations(const aiScene* scene, SkinData& skinData);
+	SkinDef::Bone* CreateBoneTree(aiNode* node, SkinDef::Bone* parent, SkinData* &skinData);
+	void CreateAnimations(const aiScene* scene, SkinData* &skinData);
 
 	// Shared functions
 	void CreateMaterials(const aiScene* scene, std::vector<GenericMaterial>& materials);

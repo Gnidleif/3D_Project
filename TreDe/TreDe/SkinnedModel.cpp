@@ -9,7 +9,7 @@ SkinnedModel::SkinnedModel(string filename, string texPath)
 	mDiffMapSRV(vector<ID3D11ShaderResourceView*>()),
 	mNormalMapSRV(vector<ID3D11ShaderResourceView*>()),
 	mGenMats(vector<GenericMaterial>()),
-	mSkinData(SkinData())
+	mSkinData(new SkinData())
 {
 	this->CreateMatsAndMeshes(filename);
 
@@ -45,7 +45,10 @@ SkinnedModel::SkinnedModel(string filename, string texPath)
 SkinnedModel::~SkinnedModel(void)
 {
 	for(auto& it(mMeshes.begin()); it != mMeshes.end(); ++it)
+	{
 		SafeDelete(*it);
+	}
+	SafeDelete(mSkinData);
 	mMeshes.clear();
 	mMaterials.clear();
 	mDiffMapSRV.clear();
@@ -55,7 +58,7 @@ SkinnedModel::~SkinnedModel(void)
 
 void SkinnedModel::CreateMatsAndMeshes(string filename)
 {
-	// Loader->CreateSkinnedObject(mGenMats, mMeshes, filename, mSkinData);
+	Loader->CreateSkinnedObject(mGenMats, mMeshes, filename, mSkinData);
 	this->mMeshCount = mMeshes.size();
 	this->mMaterialCount = mGenMats.size();
 }
@@ -63,7 +66,7 @@ void SkinnedModel::CreateMatsAndMeshes(string filename)
 void SkinnedModel::Instance::Update(float dt)
 {
 	this->Instance::mTimePos += dt;
-	this->Instance::mFinalTransforms = this->Instance::mModel->mSkinData.GetTransforms(
+	this->Instance::mFinalTransforms = this->Instance::mModel->mSkinData->GetTransforms(
 		this->Instance::mTimePos,
 		this->Instance::mAnimIndex,
 		this->Instance::mStart,

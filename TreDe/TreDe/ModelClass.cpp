@@ -23,6 +23,12 @@ void ModelClass::Shutdown()
 	{
 		SafeDelete(it->second);
 	}
+	mStaticModels.clear();
+
+	for(auto& it(mSkinnedModels.begin()); it != mSkinnedModels.end(); ++it)
+	{
+		SafeDelete(it->second);
+	}
 
 	SafeDelete(mInstance);
 }
@@ -53,6 +59,21 @@ StaticModel* ModelClass::GetStaticModel(std::string key, std::string texPath)
 	{
 		sm = new StaticModel(key, texPath);
 		mStaticModels[key] = sm;
+	}
+	return sm;
+}
+
+SkinnedModel* ModelClass::GetSkinnedModel(std::string key, std::string texPath)
+{
+	SkinnedModel* sm = nullptr;
+	if(mSkinnedModels[key])
+	{
+		sm = mSkinnedModels[key];
+	}
+	else
+	{
+		sm = new SkinnedModel(key, texPath);
+		mSkinnedModels[key] = sm;
 	}
 	return sm;
 }

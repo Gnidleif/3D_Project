@@ -2,6 +2,7 @@
 #define MODELCLASS_H
 #include "TerrainModel.h"
 #include "StaticModel.h"
+#include "SkinnedModel.h"
 #include <map>
 
 #define Model ModelClass::GetInstance()
@@ -14,12 +15,14 @@ public:
 	void Shutdown();
 	TerrainModel* GetTerrainModel(std::string key);
 	StaticModel* GetStaticModel(std::string key, std::string texPath);
+	SkinnedModel* GetSkinnedModel(std::string key, std::string texPath);
 
 private:
 	static ModelClass* mInstance;
 	// These two <map>s contains the actual models, the key is the filepath
 	std::map<std::string, TerrainModel*> mTerrainModels;
 	std::map<std::string, StaticModel*> mStaticModels;
+	std::map<std::string, SkinnedModel*> mSkinnedModels;
 
 private:
 	ModelClass() {}

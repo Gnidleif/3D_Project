@@ -129,6 +129,9 @@
     <ClInclude Include="SkinnedModel.h">
       <Filter>ObjectClasses\Models</Filter>
     </ClInclude>
+    <ClInclude Include="SkinnedEntity.h">
+      <Filter>ObjectClasses\Entities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameTimer.cpp">
@@ -220,6 +223,9 @@
     </ClCompile>
     <ClCompile Include="SkinnedModel.cpp">
       <Filter>ObjectClasses\Models</Filter>
+    </ClCompile>
+    <ClCompile Include="SkinnedEntity.cpp">
+      <Filter>ObjectClasses\Entities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

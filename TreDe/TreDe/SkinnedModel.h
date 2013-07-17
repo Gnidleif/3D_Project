@@ -19,7 +19,7 @@ public:
 	std::vector<ID3D11ShaderResourceView*> GetDiffMap() const { return this->mDiffMapSRV; }
 	std::vector<ID3D11ShaderResourceView*> GetNormalMap() const { return this->mNormalMapSRV; }
 
-	SkinData GetSkinData() const { return this->mSkinData; }
+	SkinData* GetSkinData() const { return this->mSkinData; }
 
 private:
 	void CreateMatsAndMeshes(std::string filename);
@@ -31,7 +31,7 @@ private:
 	std::vector<ID3D11ShaderResourceView*> mNormalMapSRV;
 	std::vector<GenericMaterial> mGenMats;
 
-	SkinData mSkinData;
+	SkinData* mSkinData;
 
 public:
 	struct Instance

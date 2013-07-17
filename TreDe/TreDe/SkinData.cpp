@@ -42,7 +42,7 @@ bool SkinData::SetAnimIndex(UINT animIndex)
 
 void SkinData::CalcTransform(float time)
 {
-	if((mCurrAnimIndex < 0) | (mCurrAnimIndex >= mAnimations.size()))
+	if((mCurrAnimIndex < 0) || (mCurrAnimIndex >= mAnimations.size()))
 		return;
 
 	mAnimations[mCurrAnimIndex].Evaluate(time, mBoneNames);
