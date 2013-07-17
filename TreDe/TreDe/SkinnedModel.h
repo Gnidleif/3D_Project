@@ -11,6 +11,7 @@ class SkinnedModel : public VirtualModel
 public:
 	SkinnedModel(std::string filename, std::string texPath);
 	~SkinnedModel(void);
+	void ApplyEffects();
 
 public:
 	std::vector<SkinnedMesh*> GetMeshes() const { return this->mMeshes; }

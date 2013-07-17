@@ -25,6 +25,8 @@ void StaticEntity::Draw(ID3D11DeviceContext* devCon, ID3DX11EffectTechnique* act
 
 	Effects::NormalFX->SetView(&camera->GetViewMatrix());
 	Effects::NormalFX->SetProj(&camera->GetProjMatrix());
+	mModelInstance.mModel->ApplyEffects();
+	this->CalcWorld();
 
 	for(UINT i(0); i != techDesc.Passes; ++i)
 	{

@@ -10,6 +10,7 @@ class StaticModel : public VirtualModel
 public:
 	StaticModel(std::string filename, std::string texPath);
 	~StaticModel(void);
+	void ApplyEffects();
 
 public:
 	std::vector<StaticMesh*> GetMeshes() const { return this->mMeshes; }

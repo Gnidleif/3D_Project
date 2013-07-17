@@ -29,16 +29,6 @@ StaticModel::StaticModel(string filename, string texPath)
 		}
 		mNormalMapSRV.push_back(tempNormalMap);
 	}
-
-	for(UINT i(0); i != this->mMeshCount; ++i)
-	{
-		Effects::NormalFX->SetDiffuseMap(this->mDiffMapSRV[mMeshes[i]->GetMaterialIndex()]);
-		Effects::NormalFX->SetNormalMap(this->mNormalMapSRV[mMeshes[i]->GetMaterialIndex()]);
-		for(UINT j(0); j != this->mMaterialCount; ++j)
-		{
-			Effects::NormalFX->SetMaterial(&this->mMaterials[mMeshes[i]->GetMaterialIndex()]);
-		}
-	}
 }
 
 StaticModel::~StaticModel(void)
@@ -52,6 +42,19 @@ StaticModel::~StaticModel(void)
 	mDiffMapSRV.clear();
 	mNormalMapSRV.clear();
 	mGenMats.clear();
+}
+
+void StaticModel::ApplyEffects()
+{
+	for(UINT i(0); i != this->mMeshCount; ++i)
+	{
+		Effects::NormalFX->SetDiffuseMap(this->mDiffMapSRV[mMeshes[i]->GetMaterialIndex()]);
+		Effects::NormalFX->SetNormalMap(this->mNormalMapSRV[mMeshes[i]->GetMaterialIndex()]);
+		for(UINT j(0); j != this->mMaterialCount; ++j)
+		{
+			Effects::NormalFX->SetMaterial(&this->mMaterials[mMeshes[i]->GetMaterialIndex()]);
+		}
+	}
 }
 
 void StaticModel::CreateMatsAndMeshes(string filename)

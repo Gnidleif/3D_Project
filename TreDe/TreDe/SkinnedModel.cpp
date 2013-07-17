@@ -30,16 +30,6 @@ SkinnedModel::SkinnedModel(string filename, string texPath)
 		}
 		mNormalMapSRV.push_back(tempNormalMap);
 	}
-
-	for(UINT i(0); i != this->mMeshCount; ++i)
-	{
-		Effects::NormalFX->SetDiffuseMap(this->mDiffMapSRV[mMeshes[i]->GetMaterialIndex()]);
-		Effects::NormalFX->SetNormalMap(this->mNormalMapSRV[mMeshes[i]->GetMaterialIndex()]);
-		for(UINT j(0); j != this->mMaterialCount; ++j)
-		{
-			Effects::NormalFX->SetMaterial(&this->mMaterials[mMeshes[i]->GetMaterialIndex()]);
-		}
-	}
 }
 
 SkinnedModel::~SkinnedModel(void)
@@ -54,7 +44,20 @@ SkinnedModel::~SkinnedModel(void)
 	mDiffMapSRV.clear();
 	mNormalMapSRV.clear();
 	mGenMats.clear();
-}	
+}
+
+void SkinnedModel::ApplyEffects()
+{
+	for(UINT i(0); i != this->mMeshCount; ++i)
+	{
+		Effects::NormalFX->SetDiffuseMap(this->mDiffMapSRV[mMeshes[i]->GetMaterialIndex()]);
+		Effects::NormalFX->SetNormalMap(this->mNormalMapSRV[mMeshes[i]->GetMaterialIndex()]);
+		for(UINT j(0); j != this->mMaterialCount; ++j)
+		{
+			Effects::NormalFX->SetMaterial(&this->mMaterials[mMeshes[i]->GetMaterialIndex()]);
+		}
+	}
+}
 
 void SkinnedModel::CreateMatsAndMeshes(string filename)
 {
