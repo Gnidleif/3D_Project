@@ -14,7 +14,7 @@ public:
 	SkyBox();
 	~SkyBox();
 	void Initialize(ID3D11Device* device, float radius);
-	void Draw(ID3D11DeviceContext* devCon, Camera* camera);
+	void Draw(ID3D11DeviceContext* devCon, ID3DX11EffectTechnique* activeTech, Camera* camera);
 
 public:
 	ID3D11ShaderResourceView* GetCubeMap() const { return this->mCubeMapSRV; }

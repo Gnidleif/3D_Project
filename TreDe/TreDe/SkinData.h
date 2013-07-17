@@ -18,7 +18,6 @@ public:
 
 public:
 	void SetSkeleton(SkinDef::Bone* skeleton) { this->mSkeleton = skeleton; }
-	//void SetBoneNames(std::map<std::string, SkinDef::Bone*> boneNames) { this->mBonesNames = boneNames; }
 	void SetBoneName(UINT index, std::string name) { this->mBones[index]->mName = name; }
 
 	void InsertBoneName(std::string key, SkinDef::Bone* bone) { this->mBoneNames[key] = bone; }
@@ -31,7 +30,7 @@ public:
 	void InsertBone(SkinDef::Bone* bone) { this->mBones.push_back(bone); }
 
 	void SetTransformSize(UINT size) { this->mTransforms.resize(size); }
-	void SetTransforms(std::vector<XMFLOAT4X4> transforms) { this->mTransforms = transforms; }
+	void SetTransforms(std::vector<XMFLOAT4X4> transforms) { this->mTransforms = transforms;}
 
 public:
 	std::vector<AnimEvaluator> GetAnimations() const { return this->mAnimations; }

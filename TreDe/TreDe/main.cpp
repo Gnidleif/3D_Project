@@ -32,7 +32,6 @@ private:
 	bool mDrawSolid;
 	BYTE* mInput;
 	Game* mGame;
-	SkyBox* mSkyBox;
 };
 
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE prevInst, LPSTR cmdLine, int cmdShow)
@@ -61,7 +60,6 @@ Main::Main(HINSTANCE hInst)
 	: 
 	D3D11App(hInst),
 	mGame(new Game()),
-	mSkyBox(new SkyBox()),
 	mInput(nullptr),
 	mDrawSolid(true),
 	mDrawCooldown(0.0f)
@@ -80,7 +78,6 @@ Main::~Main()
 	Model->Shutdown();
 
 	SafeDelete(mGame);
-	SafeDelete(mSkyBox);
 }
 
 bool Main::Initialize()
@@ -105,8 +102,8 @@ bool Main::Initialize()
 	InputLayouts::Initialize(mDirect3D->GetDevice());
 	Loader->Initialize(mDirect3D->GetDevice());
 
-	mSkyBox->Initialize(mDirect3D->GetDevice(), 5000.0f);
 	mGame->Initialize();
+	mGame->CreateSkyBox(mDirect3D->GetDevice());
 
 	// Last part of the initialize of main
 	D3D11App::ShowWindow();
@@ -159,7 +156,7 @@ void Main::Update(float dt)
 // Draw function, I don't know or care that much about what's going on here, as long as it works
 void Main::Draw()
 {
-	mDirect3D->GetDevCon()->ClearRenderTargetView(mDirect3D->GetRTView(), reinterpret_cast<const float*>(&Colors::Cyan));
+	mDirect3D->GetDevCon()->ClearRenderTargetView(mDirect3D->GetRTView(), reinterpret_cast<const float*>(&Colors::Black));
 	mDirect3D->GetDevCon()->ClearDepthStencilView(mDirect3D->GetDSView(), D3D11_CLEAR_DEPTH|D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 	float blendFactor[] = {0.0f, 0.0f, 0.0f, 0.0f};
@@ -171,8 +168,6 @@ void Main::Draw()
 		mGame->SolidDraw(mDirect3D->GetDevCon());
 	else
 		mGame->WireDraw(mDirect3D->GetDevCon());
-
-	mSkyBox->Draw(mDirect3D->GetDevCon(), mGame->GetPlayerCam());
 
 	// If the text isn't drawn last, objects in the world might hide it
 	Text->Draw();

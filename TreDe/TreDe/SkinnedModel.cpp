@@ -69,7 +69,7 @@ void SkinnedModel::CreateMatsAndMeshes(string filename)
 void SkinnedModel::Instance::Update(float dt)
 {
 	this->Instance::mTimePos += dt;
-	this->Instance::mFinalTransforms = this->Instance::mModel->mSkinData->GetTransforms(
+	this->Instance::mFinalTransforms = this->Instance::mModel->GetSkinData()->GetTransforms(
 		this->Instance::mTimePos,
 		this->Instance::mAnimIndex,
 		this->Instance::mStart,

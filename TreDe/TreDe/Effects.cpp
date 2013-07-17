@@ -35,6 +35,7 @@ SkyEffect::SkyEffect(ID3D11Device* device, string filename)
 	: VirtualEffect(device, filename)
 {
 	this->mSkyTech = mFX->GetTechniqueByName("SkyTech");
+	this->mWireSkyTech = mFX->GetTechniqueByName("WireSkyTech");
 
 	this->mWVP = mFX->GetVariableByName("gWVP")->AsMatrix();
 	this->mCubeMap = mFX->GetVariableByName("gCubeMap")->AsShaderResource();
@@ -70,11 +71,15 @@ NormalEffect::NormalEffect(ID3D11Device* device, string filename)
 	this->mNormalSolidAlphaTech = mFX->GetTechniqueByName("NormalMapSolidAlphaTech");
 	this->mNormalWireTech = mFX->GetTechniqueByName("NormalMapWireTech");
 
+	this->mNormalMapSolidAlphaSkinTech = mFX->GetTechniqueByName("NormalMapSolidAlphaSkinTech");
+
 	// Variables
 	this->mWorld = mFX->GetVariableByName("gWorld")->AsMatrix();
 	this->mView = mFX->GetVariableByName("gView")->AsMatrix();
 	this->mProj = mFX->GetVariableByName("gProj")->AsMatrix();
 	this->mWorldInvTranspose = mFX->GetVariableByName("gWorldInvTranspose")->AsMatrix();
+
+	this->mBoneTransforms = mFX->GetVariableByName("gBoneTransforms")->AsMatrix();
 
 	this->mDiffuseMap = mFX->GetVariableByName("gDiffMap")->AsShaderResource();
 	this->mNormalMap = mFX->GetVariableByName("gNormMap")->AsShaderResource();

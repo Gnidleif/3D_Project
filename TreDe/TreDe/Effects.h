@@ -26,6 +26,7 @@ public:
 
 public: // Techniques
 	ID3DX11EffectTechnique* mSkyTech;
+	ID3DX11EffectTechnique* mWireSkyTech;
 
 private:
 	ID3DX11EffectMatrixVariable* mWVP;
@@ -86,6 +87,8 @@ public:
 	void SetProj(XMMATRIX* matrix) { this->mProj->SetMatrix(reinterpret_cast<const float*>(matrix)); }
 	void SetWorldInvTranspose(XMMATRIX* matrix) { this->mWorldInvTranspose->SetMatrix(reinterpret_cast<const float*>(matrix)); }
 
+	void SetBoneTransforms(XMFLOAT4X4* matrix, int count) { mBoneTransforms->SetMatrixArray(reinterpret_cast<const float*>(matrix), 0, count); }
+
 	void SetDiffuseMap(ID3D11ShaderResourceView* diffMap) { this->mDiffuseMap->SetResource(diffMap); }
 	void SetNormalMap(ID3D11ShaderResourceView* normMap) { this->mNormalMap->SetResource(normMap); }
 
@@ -96,11 +99,15 @@ public: // Techniques
 	ID3DX11EffectTechnique* mNormalSolidAlphaTech;
 	ID3DX11EffectTechnique* mNormalWireTech;
 
+	ID3DX11EffectTechnique* mNormalMapSolidAlphaSkinTech;
+
 private:
 	ID3DX11EffectMatrixVariable* mWorld;
 	ID3DX11EffectMatrixVariable* mView;
 	ID3DX11EffectMatrixVariable* mProj;
 	ID3DX11EffectMatrixVariable* mWorldInvTranspose;
+
+	ID3DX11EffectMatrixVariable* mBoneTransforms;
 
 	ID3DX11EffectShaderResourceVariable* mDiffuseMap;
 	ID3DX11EffectShaderResourceVariable* mNormalMap;

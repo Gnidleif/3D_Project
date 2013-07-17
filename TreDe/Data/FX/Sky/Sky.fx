@@ -63,6 +63,20 @@ DepthStencilState LessEqualDSS
     DepthFunc = LESS_EQUAL;
 };
 
+RasterizerState Wireframe
+{
+	FillMode = WireFrame;
+	CullMode = None;
+	FrontCounterClockwise = false;
+};
+
+RasterizerState Solidframe
+{
+	FillMode = Solid;
+	CullMode = None;
+	FrontCounterClockwise = false;
+};
+
 technique11 SkyTech
 {
     pass P0
@@ -74,4 +88,17 @@ technique11 SkyTech
         SetRasterizerState(NoCulling);
         SetDepthStencilState(LessEqualDSS, 0);
     }
+}
+
+technique11 WireSkyTech
+{
+	pass p0
+	{
+		SetVertexShader(CompileShader(vs_5_0, VS()));
+		SetGeometryShader(NULL);
+		SetPixelShader(CompileShader(ps_5_0, PS()));
+
+		SetRasterizerState(Wireframe);
+		SetDepthStencilState(LessEqualDSS, 0);
+	}
 }

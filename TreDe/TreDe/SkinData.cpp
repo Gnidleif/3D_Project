@@ -8,10 +8,6 @@ SkinData::SkinData()
 
 SkinData::~SkinData(void)
 {
-	for(auto& it(mBoneNames.begin()); it != mBoneNames.end(); ++it)
-		SafeDelete(it->second);
-	for(auto& it(mBones.begin()); it != mBones.end(); ++it)
-		SafeDelete(*it);
 	mBoneIndices.clear();
 	mAnimNameID.clear();
 	mTransforms.clear();

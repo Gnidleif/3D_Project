@@ -32,8 +32,10 @@ void SkinnedEntity::Draw(ID3D11DeviceContext* devCon, ID3DX11EffectTechnique* ac
 
 	Effects::NormalFX->SetView(&camera->GetViewMatrix());
 	Effects::NormalFX->SetProj(&camera->GetProjMatrix());
+	Effects::NormalFX->SetWorld(&XMLoadFloat4x4(&mModelInstance.mWorld));
+	Effects::NormalFX->SetWorldInvTranspose(&MathHelper::InverseTranspose(XMLoadFloat4x4(&mModelInstance.mWorld)));
+	Effects::NormalFX->SetBoneTransforms(&mModelInstance.mFinalTransforms[0], mModelInstance.mFinalTransforms.size());
 	mModelInstance.mModel->ApplyEffects();
-	this->CalcWorld();
 
 	for(UINT i(0); i != techDesc.Passes; ++i)
 	{
@@ -57,6 +59,4 @@ void SkinnedEntity::CalcWorld()
 		XMLoadFloat4x4(&this->mModelScale) *
 		XMLoadFloat4x4(&this->mModelRot) *
 		XMLoadFloat4x4(&this->mModelOffset));
-	Effects::NormalFX->SetWorld(&XMLoadFloat4x4(&mModelInstance.mWorld));
-	Effects::NormalFX->SetWorldInvTranspose(&MathHelper::InverseTranspose(XMLoadFloat4x4(&mModelInstance.mWorld)));
 }

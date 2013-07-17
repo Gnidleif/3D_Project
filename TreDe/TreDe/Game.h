@@ -8,12 +8,14 @@
 #include "TerrainEntity.h"
 #include "StaticEntity.h"
 #include "SkinnedEntity.h"
+#include "SkyBox.h"
 
 class Game
 {
 public:
 	Game();
 	~Game();
+	void CreateSkyBox(ID3D11Device* device);
 	void Initialize();
 	void Update(float dt);
 	void SolidDraw(ID3D11DeviceContext* devCon);
@@ -28,5 +30,6 @@ private:
 	TerrainEntity* mTerrain;
 	StaticEntity* mPlatform;
 	SkinnedEntity* mCharacter;
+	SkyBox* mSkyBox;
 };
 #endif

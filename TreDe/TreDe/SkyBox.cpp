@@ -54,12 +54,13 @@ void SkyBox::Initialize(ID3D11Device* device, float radius)
 	device->CreateBuffer(&ibd, &iinitData, &mIndexBuffer);
 }
 
-void SkyBox::Draw(ID3D11DeviceContext* devCon, Camera* camera)
+void SkyBox::Draw(ID3D11DeviceContext* devCon, ID3DX11EffectTechnique* activeTech, Camera* camera)
 {
 	UINT stride = sizeof(XMFLOAT3);
 	UINT offset = 0;
 	devCon->IASetVertexBuffers(0, 1, &mVertexBuffer, &stride, &offset);
 	devCon->IASetIndexBuffer(mIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+
 	devCon->IASetInputLayout(InputLayouts::mPos);
 	devCon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
@@ -71,7 +72,7 @@ void SkyBox::Draw(ID3D11DeviceContext* devCon, Camera* camera)
 	Effects::SkyFX->SetCubeMap(mCubeMapSRV);
 
 	D3DX11_TECHNIQUE_DESC td = {};
-	Effects::SkyFX->mSkyTech->GetDesc(&td);
+	activeTech->GetDesc(&td);
 
 	for(UINT i(0); i < td.Passes; ++i)
 	{
