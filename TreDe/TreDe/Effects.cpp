@@ -34,8 +34,8 @@ VirtualEffect::~VirtualEffect(void)
 SkyEffect::SkyEffect(ID3D11Device* device, string filename)
 	: VirtualEffect(device, filename)
 {
-	this->mSkyTech = mFX->GetTechniqueByName("SkyTech");
-	this->mWireSkyTech = mFX->GetTechniqueByName("WireSkyTech");
+	this->mSolid = mFX->GetTechniqueByName("Solid");
+	this->mWire = mFX->GetTechniqueByName("Wire");
 
 	this->mWVP = mFX->GetVariableByName("gWVP")->AsMatrix();
 	this->mCubeMap = mFX->GetVariableByName("gCubeMap")->AsShaderResource();
@@ -45,8 +45,8 @@ SkyEffect::SkyEffect(ID3D11Device* device, string filename)
 TerrainEffect::TerrainEffect(ID3D11Device* device, string filename)
 	: VirtualEffect(device, filename)
 {
-	this->mTerrainSolidTech = mFX->GetTechniqueByName("TerrainSolidTech");
-	this->mTerrainWireTech = mFX->GetTechniqueByName("TerrainWireTech");
+	this->mSolid = mFX->GetTechniqueByName("Solid");
+	this->mWire = mFX->GetTechniqueByName("Wire");
 
 	this->mWorld = mFX->GetVariableByName("gWorld")->AsMatrix();
 	this->mView = mFX->GetVariableByName("gView")->AsMatrix();
@@ -67,11 +67,11 @@ NormalEffect::NormalEffect(ID3D11Device* device, string filename)
 	: VirtualEffect(device, filename)
 {
 	// Techniques
-	this->mNormalSolidTech = mFX->GetTechniqueByName("NormalMapSolidTech");
-	this->mNormalSolidAlphaTech = mFX->GetTechniqueByName("NormalMapSolidAlphaTech");
-	this->mNormalWireTech = mFX->GetTechniqueByName("NormalMapWireTech");
-
-	this->mNormalMapSolidAlphaSkinTech = mFX->GetTechniqueByName("NormalMapSolidAlphaSkinTech");
+	this->mSolid = mFX->GetTechniqueByName("Solid");
+	this->mSolidSkin = mFX->GetTechniqueByName("SolidSkin");
+	this->mSolidAlpha = mFX->GetTechniqueByName("SolidAlpha");
+	this->mSolidAlphaSkin = mFX->GetTechniqueByName("SolidAlphaSkin");
+	this->mWire = mFX->GetTechniqueByName("Wire");
 
 	// Variables
 	this->mWorld = mFX->GetVariableByName("gWorld")->AsMatrix();

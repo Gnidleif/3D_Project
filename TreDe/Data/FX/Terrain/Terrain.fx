@@ -124,7 +124,7 @@ DepthStencilState NoDepthWrites
 	DepthFunc = LESS_EQUAL;
 };
 
-technique11 TerrainSolidTech
+technique11 Solid
 {
 	pass p0
 	{
@@ -135,7 +135,7 @@ technique11 TerrainSolidTech
 	}
 };
 
-technique11 TerrainWireTech
+technique11 Wire
 {
 	pass p0
 	{

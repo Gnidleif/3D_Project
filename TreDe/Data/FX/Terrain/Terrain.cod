@@ -69,7 +69,7 @@ fxgroup
     //
     // 2 technique(s)
     //
-    technique11 TerrainSolidTech
+    technique11 Solid
     {
         pass p0
         {
@@ -326,7 +326,7 @@ fxgroup
 
     }
 
-    technique11 TerrainWireTech
+    technique11 Wire
     {
         pass p0
         {

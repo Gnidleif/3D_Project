@@ -113,7 +113,7 @@ PSIn SkinVSScene(SkinVSIn input)
 	//output.Normal = mul(input.Normal, (float3x3) wvp);
 	//output.Normal = normalize(output.Normal);
 	output.Normal = mul(normal, (float3x3)gWorldInvTranspose);
-	output.TangentW = mul(tangent, gWorld);
+	output.TangentW = float4(mul(tangent, (float3x3) gWorld), input.TangentL.w);
 	output.TexC = input.TexC;
 
 	return output;
@@ -151,7 +151,7 @@ RasterizerState Solidframe
 	FrontCounterClockwise = false;
 };
 
-technique11 NormalMapSolidTech
+technique11 Solid
 {
 	pass p0
 	{
@@ -162,7 +162,18 @@ technique11 NormalMapSolidTech
 	}
 };
 
-technique11 NormalMapSolidAlphaTech
+technique11 SolidSkin
+{
+	pass p0
+	{
+		SetVertexShader( CompileShader(vs_5_0, SkinVSScene()));
+		SetGeometryShader(NULL);
+		SetPixelShader( CompileShader(ps_5_0, PSScene(false, true)));
+		SetRasterizerState(Solidframe);
+	}
+};
+
+technique11 SolidAlpha
 {
 	pass p0
 	{
@@ -173,7 +184,7 @@ technique11 NormalMapSolidAlphaTech
 	}
 };
 
-technique11 NormalMapSolidAlphaSkinTech
+technique11 SolidAlphaSkin
 {
 	pass p0
 	{
@@ -184,7 +195,7 @@ technique11 NormalMapSolidAlphaSkinTech
 	}
 }
 
-technique11 NormalMapWireTech
+technique11 Wire
 {
 	pass p0
 	{

@@ -52,29 +52,29 @@ void Game::SolidDraw(ID3D11DeviceContext* devCon)
 {
 	Camera* playerCam = mPlayer->GetCamera();
 
-	ID3DX11EffectTechnique* activeTech = Effects::SkyFX->mSkyTech;
+	ID3DX11EffectTechnique* activeTech = Effects::SkyFX->mSolid;
 	mSkyBox->Draw(devCon, activeTech, playerCam);
 
-	activeTech = Effects::TerrainFX->mTerrainSolidTech;
+	activeTech = Effects::TerrainFX->mSolid;
 	mTerrain->Draw(devCon, activeTech, playerCam);
 
-	activeTech = Effects::NormalFX->mNormalSolidAlphaTech;
+	activeTech = Effects::NormalFX->mSolidAlpha;
 	mPlatform->Draw(devCon, activeTech, playerCam);
 
-	activeTech = Effects::NormalFX->mNormalMapSolidAlphaSkinTech;
+	activeTech = Effects::NormalFX->mSolidAlphaSkin;
 	mCharacter->Draw(devCon, activeTech, playerCam);
 }
 
 void Game::WireDraw(ID3D11DeviceContext* devCon)
 {
 	Camera* playerCam = mPlayer->GetCamera();
-	ID3DX11EffectTechnique* activeTech = Effects::SkyFX->mWireSkyTech;
+	ID3DX11EffectTechnique* activeTech = Effects::SkyFX->mWire;
 	mSkyBox->Draw(devCon, activeTech, playerCam);
 
-	activeTech = Effects::TerrainFX->mTerrainWireTech;
+	activeTech = Effects::TerrainFX->mWire;
 	mTerrain->Draw(devCon, activeTech, playerCam);
 
-	activeTech = Effects::NormalFX->mNormalWireTech;
+	activeTech = Effects::NormalFX->mWire;
 	mPlatform->Draw(devCon, activeTech, playerCam);
 	mCharacter->Draw(devCon, activeTech, playerCam);
 }

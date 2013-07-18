@@ -76,8 +76,10 @@ void SkyBox::Draw(ID3D11DeviceContext* devCon, ID3DX11EffectTechnique* activeTec
 
 	for(UINT i(0); i < td.Passes; ++i)
 	{
-		ID3DX11EffectPass* pass = Effects::SkyFX->mSkyTech->GetPassByIndex(i);
-		pass->Apply(0, devCon);
+		activeTech->GetPassByIndex(i)->Apply(0, devCon);
+
+		//ID3DX11EffectPass* pass = activeTech->GetPassByIndex(i);
+		//pass->Apply(0, devCon);
 	}
 	devCon->DrawIndexed(mIndexCount, 0, 0);
 }

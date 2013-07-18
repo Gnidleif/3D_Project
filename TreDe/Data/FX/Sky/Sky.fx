@@ -47,9 +47,12 @@ VertexOut VS(VertexIn vin)
 //=======================================================================
 // Pixel shader
 //=======================================================================
-float4 PS(VertexOut pin) : SV_Target
+float4 PS(VertexOut pin,
+		  uniform bool useTex) : SV_Target
 {
-	float4 Color = gCubeMap.Sample(samTriLinearSam, pin.PosL);
+	float4 Color = float4(0.0f, 1.0f, 0.0f, 1.0f);
+	if(useTex)
+		Color = gCubeMap.Sample(samTriLinearSam, pin.PosL);
 	return Color;
 }
 
@@ -77,26 +80,26 @@ RasterizerState Solidframe
 	FrontCounterClockwise = false;
 };
 
-technique11 SkyTech
+technique11 Solid
 {
     pass P0
     {
         SetVertexShader(CompileShader(vs_5_0, VS()));
         SetGeometryShader(NULL);
-        SetPixelShader(CompileShader(ps_5_0, PS()));
+        SetPixelShader(CompileShader(ps_5_0, PS(true)));
         
         SetRasterizerState(NoCulling);
         SetDepthStencilState(LessEqualDSS, 0);
     }
 }
 
-technique11 WireSkyTech
+technique11 Wire
 {
 	pass p0
 	{
 		SetVertexShader(CompileShader(vs_5_0, VS()));
 		SetGeometryShader(NULL);
-		SetPixelShader(CompileShader(ps_5_0, PS()));
+		SetPixelShader(CompileShader(ps_5_0, PS(false)));
 
 		SetRasterizerState(Wireframe);
 		SetDepthStencilState(LessEqualDSS, 0);

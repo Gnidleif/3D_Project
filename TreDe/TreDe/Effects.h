@@ -25,8 +25,8 @@ public:
 	void SetCubeMap(ID3D11ShaderResourceView* cubeMap) { this->mCubeMap->SetResource(cubeMap); }
 
 public: // Techniques
-	ID3DX11EffectTechnique* mSkyTech;
-	ID3DX11EffectTechnique* mWireSkyTech;
+	ID3DX11EffectTechnique* mSolid;
+	ID3DX11EffectTechnique* mWire;
 
 private:
 	ID3DX11EffectMatrixVariable* mWVP;
@@ -56,8 +56,8 @@ public:
 	void SetMaterial(Material* mat) { mMaterial->SetRawValue(&mat, 0, sizeof(Material)); }
 
 public:
-	ID3DX11EffectTechnique* mTerrainSolidTech;
-	ID3DX11EffectTechnique* mTerrainWireTech;
+	ID3DX11EffectTechnique* mSolid;
+	ID3DX11EffectTechnique* mWire;
 
 private:
 	ID3DX11EffectMatrixVariable* mWorld;
@@ -95,11 +95,11 @@ public:
 	void SetMaterial(Material* mat) { mMaterial->SetRawValue(&mat, 0, sizeof(Material)); }
 
 public: // Techniques
-	ID3DX11EffectTechnique* mNormalSolidTech;
-	ID3DX11EffectTechnique* mNormalSolidAlphaTech;
-	ID3DX11EffectTechnique* mNormalWireTech;
-
-	ID3DX11EffectTechnique* mNormalMapSolidAlphaSkinTech;
+	ID3DX11EffectTechnique* mSolid;
+	ID3DX11EffectTechnique* mSolidSkin;
+	ID3DX11EffectTechnique* mSolidAlpha;
+	ID3DX11EffectTechnique* mSolidAlphaSkin;
+	ID3DX11EffectTechnique* mWire;
 
 private:
 	ID3DX11EffectMatrixVariable* mWorld;
