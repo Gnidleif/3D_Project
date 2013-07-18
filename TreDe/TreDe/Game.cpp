@@ -61,7 +61,7 @@ void Game::SolidDraw(ID3D11DeviceContext* devCon)
 	activeTech = Effects::NormalFX->mSolidAlpha;
 	mPlatform->Draw(devCon, activeTech, playerCam);
 
-	activeTech = Effects::NormalFX->mSolidAlphaSkin;
+	activeTech = Effects::NormalFX->mSolidSkin;
 	mCharacter->Draw(devCon, activeTech, playerCam);
 }
 
@@ -84,10 +84,12 @@ void Game::ControlPlayer(DirectInput* di)
 	if(di->GetKeyboardState()[DIK_R] && 0x80)
 	{
 		mPlatform->SetScale(0.05f);
+		mCharacter->SetScale(0.5f);
 	}
 	else if(di->GetKeyboardState()[DIK_F] && 0x80)
 	{
 		mPlatform->SetScale(0.1f);
+		mCharacter->SetScale(1.0f);
 	}
 	else
 		mPlayer->Control(di);
