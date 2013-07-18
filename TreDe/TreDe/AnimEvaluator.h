@@ -31,6 +31,7 @@ public: // Get functions
 	{ return mTransforms[CalcFrameIndexAt(dt, frameStart, frameEnd, playForward)]; }
 
 public: // Set functions
+	void SetTransVectorVector(std::vector<std::vector<XMFLOAT4X4>> item) { this->mTransforms = item; }
 	void InsertTransformation(std::vector<XMFLOAT4X4> transformation) { this->mTransforms.push_back(transformation); }
 
 private: // Private functions

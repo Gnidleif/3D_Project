@@ -25,12 +25,14 @@ public:
 
 	void InsertAnimation(AnimEvaluator item) { this->mAnimations.push_back(item); }
 	void InsertAnimNameID(std::string key, UINT id) { this->mAnimNameID[key] = id; }
+
+	void SetAnimTransVector(UINT index, std::vector<std::vector<XMFLOAT4X4>> item) { this->mAnimations[index].SetTransVectorVector(item); }
 	void InsertAnimTransform(UINT index, std::vector<XMFLOAT4X4> item) { this->mAnimations[index].InsertTransformation(item); }
 
 	void InsertBone(SkinDef::Bone* bone) { this->mBones.push_back(bone); }
 
-	void SetTransformSize(UINT size) { this->mTransforms.resize(size); }
-	void SetTransforms(std::vector<XMFLOAT4X4> transforms) { this->mTransforms = transforms;}
+	void SetTransVectorSize(UINT size) { this->mTransforms.resize(size); }
+	void SetTransVector(std::vector<XMFLOAT4X4> transforms) { this->mTransforms = transforms;}
 
 public:
 	std::vector<AnimEvaluator> GetAnimations() const { return this->mAnimations; }

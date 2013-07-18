@@ -98,7 +98,7 @@ PSIn SkinVSScene(SkinVSIn input)
 	float3 normal = float3(0.0f, 0.0f, 0.0f);
 	float3 tangent = float3(0.0f, 0.0f, 0.0f);
 
-	for(int i = 0; i != 4; ++i)
+	for(int i = 0; i < 4; ++i)
 	{
 		pos += weights[i] * mul(float4(input.PosL, 1.0f), gBoneTransforms[input.BoneIndices[i]]).xyz;
 		normal += weights[i] * mul(input.Normal, (float3x3) gBoneTransforms[input.BoneIndices[i]]);

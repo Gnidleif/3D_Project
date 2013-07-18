@@ -487,7 +487,9 @@ bool LoaderClass::CreateSkinnedObject(
 			meshes.push_back(tempMesh);
 		}
 
-		skinData->SetTransformSize(skinData->GetBones().size());
+		skinData->SetTransVectorSize(skinData->GetBones().size());
+		std::vector<std::vector<XMFLOAT4X4>> animVector;
+
 		float timeStep = 1.0f/30.0f;
 
 		for(UINT i(0); i != skinData->GetAnimations().size(); ++i)
@@ -498,9 +500,8 @@ bool LoaderClass::CreateSkinnedObject(
 			{
 				dt += timeStep;
 				skinData->CalcTransform(dt);
-				//skinData->InsertAnimTransform(i, std::vector<XMFLOAT4X4>());
-				//std::vector<XMFLOAT4X4> trans = skinData->GetAnimation(i).GetTransVector().back();
-				std::vector<XMFLOAT4X4> trans = std::vector<XMFLOAT4X4>();
+				animVector.push_back(std::vector<XMFLOAT4X4>());
+				std::vector<XMFLOAT4X4>& trans = animVector.back();
 
 				for(UINT j(0); j != skinData->GetTransVector().size(); ++j)
 				{
@@ -512,8 +513,7 @@ bool LoaderClass::CreateSkinnedObject(
 					XMStoreFloat4x4(&rotation4x4, rotation);
 					trans.push_back(rotation4x4);
 				}
-				skinData->SetTransforms(trans);
-				skinData->InsertAnimTransform(i, trans);
+				skinData->SetAnimTransVector(i, animVector);
 			}
 		}
 	}
