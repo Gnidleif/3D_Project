@@ -4,25 +4,26 @@ AnimEvaluator::AnimEvaluator()
 	: 
 	mAnimIndexer(0),
 	mLastTime(0.0f), mTicksPerSec(0.0f), mDuration(0.0f),
-	mPlayForward(true),
-	mChannels(std::vector<SkinDef::AnimChannel>()), 
-	mLastPositions(std::vector<std::tuple<UINT, UINT, UINT>>()), 
-	mTransforms(std::vector<std::vector<XMFLOAT4X4>>())
+	mPlayForward(true)
+	//mChannels(std::vector<SkinDef::AnimChannel>()), 
+	//mLastPositions(std::vector<std::tuple<UINT, UINT, UINT>>()), 
+	//mTransforms(std::vector<std::vector<XMFLOAT4X4>>())
 {
 }
 
 AnimEvaluator::AnimEvaluator(const aiAnimation* animation)
 {
+	this->mLastTime = 0.0f;
+	this->mTicksPerSec = static_cast<float>(animation->mTicksPerSecond != 0.0f ? animation->mTicksPerSecond : 100.0f);
+	this->mDuration = static_cast<float>(animation->mDuration);
+
 	this->mName = std::string(animation->mName.data, animation->mName.length);
 	if(mName.size() == 0)
 	{
 		std::ostringstream ss;
-		ss << "animation" << mAnimIndexer;
+		ss << "Animation" << mAnimIndexer;
 		mName = ss.str();
 	}
-
-	this->mTicksPerSec = static_cast<float>(animation->mTicksPerSecond != 0.0f ? animation->mTicksPerSecond : 100.0f);
-	this->mDuration = static_cast<float>(animation->mDuration);
 
 	mChannels.resize(animation->mNumChannels);
 	for(UINT i(0); i != mChannels.size(); ++i)

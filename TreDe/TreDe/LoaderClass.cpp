@@ -513,6 +513,7 @@ bool LoaderClass::CreateSkinnedObject(
 					XMStoreFloat4x4(&rotation4x4, rotation);
 					trans.push_back(rotation4x4);
 				}
+				skinData->SetTransVector(trans);
 				skinData->SetAnimTransVector(i, animVector);
 			}
 		}

@@ -60,7 +60,7 @@ Main::Main(HINSTANCE hInst)
 	: 
 	D3D11App(hInst),
 	mGame(new Game()),
-	mInput(nullptr),
+	//mInput(nullptr),
 	mDrawSolid(true),
 	mDrawCooldown(0.0f)
 {
@@ -101,9 +101,9 @@ bool Main::Initialize()
 	Effects::Initialize(mDirect3D->GetDevice());
 	InputLayouts::Initialize(mDirect3D->GetDevice());
 	Loader->Initialize(mDirect3D->GetDevice());
+	mGame->CreateSkyBox(mDirect3D->GetDevice());
 
 	mGame->Initialize();
-	mGame->CreateSkyBox(mDirect3D->GetDevice());
 
 	// Last part of the initialize of main
 	D3D11App::ShowWindow();

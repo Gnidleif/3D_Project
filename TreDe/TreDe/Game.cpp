@@ -61,7 +61,7 @@ void Game::SolidDraw(ID3D11DeviceContext* devCon)
 	activeTech = Effects::NormalFX->mSolidAlpha;
 	mPlatform->Draw(devCon, activeTech, playerCam);
 
-	activeTech = Effects::NormalFX->mSolidSkin;
+	activeTech = Effects::NormalFX->mSolidAlphaSkin;
 	mCharacter->Draw(devCon, activeTech, playerCam);
 }
 
