@@ -18,7 +18,7 @@ cbuffer cbPerObject
 
 cbuffer cbSkin
 {
-    float4x4 gBoneTransforms[96];       // Offset:    0, size: 6144
+    float4x4 gBoneTransforms[60];       // Offset:    0, size: 3840
 }
 
 //
@@ -320,7 +320,7 @@ fxgroup
                 // cbuffer cbSkin
                 // {
                 //
-                //   float4x4 gBoneTransforms[96];      // Offset:    0 Size:  6144
+                //   float4x4 gBoneTransforms[60];      // Offset:    0 Size:  3840
                 //
                 // }
                 //
@@ -365,7 +365,7 @@ fxgroup
                                               { 0, 0, 0, -1} }
                 dcl_constantbuffer cb0[8], immediateIndexed
                 dcl_constantbuffer cb1[11], immediateIndexed
-                dcl_constantbuffer cb2[383], dynamicIndexed
+                dcl_constantbuffer cb2[239], dynamicIndexed
                 dcl_input v0.xyz
                 dcl_input v1.xyz
                 dcl_input v2.xy
@@ -831,7 +831,7 @@ fxgroup
                 // cbuffer cbSkin
                 // {
                 //
-                //   float4x4 gBoneTransforms[96];      // Offset:    0 Size:  6144
+                //   float4x4 gBoneTransforms[60];      // Offset:    0 Size:  3840
                 //
                 // }
                 //
@@ -876,7 +876,7 @@ fxgroup
                                               { 0, 0, 0, -1} }
                 dcl_constantbuffer cb0[8], immediateIndexed
                 dcl_constantbuffer cb1[11], immediateIndexed
-                dcl_constantbuffer cb2[383], dynamicIndexed
+                dcl_constantbuffer cb2[239], dynamicIndexed
                 dcl_input v0.xyz
                 dcl_input v1.xyz
                 dcl_input v2.xy
