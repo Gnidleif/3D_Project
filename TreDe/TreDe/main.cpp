@@ -103,7 +103,7 @@ bool Main::Initialize()
 	Loader->Initialize(mDirect3D->GetDevice());
 	mGame->CreateSkyBox(mDirect3D->GetDevice());
 
-	mGame->Initialize();
+	mGame->Initialize(false);
 
 	// Last part of the initialize of main
 	D3D11App::ShowWindow();

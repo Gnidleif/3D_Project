@@ -16,7 +16,7 @@ public:
 	Game();
 	~Game();
 	void CreateSkyBox(ID3D11Device* device);
-	void Initialize();
+	void Initialize(bool character);
 	void Update(float dt);
 	void SolidDraw(ID3D11DeviceContext* devCon);
 	void WireDraw(ID3D11DeviceContext* devCon);
@@ -28,8 +28,8 @@ public:
 private:
 	Player* mPlayer;
 	TerrainEntity* mTerrain;
-	StaticEntity* mPlatform;
-	SkinnedEntity* mCharacter;
+	std::vector<StaticEntity*> mPlatforms;
+	//SkinnedEntity* mCharacter;
 	SkyBox* mSkyBox;
 };
 #endif

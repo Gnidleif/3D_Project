@@ -7,7 +7,7 @@ SkinnedEntity::SkinnedEntity(std::string key, std::string texPath)
 
 	mModelInstance->mModel = Model->GetSkinnedModel(key, texPath);
 	mModelInstance->mTimePos = 0.0f;
-	mModelInstance->mAnimName = "animation";
+	mModelInstance->mAnimName = "combinedAnim_1";
 	mModelInstance->mAnimIndex = mModelInstance->mModel->GetSkinData()->GetAnimIndex(mModelInstance->mAnimName);
 	mModelInstance->mFinalTransforms.resize(mModelInstance->mModel->GetSkinData()->GetBones().size());
 	mModelInstance->mStart = 51+15;

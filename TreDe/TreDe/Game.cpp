@@ -1,4 +1,5 @@
 #include "Game.h"
+#include <sstream>
 using namespace std;
 
 Game::Game()
@@ -11,8 +12,11 @@ Game::~Game()
 {
 	SafeDelete(mPlayer);
 	SafeDelete(mTerrain);
-	SafeDelete(mPlatform);
-	SafeDelete(mCharacter);
+	for(auto& it(mPlatforms.begin()); it != mPlatforms.end(); ++it)
+	{
+		SafeDelete(*it);
+	}
+	//SafeDelete(mCharacter);
 	SafeDelete(mSkyBox);
 }
 
@@ -22,16 +26,22 @@ void Game::CreateSkyBox(ID3D11Device* device)
 	mSkyBox->Initialize(device, 5000.0f);
 }
 
-void Game::Initialize()
+void Game::Initialize(bool character)
 {
 	mTerrain = new TerrainEntity("../Data/Textures/heightmap.bmp");
 	mTerrain->Initialize(XMFLOAT3(0.0f, 0.0f, 0.0f), 1.0f);
 
-	mPlatform = new StaticEntity("../Data/Models/Static/Platform1/Platform1.obj", "../Data/Models/Static/Platform1/");
-	mPlatform->Initialize(XMFLOAT3(100.0f, 20.0f, 100.0f), 0.05f);
+	for(UINT i(0); i != 4; ++i)
+	{
+		stringstream ss;
+		ss << i + 1;
+		mPlatforms.push_back(new StaticEntity("../Data/Models/Static/Platform" + ss.str() + "/Platform" + ss.str() + ".obj", "../Data/Models/Static/Platform" + ss.str() + "/"));
+		mPlatforms[i]->Initialize(XMFLOAT3(100.0f * (float)i, 20.0f, 100.0f), 0.05f);
+	}
 
-	mCharacter = new SkinnedEntity("../Data/Models/Skinned/Character/Character.dae", "../Data/Models/Skinned/Character/");
-	mCharacter->Initialize(XMFLOAT3(150.0f, 20.0f, 100.0f), 1.0f);
+	//mCharacter = new SkinnedEntity("../Data/Models/Skinned/Character/Character.dae", "../Data/Models/Skinned/Character/");
+	//mCharacter->Initialize(XMFLOAT3(150.0f, 20.0f, 100.0f), 1.0f);
+
 	//
 	Text->AddConstantText("PlayerInfo", "Name: " + mPlayer->GetName(), 20.0f, 20.0f, 20.0f, TextColors::White);
 }
@@ -44,7 +54,17 @@ void Game::Update(float dt)
 	//rotation += dt;
 	//mTerrain->RotateXYZ(XMFLOAT3(rotation, rotation, rotation));
 
-	mCharacter->Update(dt);
+	static float xRot(0.0f), zRot(0.0f);
+	xRot += dt;
+	zRot += dt;
+	for(UINT i(0); i != mPlatforms.size(); ++i)
+	{
+		mPlatforms[i]->RotateXYZ(XMFLOAT3(xRot, 0.0f, zRot));
+		//mPlatforms[i]->RotateZ(zRot);
+	}
+
+	//mCharacter->Update(dt);
+
 	mPlayer->Update(dt);
 }
 
@@ -59,10 +79,13 @@ void Game::SolidDraw(ID3D11DeviceContext* devCon)
 	mTerrain->Draw(devCon, activeTech, playerCam);
 
 	activeTech = Effects::NormalFX->mSolidAlpha;
-	mPlatform->Draw(devCon, activeTech, playerCam);
+	for(UINT i(0); i != mPlatforms.size(); ++i)
+	{
+		mPlatforms[i]->Draw(devCon, activeTech, playerCam);
+	}
 
-	activeTech = Effects::NormalFX->mSolidSkin;
-	mCharacter->Draw(devCon, activeTech, playerCam);
+	//activeTech = Effects::NormalFX->mSolidSkin;
+	//mCharacter->Draw(devCon, activeTech, playerCam);
 }
 
 void Game::WireDraw(ID3D11DeviceContext* devCon)
@@ -75,21 +98,30 @@ void Game::WireDraw(ID3D11DeviceContext* devCon)
 	mTerrain->Draw(devCon, activeTech, playerCam);
 
 	activeTech = Effects::NormalFX->mWire;
-	mPlatform->Draw(devCon, activeTech, playerCam);
-	mCharacter->Draw(devCon, activeTech, playerCam);
+	for(UINT i(0); i != mPlatforms.size(); ++i)
+	{
+		mPlatforms[i]->Draw(devCon, activeTech, playerCam);
+	}
+	//mCharacter->Draw(devCon, activeTech, playerCam);
 }
 
 void Game::ControlPlayer(DirectInput* di)
 {
 	if(di->GetKeyboardState()[DIK_R] && 0x80)
 	{
-		mPlatform->SetScale(0.05f);
-		mCharacter->SetScale(0.5f);
+		for(UINT i(0); i != mPlatforms.size(); ++i)
+		{
+			mPlatforms[i]->SetScale(0.05f);
+		}
+		//mCharacter->SetScale(0.5f);
 	}
 	else if(di->GetKeyboardState()[DIK_F] && 0x80)
 	{
-		mPlatform->SetScale(0.1f);
-		mCharacter->SetScale(1.0f);
+		for(UINT i(0); i != mPlatforms.size(); ++i)
+		{
+			mPlatforms[i]->SetScale(0.1f);
+		}
+		//mCharacter->SetScale(1.0f);
 	}
 	else
 		mPlayer->Control(di);

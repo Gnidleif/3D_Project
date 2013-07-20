@@ -506,8 +506,8 @@ bool LoaderClass::CreateSkinnedObject(
 
 				for(UINT j(0); j != skinData->GetTransVector().size(); ++j)
 				{
-					XMMATRIX offset = XMLoadFloat4x4(&skinData->GetBone(i)->mOffset);
-					XMMATRIX global = XMLoadFloat4x4(&skinData->GetBone(i)->mGlobalTrans);
+					XMMATRIX offset = XMLoadFloat4x4(&skinData->GetBone(j)->mOffset);
+					XMMATRIX global = XMLoadFloat4x4(&skinData->GetBone(j)->mGlobalTrans);
 					XMMATRIX rotation = XMMatrixMultiply(offset, global);
 
 					XMFLOAT4X4 rotation4x4;
