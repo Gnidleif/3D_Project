@@ -17,6 +17,6 @@ private:
 	void CalcWorld();
 	
 private:
-	SkinnedModel::Instance mModelInstance;
+	SkinnedModel::Instance* mModelInstance;
 };
 #endif

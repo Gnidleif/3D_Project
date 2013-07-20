@@ -113,7 +113,7 @@ PSIn SkinVSScene(SkinVSIn input)
 	//output.Normal = mul(input.Normal, (float3x3) wvp);
 	//output.Normal = normalize(output.Normal);
 	output.Normal = mul(normal, (float3x3)gWorldInvTranspose);
-	output.TangentW = float4(mul(tangent, (float3x3) gWorld), input.TangentL.w);
+	output.TangentW = float4(mul(tangent, (float3x3) gWorldInvTranspose), input.TangentL.w);
 	output.TexC = input.TexC;
 
 	return output;
@@ -123,6 +123,7 @@ float4 PSScene(PSIn input,
 			   uniform bool alphaClip,
 			   uniform bool useTex) : SV_Target
 {
+	input.Normal = normalize(input.Normal);
 	float4 texColor = float4(1.0f, 0.0f, 0.0f, 1.0f);
 	if(useTex)
 	{
@@ -169,7 +170,7 @@ technique11 SolidSkin
 		SetVertexShader( CompileShader(vs_5_0, SkinVSScene()));
 		SetGeometryShader(NULL);
 		SetPixelShader( CompileShader(ps_5_0, PSScene(false, true)));
-		//SetRasterizerState(Solidframe);
+		SetRasterizerState(Solidframe);
 	}
 };
 

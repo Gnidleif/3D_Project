@@ -531,7 +531,7 @@ fxgroup
                 dcl_output o0.xyzw
                 
                 #line 103 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\Terrain\Terrain.fx"
-                mov o0.xyzw, l(1.000000,1.000000,1.000000,1.000000)  // PSScene<0: 1f,1: 1f,2: 1f,3: 1f>
+                mov o0.xyzw, l(0,0,1.000000,1.000000)  // PSScene<0: 0f,1: 0f,2: 1f,3: 1f>
                 ret 
                 // Approximately 2 instruction slots used
                             

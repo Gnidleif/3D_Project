@@ -266,11 +266,11 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 1
                 
-                #line 129 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\NormalMap\NormalMap.fx"
+                #line 130 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\NormalMap\NormalMap.fx"
                 sample_indexable(texture2d)(float,float,float,float) r0.xyzw, v3.xyxx, t0.xyzw, s0  // texColor<0:Inf,1:Inf,2:Inf,3:Inf>
                 nop 
                 
-                #line 137
+                #line 138
                 mov o0.xyzw, r0.xyzw  // PSScene<0:Inf,1:Inf,2:Inf,3:Inf>
                 ret 
                 // Approximately 4 instruction slots used
@@ -498,9 +498,9 @@ fxgroup
                 dp3 r0.x, r1.xyzx, cb1[8].xyzx  // output<7:NaN:Inf>
                 dp3 r0.y, r1.xyzx, cb1[9].xyzx  // output<8:NaN:Inf>
                 dp3 r0.z, r1.xyzx, cb1[10].xyzx  // output<9:NaN:Inf>
-                dp3 r1.x, r2.xyzx, cb1[4].xyzx  // output<12:NaN:Inf>
-                dp3 r1.y, r2.xyzx, cb1[5].xyzx  // output<13:NaN:Inf>
-                dp3 r1.z, r2.xyzx, cb1[6].xyzx  // output<14:NaN:Inf>
+                dp3 r1.x, r2.xyzx, cb1[8].xyzx  // output<12:NaN:Inf>
+                dp3 r1.y, r2.xyzx, cb1[9].xyzx  // output<13:NaN:Inf>
+                dp3 r1.z, r2.xyzx, cb1[10].xyzx  // output<14:NaN:Inf>
                 mov r1.w, v3.w  // output<15>
                 mov r2.xy, v2.xyxx  // output<10,11>
                 mov o0.xyzw, r3.xyzw  // SkinVSScene<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
@@ -552,16 +552,17 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 1
                 
-                #line 129 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\NormalMap\NormalMap.fx"
+                #line 130 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\NormalMap\NormalMap.fx"
                 sample_indexable(texture2d)(float,float,float,float) r0.xyzw, v3.xyxx, t0.xyzw, s0  // texColor<0:Inf,1:Inf,2:Inf,3:Inf>
                 nop 
                 
-                #line 137
+                #line 138
                 mov o0.xyzw, r0.xyzw  // PSScene<0:Inf,1:Inf,2:Inf,3:Inf>
                 ret 
                 // Approximately 4 instruction slots used
                             
             };
+            RasterizerState = Solidframe;
         }
 
     }
@@ -772,17 +773,17 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 2
                 
-                #line 129 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\NormalMap\NormalMap.fx"
+                #line 130 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\NormalMap\NormalMap.fx"
                 sample_indexable(texture2d)(float,float,float,float) r0.xyzw, v3.xyxx, t0.xyzw, s0  // texColor<0:Inf,1:Inf,2:Inf,3:Inf>
                 nop 
                 
-                #line 134
+                #line 135
                 add r1.x, r0.w, l(-0.100000)
                 lt r1.x, r1.x, l(0.000000)
                 and r1.x, r1.x, l(-1)
                 discard r1.x
                 
-                #line 137
+                #line 138
                 mov o0.xyzw, r0.xyzw  // PSScene<0:Inf,1:Inf,2:Inf,3:Inf>
                 ret 
                 // Approximately 8 instruction slots used
@@ -1010,9 +1011,9 @@ fxgroup
                 dp3 r0.x, r1.xyzx, cb1[8].xyzx  // output<7:NaN:Inf>
                 dp3 r0.y, r1.xyzx, cb1[9].xyzx  // output<8:NaN:Inf>
                 dp3 r0.z, r1.xyzx, cb1[10].xyzx  // output<9:NaN:Inf>
-                dp3 r1.x, r2.xyzx, cb1[4].xyzx  // output<12:NaN:Inf>
-                dp3 r1.y, r2.xyzx, cb1[5].xyzx  // output<13:NaN:Inf>
-                dp3 r1.z, r2.xyzx, cb1[6].xyzx  // output<14:NaN:Inf>
+                dp3 r1.x, r2.xyzx, cb1[8].xyzx  // output<12:NaN:Inf>
+                dp3 r1.y, r2.xyzx, cb1[9].xyzx  // output<13:NaN:Inf>
+                dp3 r1.z, r2.xyzx, cb1[10].xyzx  // output<14:NaN:Inf>
                 mov r1.w, v3.w  // output<15>
                 mov r2.xy, v2.xyxx  // output<10,11>
                 mov o0.xyzw, r3.xyzw  // SkinVSScene<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
@@ -1064,17 +1065,17 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 2
                 
-                #line 129 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\NormalMap\NormalMap.fx"
+                #line 130 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\NormalMap\NormalMap.fx"
                 sample_indexable(texture2d)(float,float,float,float) r0.xyzw, v3.xyxx, t0.xyzw, s0  // texColor<0:Inf,1:Inf,2:Inf,3:Inf>
                 nop 
                 
-                #line 134
+                #line 135
                 add r1.x, r0.w, l(-0.100000)
                 lt r1.x, r1.x, l(0.000000)
                 and r1.x, r1.x, l(-1)
                 discard r1.x
                 
-                #line 137
+                #line 138
                 mov o0.xyzw, r0.xyzw  // PSScene<0:Inf,1:Inf,2:Inf,3:Inf>
                 ret 
                 // Approximately 8 instruction slots used
@@ -1279,7 +1280,7 @@ fxgroup
                 dcl_globalFlags refactoringAllowed
                 dcl_output o0.xyzw
                 
-                #line 137 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\NormalMap\NormalMap.fx"
+                #line 138 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\NormalMap\NormalMap.fx"
                 mov o0.xyzw, l(1.000000,0,0,1.000000)  // PSScene<0: 1f,1: 0f,2: 0f,3: 1f>
                 ret 
                 // Approximately 2 instruction slots used
