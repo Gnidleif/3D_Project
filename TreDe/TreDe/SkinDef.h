@@ -82,7 +82,7 @@ namespace SkinDef
 		return out;
 	}
 
-	static void CalculateBoneToWorld(SkinDef::Bone* child)
+	static void CalculateBoneToWorld(SkinDef::Bone* &child)
 	{
 		child->mGlobalTrans = child->mLocalTrans;
 		XMMATRIX Child_GlobalTrans = XMLoadFloat4x4(&child->mGlobalTrans);

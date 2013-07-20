@@ -105,13 +105,10 @@ public:
 	std::vector<VertexDef::PosNorTexTanSkin> GetVertices() const { return this->mVertices; }
 
 public:
-	void SetBoneSize(UINT size) { this->mBones.resize(size); }
-	void SetBones(std::vector<SkinDef::Bone> bones) { this->mBones = bones; }
 	void SetVerticeSize(UINT size) { this->mVertices.resize(size); }
 	void SetVertices(std::vector<VertexDef::PosNorTexTanSkin> vertices) { this->mVertices = vertices; }
 
 private:
-	std::vector<SkinDef::Bone> mBones;
 	std::vector<VertexDef::PosNorTexTanSkin> mVertices;
 };
 #endif

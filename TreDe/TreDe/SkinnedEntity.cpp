@@ -5,11 +5,11 @@ SkinnedEntity::SkinnedEntity(std::string key, std::string texPath)
 {
 	mModelInstance.mModel = Model->GetSkinnedModel(key, texPath);
 	mModelInstance.mTimePos = 0.0f;
-	mModelInstance.mAnimName = "Animation";
+	mModelInstance.mAnimName = "animation";
 	mModelInstance.mAnimIndex = mModelInstance.mModel->GetSkinData()->GetAnimIndex(mModelInstance.mAnimName);
 	mModelInstance.mFinalTransforms.resize(mModelInstance.mModel->GetSkinData()->GetBones().size());
 	mModelInstance.mStart = 51+15;
-	mModelInstance.mEnd = mModelInstance.mStart;
+	mModelInstance.mEnd = 51+15;
 	mModelInstance.mPlayForward = true;
 }
 

@@ -151,6 +151,9 @@ void AnimEvaluator::Evaluate(float time, std::map<std::string, SkinDef::Bone*>& 
 					break;
 				frame++;
 			}
+
+			presentScale = channel->mScaleKeys[frame].mValue;
+			std::get<2>(mLastPositions[i]) = frame;
 		}
 
 		aiMatrix4x4 mat = aiMatrix4x4(presentRot.GetMatrix());

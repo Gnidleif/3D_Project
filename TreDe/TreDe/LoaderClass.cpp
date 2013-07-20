@@ -356,7 +356,7 @@ bool LoaderClass::CreateSkinnedObject(
 {
 	using namespace Assimp;
 	Importer importer;
-	string logName("../Data/StaticMeshLoader.log");
+	string logName("../Data/SkinnedMeshLoader.log");
 	DefaultLogger::create(logName.c_str(), Logger::VERBOSE);
 
 	const aiScene* scene = importer.ReadFile(
@@ -559,7 +559,7 @@ void LoaderClass::CreateAnimations(const aiScene* scene, SkinData* &skinData)
 		skinData->InsertAnimNameID(skinData->GetAnimation(i).GetName(), i);
 	}
 
-	skinData->SetAnimation("Idle");
+	skinData->SetAnimation("combinedAnim_0");
 }
 
 // Function used to create the various materials that a mesh might have

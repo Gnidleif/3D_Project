@@ -65,7 +65,7 @@ UINT SkinData::GetAnimIndex(std::string name)
 	return animIndex;
 }
 
-void SkinData::UpdateTransforms(SkinDef::Bone* node)
+void SkinData::UpdateTransforms(SkinDef::Bone* &node)
 {
 	SkinDef::CalculateBoneToWorld(node);
 	for(auto& it(node->mChildren.begin()); it != node->mChildren.end(); ++it)

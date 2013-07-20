@@ -55,7 +55,7 @@ public:
 	{ return mAnimations[animIndex].GetTransformation(dt, start, end, playForward); }
 
 private:
-	void UpdateTransforms(SkinDef::Bone* node);
+	void UpdateTransforms(SkinDef::Bone* &node);
 
 private:
 	SkinDef::Bone* mSkeleton;

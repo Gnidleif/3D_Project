@@ -15,7 +15,7 @@ cbuffer cbPerObject
 
 cbuffer cbSkin
 {
-	float4x4 gBoneTransforms[60];
+	float4x4 gBoneTransforms[96];
 };
 
 Texture2D gDiffMap;
@@ -129,10 +129,10 @@ float4 PSScene(PSIn input,
 		texColor = gDiffMap.Sample(samLinear, input.TexC);
 		float3 normMapSamp = gNormMap.Sample(samLinear, input.TexC).rgb;
 		float3 bumpNormal = NormalSampleToWorldSpace(normMapSamp, input.Normal, input.TangentW);
-	}
 
-	if(alphaClip) // If alpha clipping is true
-		clip(texColor.a - 0.1f);
+		if(alphaClip) // If alpha clipping is true
+			clip(texColor.a - 0.1f);
+	}
 
 	return texColor;
 };
@@ -169,7 +169,7 @@ technique11 SolidSkin
 		SetVertexShader( CompileShader(vs_5_0, SkinVSScene()));
 		SetGeometryShader(NULL);
 		SetPixelShader( CompileShader(ps_5_0, PSScene(false, true)));
-		SetRasterizerState(Solidframe);
+		//SetRasterizerState(Solidframe);
 	}
 };
 

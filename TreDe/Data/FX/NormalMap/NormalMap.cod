@@ -18,7 +18,7 @@ cbuffer cbPerObject
 
 cbuffer cbSkin
 {
-    float4x4 gBoneTransforms[60];       // Offset:    0, size: 3840
+    float4x4 gBoneTransforms[96];       // Offset:    0, size: 6144
 }
 
 //
@@ -320,7 +320,7 @@ fxgroup
                 // cbuffer cbSkin
                 // {
                 //
-                //   float4x4 gBoneTransforms[60];      // Offset:    0 Size:  3840
+                //   float4x4 gBoneTransforms[96];      // Offset:    0 Size:  6144
                 //
                 // }
                 //
@@ -365,7 +365,7 @@ fxgroup
                                               { 0, 0, 0, -1} }
                 dcl_constantbuffer cb0[8], immediateIndexed
                 dcl_constantbuffer cb1[11], immediateIndexed
-                dcl_constantbuffer cb2[239], dynamicIndexed
+                dcl_constantbuffer cb2[383], dynamicIndexed
                 dcl_input v0.xyz
                 dcl_input v1.xyz
                 dcl_input v2.xy
@@ -562,7 +562,6 @@ fxgroup
                 // Approximately 4 instruction slots used
                             
             };
-            RasterizerState = Solidframe;
         }
 
     }
@@ -777,11 +776,13 @@ fxgroup
                 sample_indexable(texture2d)(float,float,float,float) r0.xyzw, v3.xyxx, t0.xyzw, s0  // texColor<0:Inf,1:Inf,2:Inf,3:Inf>
                 nop 
                 
-                #line 135
+                #line 134
                 add r1.x, r0.w, l(-0.100000)
                 lt r1.x, r1.x, l(0.000000)
                 and r1.x, r1.x, l(-1)
                 discard r1.x
+                
+                #line 137
                 mov o0.xyzw, r0.xyzw  // PSScene<0:Inf,1:Inf,2:Inf,3:Inf>
                 ret 
                 // Approximately 8 instruction slots used
@@ -831,7 +832,7 @@ fxgroup
                 // cbuffer cbSkin
                 // {
                 //
-                //   float4x4 gBoneTransforms[60];      // Offset:    0 Size:  3840
+                //   float4x4 gBoneTransforms[96];      // Offset:    0 Size:  6144
                 //
                 // }
                 //
@@ -876,7 +877,7 @@ fxgroup
                                               { 0, 0, 0, -1} }
                 dcl_constantbuffer cb0[8], immediateIndexed
                 dcl_constantbuffer cb1[11], immediateIndexed
-                dcl_constantbuffer cb2[239], dynamicIndexed
+                dcl_constantbuffer cb2[383], dynamicIndexed
                 dcl_input v0.xyz
                 dcl_input v1.xyz
                 dcl_input v2.xy
@@ -1067,11 +1068,13 @@ fxgroup
                 sample_indexable(texture2d)(float,float,float,float) r0.xyzw, v3.xyxx, t0.xyzw, s0  // texColor<0:Inf,1:Inf,2:Inf,3:Inf>
                 nop 
                 
-                #line 135
+                #line 134
                 add r1.x, r0.w, l(-0.100000)
                 lt r1.x, r1.x, l(0.000000)
                 and r1.x, r1.x, l(-1)
                 discard r1.x
+                
+                #line 137
                 mov o0.xyzw, r0.xyzw  // PSScene<0:Inf,1:Inf,2:Inf,3:Inf>
                 ret 
                 // Approximately 8 instruction slots used
