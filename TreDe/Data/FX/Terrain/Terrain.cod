@@ -23,6 +23,7 @@ cbuffer cbPerObject
 cbuffer cbFixed
 {
     float   texScale = 15;              // Offset:    0, size:    4
+    float   lightAddScale = 0.5;        // Offset:    4, size:    4
 }
 
 //
@@ -162,6 +163,8 @@ fxgroup
                 //
                 //   float texScale;                    // Offset:    0 Size:     4
                 //      = 0x41700000 
+                //   float lightAddScale;               // Offset:    4 Size:     4 [unused]
+                //      = 0x3f000000 
                 //
                 // }
                 //
@@ -208,7 +211,7 @@ fxgroup
                 dcl_output o3.zw
                 dcl_temps 6
                 
-                #line 68 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\Terrain\Terrain.fx"
+                #line 69 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\Terrain\Terrain.fx"
                 mul r0.xyzw, cb0[8].xyzw, cb0[12].xxxx
                 mul r1.xyzw, cb0[9].xyzw, cb0[12].yyyy
                 add r0.xyzw, r0.xyzw, r1.xyzw
@@ -272,12 +275,12 @@ fxgroup
                 dp4 r0.z, r4.xyzw, r2.xyzw  // output<2:NaN:Inf>
                 dp4 r0.w, r4.xyzw, r3.xyzw  // output<3:NaN:Inf>
                 
-                #line 74
+                #line 75
                 dp4 r1.x, r4.xyzw, cb0[4].xyzw  // output<4:NaN:Inf>
                 dp4 r1.y, r4.xyzw, cb0[5].xyzw  // output<5:NaN:Inf>
                 dp4 r1.z, r4.xyzw, cb0[6].xyzw  // output<6:NaN:Inf>
                 
-                #line 77
+                #line 78
                 dp3 r2.x, v1.xyzx, cb0[16].xyzx  // output<7:NaN:Inf>
                 dp3 r2.y, v1.xyzx, cb0[17].xyzx  // output<8:NaN:Inf>
                 dp3 r2.z, v1.xyzx, cb0[18].xyzx  // output<9:NaN:Inf>
@@ -344,7 +347,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 6
                 
-                #line 93 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\Terrain\Terrain.fx"
+                #line 94 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\Terrain\Terrain.fx"
                 sample_indexable(texture2d)(float,float,float,float) r0.xyzw, v3.xyxx, t1.xyzw, s0  // c0<0:Inf,1:Inf,2:Inf,3:Inf>
                 sample_indexable(texture2d)(float,float,float,float) r1.xyzw, v3.xyxx, t2.xyzw, s0  // c1<0:Inf,1:Inf,2:Inf,3:Inf>
                 sample_indexable(texture2d)(float,float,float,float) r2.xyzw, v3.xyxx, t3.xyzw, s0  // c2<0:Inf,1:Inf,2:Inf,3:Inf>
@@ -365,7 +368,7 @@ fxgroup
                 mul r1.xyzw, r1.xyzw, r4.zzzz
                 add r0.xyzw, r0.xyzw, r1.xyzw  // texColor<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
                 
-                #line 107
+                #line 108
                 mov o0.xyzw, r0.xyzw  // PSScene<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
                 ret 
                 // Approximately 21 instruction slots used
@@ -411,6 +414,8 @@ fxgroup
                 //
                 //   float texScale;                    // Offset:    0 Size:     4
                 //      = 0x41700000 
+                //   float lightAddScale;               // Offset:    4 Size:     4 [unused]
+                //      = 0x3f000000 
                 //
                 // }
                 //
@@ -457,7 +462,7 @@ fxgroup
                 dcl_output o3.zw
                 dcl_temps 6
                 
-                #line 68 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\Terrain\Terrain.fx"
+                #line 69 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\Terrain\Terrain.fx"
                 mul r0.xyzw, cb0[8].xyzw, cb0[12].xxxx
                 mul r1.xyzw, cb0[9].xyzw, cb0[12].yyyy
                 add r0.xyzw, r0.xyzw, r1.xyzw
@@ -521,12 +526,12 @@ fxgroup
                 dp4 r0.z, r4.xyzw, r2.xyzw  // output<2:NaN:Inf>
                 dp4 r0.w, r4.xyzw, r3.xyzw  // output<3:NaN:Inf>
                 
-                #line 74
+                #line 75
                 dp4 r1.x, r4.xyzw, cb0[4].xyzw  // output<4:NaN:Inf>
                 dp4 r1.y, r4.xyzw, cb0[5].xyzw  // output<5:NaN:Inf>
                 dp4 r1.z, r4.xyzw, cb0[6].xyzw  // output<6:NaN:Inf>
                 
-                #line 77
+                #line 78
                 dp3 r2.x, v1.xyzx, cb0[16].xyzx  // output<7:NaN:Inf>
                 dp3 r2.y, v1.xyzx, cb0[17].xyzx  // output<8:NaN:Inf>
                 dp3 r2.z, v1.xyzx, cb0[18].xyzx  // output<9:NaN:Inf>
@@ -572,7 +577,7 @@ fxgroup
                 dcl_globalFlags refactoringAllowed
                 dcl_output o0.xyzw
                 
-                #line 107 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\Terrain\Terrain.fx"
+                #line 108 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\Terrain\Terrain.fx"
                 mov o0.xyzw, l(0,0,1.000000,1.000000)  // PSScene<0: 0f,1: 0f,2: 1f,3: 1f>
                 ret 
                 // Approximately 2 instruction slots used
@@ -620,6 +625,8 @@ fxgroup
                 //
                 //   float texScale;                    // Offset:    0 Size:     4
                 //      = 0x41700000 
+                //   float lightAddScale;               // Offset:    4 Size:     4 [unused]
+                //      = 0x3f000000 
                 //
                 // }
                 //
@@ -666,7 +673,7 @@ fxgroup
                 dcl_output o3.zw
                 dcl_temps 6
                 
-                #line 68 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\Terrain\Terrain.fx"
+                #line 69 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\Terrain\Terrain.fx"
                 mul r0.xyzw, cb0[8].xyzw, cb0[12].xxxx
                 mul r1.xyzw, cb0[9].xyzw, cb0[12].yyyy
                 add r0.xyzw, r0.xyzw, r1.xyzw
@@ -730,12 +737,12 @@ fxgroup
                 dp4 r0.z, r4.xyzw, r2.xyzw  // output<2:NaN:Inf>
                 dp4 r0.w, r4.xyzw, r3.xyzw  // output<3:NaN:Inf>
                 
-                #line 74
+                #line 75
                 dp4 r1.x, r4.xyzw, cb0[4].xyzw  // output<4:NaN:Inf>
                 dp4 r1.y, r4.xyzw, cb0[5].xyzw  // output<5:NaN:Inf>
                 dp4 r1.z, r4.xyzw, cb0[6].xyzw  // output<6:NaN:Inf>
                 
-                #line 77
+                #line 78
                 dp3 r2.x, v1.xyzx, cb0[16].xyzx  // output<7:NaN:Inf>
                 dp3 r2.y, v1.xyzx, cb0[17].xyzx  // output<8:NaN:Inf>
                 dp3 r2.z, v1.xyzx, cb0[18].xyzx  // output<9:NaN:Inf>
@@ -761,6 +768,51 @@ fxgroup
                 //
                 // Buffer Definitions: 
                 //
+                // cbuffer cbPerFrame
+                // {
+                //
+                //   struct DirectionalLight
+                //   {
+                //       
+                //       float4 Ambient;                // Offset:    0
+                //       float4 Diffuse;                // Offset:   16
+                //       float4 Specular;               // Offset:   32
+                //       float3 Direction;              // Offset:   48
+                //       float Padding;                 // Offset:   60
+                //
+                //   } gDirLights;                      // Offset:    0 Size:    64
+                //   
+                //   struct PointLight
+                //   {
+                //       
+                //       float4 Ambient;                // Offset:   64
+                //       float4 Diffuse;                // Offset:   80
+                //       float4 Specular;               // Offset:   96
+                //       float3 Position;               // Offset:  112
+                //       float Range;                   // Offset:  124
+                //       float3 Attenuation;            // Offset:  128
+                //       float Padding;                 // Offset:  140
+                //
+                //   } gPointLights[2];                 // Offset:   64 Size:   160
+                //   
+                //   struct SpotLight
+                //   {
+                //       
+                //       float4 Ambient;                // Offset:  224
+                //       float4 Diffuse;                // Offset:  240
+                //       float4 Specular;               // Offset:  256
+                //       float3 Position;               // Offset:  272
+                //       float Range;                   // Offset:  284
+                //       float3 Direction;              // Offset:  288
+                //       float Spot;                    // Offset:  300
+                //       float3 Attenuation;            // Offset:  304
+                //       float Padding;                 // Offset:  316
+                //
+                //   } gSpotLights[2];                  // Offset:  224 Size:   192
+                //   float3 gEyePos;                    // Offset:  416 Size:    12
+                //
+                // }
+                //
                 // cbuffer cbPerObject
                 // {
                 //
@@ -780,6 +832,16 @@ fxgroup
                 //
                 // }
                 //
+                // cbuffer cbFixed
+                // {
+                //
+                //   float texScale;                    // Offset:    0 Size:     4 [unused]
+                //      = 0x41700000 
+                //   float lightAddScale;               // Offset:    4 Size:     4
+                //      = 0x3f000000 
+                //
+                // }
+                //
                 //
                 // Resource Bindings:
                 //
@@ -791,7 +853,9 @@ fxgroup
                 // gTex1                             texture  float4          2d    2        1
                 // gTex2                             texture  float4          2d    3        1
                 // gTex3                             texture  float4          2d    4        1
-                // cbPerObject                       cbuffer      NA          NA    0        1
+                // cbPerFrame                        cbuffer      NA          NA    0        1
+                // cbPerObject                       cbuffer      NA          NA    1        1
+                // cbFixed                           cbuffer      NA          NA    2        1
                 //
                 //
                 //
@@ -800,8 +864,8 @@ fxgroup
                 // Name                 Index   Mask Register SysValue Format   Used
                 // -------------------- ----- ------ -------- -------- ------ ------
                 // SV_Position              0   xyzw        0      POS  float       
-                // POSITION                 0   xyz         1     NONE  float       
-                // NORMAL                   0   xyz         2     NONE  float       
+                // POSITION                 0   xyz         1     NONE  float   xyz 
+                // NORMAL                   0   xyz         2     NONE  float   xyz 
                 // TEXCOORD                 0   xy          3     NONE  float   xy  
                 // TEXCOORD                 1     zw        3     NONE  float     zw
                 //
@@ -814,19 +878,23 @@ fxgroup
                 //
                 ps_5_0
                 dcl_globalFlags refactoringAllowed
-                dcl_constantbuffer cb0[2], immediateIndexed
+                dcl_constantbuffer cb0[27], immediateIndexed
+                dcl_constantbuffer cb1[3], immediateIndexed
+                dcl_constantbuffer cb2[1], immediateIndexed
                 dcl_sampler s0, mode_default
                 dcl_resource_texture2d (float,float,float,float) t0
                 dcl_resource_texture2d (float,float,float,float) t1
                 dcl_resource_texture2d (float,float,float,float) t2
                 dcl_resource_texture2d (float,float,float,float) t3
                 dcl_resource_texture2d (float,float,float,float) t4
+                dcl_input_ps linear v1.xyz
+                dcl_input_ps linear v2.xyz
                 dcl_input_ps linear v3.xy
                 dcl_input_ps linear v3.zw
                 dcl_output o0.xyzw
-                dcl_temps 6
+                dcl_temps 18
                 
-                #line 120 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\Terrain\Terrain.fx"
+                #line 121 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\Terrain\Terrain.fx"
                 sample_indexable(texture2d)(float,float,float,float) r0.xyzw, v3.xyxx, t1.xyzw, s0  // c0<0:Inf,1:Inf,2:Inf,3:Inf>
                 sample_indexable(texture2d)(float,float,float,float) r1.xyzw, v3.xyxx, t2.xyzw, s0  // c1<0:Inf,1:Inf,2:Inf,3:Inf>
                 sample_indexable(texture2d)(float,float,float,float) r2.xyzw, v3.xyxx, t3.xyzw, s0  // c2<0:Inf,1:Inf,2:Inf,3:Inf>
@@ -847,15 +915,391 @@ fxgroup
                 mul r1.xyzw, r1.xyzw, r4.zzzz
                 add r0.xyzw, r0.xyzw, r1.xyzw  // texColor<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
                 
-                #line 135
-                mov r0.xyz, r0.xyzx  // litColor<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                #line 142
+                mov r1.xyz, -v1.xyzx
+                add r1.xyz, r1.xyzx, cb0[26].xyzx  // toEye<0:Inf,1:Inf,2:Inf>
+                dp3 r1.w, r1.xyzx, r1.xyzx
+                sqrt r1.w, r1.w  // eyeDist<0:NaN:Inf>
+                div r1.xyz, r1.xyzx, r1.wwww  // toEye<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 187
-                mul r0.w, r0.w, cb0[1].w  // litColor<3:NaN:Inf>
+                #line 154
+                nop 
+                mov r2.xyz, cb1[0].xyzx  // mat<0,1,2>
+                mov r3.xyz, cb1[1].xyzx  // mat<4,5,6>
+                mov r4.xyzw, cb1[2].xyzw  // mat<8,9,10,11>
+                mov r5.xyz, cb0[0].xyzx  // light<0,1,2>
+                mov r6.xyz, cb0[1].xyzx  // light<4,5,6>
+                mov r7.xyz, cb0[2].xyzx  // light<8,9,10>
+                mov r8.xyz, cb0[3].xyzx  // light<12,13,14>
+                mov r9.xyz, v2.xyzx  // normal<0,1,2>
+                mov r1.xyz, r1.xyzx  // toEye<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                
+                #line 75 "../LightDef.fx"
+                mov r8.xyz, -r8.xyzx  // lightVec<0,1,2>
+                mul r5.xyz, r2.xyzx, r5.xyzx  // ambient<0:Inf,1:Inf,2:Inf>
+                dp3 r1.w, r8.xyzx, r9.xyzx  // diffuseFactor<0:NaN:Inf>
+                
+                #line 82
+                lt r2.w, l(0.000000), r1.w
+                mov r8.xyz, -r8.xyzx
+                dp3 r3.w, r8.xyzx, r9.xyzx
+                add r3.w, r3.w, r3.w
+                mov r3.w, -r3.w
+                mul r10.xyz, r3.wwww, r9.xyzx
+                add r8.xyz, r8.xyzx, r10.xyzx  // v<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                dp3 r3.w, r8.xyzx, r1.xyzx
+                max r3.w, r3.w, l(0.000000)
+                log r3.w, r3.w
+                mul r3.w, r3.w, r4.w
+                exp r3.w, r3.w  // specFactor<0:NaN:Inf>
+                mul r8.xyz, r3.xyzx, r1.wwww
+                mul r6.xyz, r6.xyzx, r8.xyzx  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                mul r8.xyz, r4.xyzx, r3.wwww
+                mul r7.xyz, r7.xyzx, r8.xyzx  // specular<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                
+                #line 82
+                movc r6.xyz, r2.wwww, r6.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                movc r7.xyz, r2.wwww, r7.xyzx, l(0,0,0,0)  // specular<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                
+                #line 154 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\Terrain\Terrain.fx"
+                mov r5.xyz, r5.xyzx  // A<0:Inf,1:Inf,2:Inf>
+                mov r6.xyz, r6.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                mov r7.xyz, r7.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                add r5.xyz, r5.xyzx, l(0.000000, 0.000000, 0.000000, 0.000000)  // ambient<0:Inf,1:Inf,2:Inf>
+                add r6.xyz, r6.xyzx, l(0.000000, 0.000000, 0.000000, 0.000000)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                add r7.xyz, r7.xyzx, l(0.000000, 0.000000, 0.000000, 0.000000)  // specular<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                
+                #line 165
+                nop 
+                mov r8.xyz, cb0[4].xyzx  // light<0,1,2>
+                mov r10.xyz, cb0[5].xyzx  // light<4,5,6>
+                mov r11.xyz, cb0[6].xyzx  // light<8,9,10>
+                mov r12.xyz, cb0[7].xyzx  // light<12,13,14>
+                mov r1.w, cb0[7].w  // light<15>
+                mov r13.xyz, cb0[8].xyzx  // light<16,17,18>
+                mov r14.xyz, v1.xyzx  // pos<0,1,2>
+                
+                #line 112 "../LightDef.fx"
+                mov r14.xyz, -r14.xyzx
+                add r12.xyz, r12.xyzx, r14.xyzx  // lightVec<0:Inf,1:Inf,2:Inf>
+                
+                #line 115
+                dp3 r2.w, r12.xyzx, r12.xyzx
+                sqrt r15.y, r2.w  // dist<0:NaN:Inf>
+                
+                #line 118
+                lt r1.w, r1.w, r15.y
+                
+                #line 122
+                if_z r1.w
+                  div r12.xyz, r12.xyzx, r15.yyyy  // lightVec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                
+                #line 125
+                  mul r8.xyz, r2.xyzx, r8.xyzx  // ambient<0:Inf,1:Inf,2:Inf>
+                
+                #line 128
+                  dp3 r1.w, r12.xyzx, r9.xyzx  // diffuseFactor<0:NaN:Inf>
+                
+                #line 131
+                  lt r2.w, l(0.000000), r1.w
+                  mov r12.xyz, -r12.xyzx
+                  dp3 r3.w, r12.xyzx, r9.xyzx
+                  add r3.w, r3.w, r3.w
+                  mov r3.w, -r3.w
+                  mul r16.xyz, r3.wwww, r9.xyzx
+                  add r12.xyz, r12.xyzx, r16.xyzx  // v<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                  dp3 r3.w, r12.xyzx, r1.xyzx
+                  max r3.w, r3.w, l(0.000000)
+                  log r3.w, r3.w
+                  mul r3.w, r3.w, r4.w
+                  exp r3.w, r3.w  // specFactor<0:NaN:Inf>
+                  mul r12.xyz, r3.xyzx, r1.wwww
+                  mul r10.xyz, r10.xyzx, r12.xyzx  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                  mul r12.xyz, r4.xyzx, r3.wwww
+                  mul r11.xyz, r11.xyzx, r12.xyzx  // specular<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                
+                #line 131
+                  movc r10.xyz, r2.wwww, r10.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                  movc r11.xyz, r2.wwww, r11.xyzx, l(0,0,0,0)  // specular<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                
+                #line 141
+                  mul r15.z, r15.y, r15.y
+                  mov r15.x, l(1.000000)
+                  dp3 r1.w, r13.xyzx, r15.xyzx
+                  div r1.w, l(1.000000), r1.w  // atten<0:NaN:Inf>
+                  mul r10.xyz, r1.wwww, r10.xyzx  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                  mul r11.xyz, r1.wwww, r11.xyzx  // specular<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                
+                #line 122
+                else 
+                  mov r8.xyz, l(0,0,0,0)  // ambient<0: 0f,1: 0f,2: 0f>
+                  mov r10.xyz, l(0,0,0,0)  // diffuse<0: 0f,1: 0f,2: 0f>
+                  mov r11.xyz, l(0,0,0,0)  // specular<0: 0f,1: 0f,2: 0f>
+                endif 
+                
+                #line 165 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\Terrain\Terrain.fx"
+                mov r8.xyz, r8.xyzx  // A<0:Inf,1:Inf,2:Inf>
+                mov r10.xyz, r10.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                mov r11.xyz, r11.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                add r5.xyz, r5.xyzx, r8.xyzx  // ambient<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                add r6.xyz, r6.xyzx, r10.xyzx  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                add r7.xyz, r7.xyzx, r11.xyzx  // specular<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                
+                #line 165
+                nop 
+                mov r8.xyz, cb0[9].xyzx  // light<0,1,2>
+                mov r10.xyz, cb0[10].xyzx  // light<4,5,6>
+                mov r11.xyz, cb0[11].xyzx  // light<8,9,10>
+                mov r12.xyz, cb0[12].xyzx  // light<12,13,14>
+                mov r1.w, cb0[12].w  // light<15>
+                mov r13.xyz, cb0[13].xyzx  // light<16,17,18>
+                
+                #line 112 "../LightDef.fx"
+                add r12.xyz, r14.xyzx, r12.xyzx  // lightVec<0:Inf,1:Inf,2:Inf>
+                
+                #line 115
+                dp3 r2.w, r12.xyzx, r12.xyzx
+                sqrt r15.y, r2.w  // dist<0:NaN:Inf>
+                
+                #line 118
+                lt r1.w, r1.w, r15.y
+                
+                #line 122
+                if_z r1.w
+                  div r12.xyz, r12.xyzx, r15.yyyy  // lightVec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                
+                #line 125
+                  mul r8.xyz, r2.xyzx, r8.xyzx  // ambient<0:Inf,1:Inf,2:Inf>
+                
+                #line 128
+                  dp3 r1.w, r12.xyzx, r9.xyzx  // diffuseFactor<0:NaN:Inf>
+                
+                #line 131
+                  lt r2.w, l(0.000000), r1.w
+                  mov r12.xyz, -r12.xyzx
+                  dp3 r3.w, r12.xyzx, r9.xyzx
+                  add r3.w, r3.w, r3.w
+                  mov r3.w, -r3.w
+                  mul r16.xyz, r3.wwww, r9.xyzx
+                  add r12.xyz, r12.xyzx, r16.xyzx  // v<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                  dp3 r3.w, r12.xyzx, r1.xyzx
+                  max r3.w, r3.w, l(0.000000)
+                  log r3.w, r3.w
+                  mul r3.w, r3.w, r4.w
+                  exp r3.w, r3.w  // specFactor<0:NaN:Inf>
+                  mul r12.xyz, r3.xyzx, r1.wwww
+                  mul r10.xyz, r10.xyzx, r12.xyzx  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                  mul r12.xyz, r4.xyzx, r3.wwww
+                  mul r11.xyz, r11.xyzx, r12.xyzx  // specular<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                
+                #line 131
+                  movc r10.xyz, r2.wwww, r10.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                  movc r11.xyz, r2.wwww, r11.xyzx, l(0,0,0,0)  // specular<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                
+                #line 141
+                  mul r15.z, r15.y, r15.y
+                  mov r15.x, l(1.000000)
+                  dp3 r1.w, r13.xyzx, r15.xyzx
+                  div r1.w, l(1.000000), r1.w  // atten<0:NaN:Inf>
+                  mul r10.xyz, r1.wwww, r10.xyzx  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                  mul r11.xyz, r1.wwww, r11.xyzx  // specular<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                
+                #line 122
+                else 
+                  mov r8.xyz, l(0,0,0,0)  // ambient<0: 0f,1: 0f,2: 0f>
+                  mov r10.xyz, l(0,0,0,0)  // diffuse<0: 0f,1: 0f,2: 0f>
+                  mov r11.xyz, l(0,0,0,0)  // specular<0: 0f,1: 0f,2: 0f>
+                endif 
+                
+                #line 165 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\Terrain\Terrain.fx"
+                mov r8.xyz, r8.xyzx  // A<0:Inf,1:Inf,2:Inf>
+                mov r10.xyz, r10.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                mov r11.xyz, r11.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                add r5.xyz, r5.xyzx, r8.xyzx  // ambient<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                add r6.xyz, r6.xyzx, r10.xyzx  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                add r7.xyz, r7.xyzx, r11.xyzx  // specular<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                
+                #line 176
+                nop 
+                mov r8.xyz, cb0[14].xyzx  // light<0,1,2>
+                mov r10.xyz, cb0[15].xyzx  // light<4,5,6>
+                mov r11.xyz, cb0[16].xyzx  // light<8,9,10>
+                mov r12.xyz, cb0[17].xyzx  // light<12,13,14>
+                mov r13.xyz, cb0[18].xyzx  // light<16,17,18>
+                mov r15.xyz, cb0[19].xyzx  // light<20,21,22>
+                mov r1.w, cb0[17].w  // light<15>
+                mov r2.w, cb0[18].w  // light<19>
+                
+                #line 167 "../LightDef.fx"
+                add r12.xyz, r14.xyzx, r12.xyzx  // lightVec<0:Inf,1:Inf,2:Inf>
+                
+                #line 170
+                dp3 r3.w, r12.xyzx, r12.xyzx
+                sqrt r16.y, r3.w  // dist<0:NaN:Inf>
+                
+                #line 173
+                lt r1.w, r1.w, r16.y
+                
+                #line 177
+                if_z r1.w
+                  div r12.xyz, r12.xyzx, r16.yyyy  // lightVec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                
+                #line 180
+                  mul r8.xyz, r2.xyzx, r8.xyzx  // ambient<0:Inf,1:Inf,2:Inf>
+                
+                #line 183
+                  dp3 r1.w, r12.xyzx, r9.xyzx  // diffuseFactor<0:NaN:Inf>
+                
+                #line 186
+                  lt r3.w, l(0.000000), r1.w
+                  mov r12.xyz, -r12.xyzx
+                  dp3 r5.w, r12.xyzx, r9.xyzx
+                  add r5.w, r5.w, r5.w
+                  mov r5.w, -r5.w
+                  mul r17.xyz, r5.wwww, r9.xyzx
+                  add r17.xyz, r12.xyzx, r17.xyzx  // v<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                  dp3 r5.w, r17.xyzx, r1.xyzx
+                  max r5.w, r5.w, l(0.000000)
+                  log r5.w, r5.w
+                  mul r5.w, r4.w, r5.w
+                  exp r5.w, r5.w  // specFactor<0:NaN:Inf>
+                  mul r17.xyz, r3.xyzx, r1.wwww
+                  mul r10.xyz, r10.xyzx, r17.xyzx  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                  mul r17.xyz, r4.xyzx, r5.wwww
+                  mul r11.xyz, r11.xyzx, r17.xyzx  // specular<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                
+                #line 186
+                  movc r10.xyz, r3.wwww, r10.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                  movc r11.xyz, r3.wwww, r11.xyzx, l(0,0,0,0)  // specular<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                
+                #line 196
+                  dp3 r1.w, r12.xyzx, r13.xyzx
+                  max r1.w, r1.w, l(0.000000)
+                  log r1.w, r1.w
+                  mul r1.w, r1.w, r2.w
+                  exp r1.w, r1.w  // spot<0:NaN:Inf>
+                
+                #line 199
+                  mul r16.z, r16.y, r16.y
+                  mov r16.x, l(1.000000)
+                  dp3 r2.w, r15.xyzx, r16.xyzx
+                  div r2.w, r1.w, r2.w  // attenuation<0:NaN:Inf>
+                  mul r8.xyz, r1.wwww, r8.xyzx  // ambient<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                  mul r10.xyz, r2.wwww, r10.xyzx  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                  mul r11.xyz, r2.wwww, r11.xyzx  // specular<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                
+                #line 177
+                else 
+                  mov r8.xyz, l(0,0,0,0)  // ambient<0: 0f,1: 0f,2: 0f>
+                  mov r10.xyz, l(0,0,0,0)  // diffuse<0: 0f,1: 0f,2: 0f>
+                  mov r11.xyz, l(0,0,0,0)  // specular<0: 0f,1: 0f,2: 0f>
+                endif 
+                
+                #line 176 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\Terrain\Terrain.fx"
+                mov r8.xyz, r8.xyzx  // A<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                mov r10.xyz, r10.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                mov r11.xyz, r11.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                add r5.xyz, r5.xyzx, r8.xyzx  // ambient<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                add r6.xyz, r6.xyzx, r10.xyzx  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                add r7.xyz, r7.xyzx, r11.xyzx  // specular<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                
+                #line 176
+                nop 
+                mov r8.xyz, cb0[20].xyzx  // light<0,1,2>
+                mov r10.xyz, cb0[21].xyzx  // light<4,5,6>
+                mov r11.xyz, cb0[22].xyzx  // light<8,9,10>
+                mov r12.xyz, cb0[23].xyzx  // light<12,13,14>
+                mov r13.xyz, cb0[24].xyzx  // light<16,17,18>
+                mov r15.xyz, cb0[25].xyzx  // light<20,21,22>
+                mov r1.w, cb0[23].w  // light<15>
+                mov r2.w, cb0[24].w  // light<19>
+                
+                #line 167 "../LightDef.fx"
+                add r12.xyz, r14.xyzx, r12.xyzx  // lightVec<0:Inf,1:Inf,2:Inf>
+                
+                #line 170
+                dp3 r3.w, r12.xyzx, r12.xyzx
+                sqrt r14.y, r3.w  // dist<0:NaN:Inf>
+                
+                #line 173
+                lt r1.w, r1.w, r14.y
+                
+                #line 177
+                if_z r1.w
+                  div r12.xyz, r12.xyzx, r14.yyyy  // lightVec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                
+                #line 180
+                  mul r2.xyz, r2.xyzx, r8.xyzx  // ambient<0:Inf,1:Inf,2:Inf>
+                
+                #line 183
+                  dp3 r1.w, r12.xyzx, r9.xyzx  // diffuseFactor<0:NaN:Inf>
+                
+                #line 186
+                  lt r3.w, l(0.000000), r1.w
+                  mov r8.xyz, -r12.xyzx
+                  dp3 r5.w, r8.xyzx, r9.xyzx
+                  add r5.w, r5.w, r5.w
+                  mov r5.w, -r5.w
+                  mul r9.xyz, r5.wwww, r9.xyzx
+                  add r9.xyz, r8.xyzx, r9.xyzx  // v<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                  dp3 r1.x, r9.xyzx, r1.xyzx
+                  max r1.x, r1.x, l(0.000000)
+                  log r1.x, r1.x
+                  mul r1.x, r1.x, r4.w
+                  exp r1.x, r1.x  // specFactor<0:NaN:Inf>
+                  mul r1.yzw, r3.xxyz, r1.wwww
+                  mul r1.yzw, r10.xxyz, r1.yyzw  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                  mul r3.xyz, r4.xyzx, r1.xxxx
+                  mul r3.xyz, r11.xyzx, r3.xyzx  // specular<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                
+                #line 186
+                  movc r1.xyz, r3.wwww, r1.yzwy, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                  movc r3.xyz, r3.wwww, r3.xyzx, l(0,0,0,0)  // specular<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                
+                #line 196
+                  dp3 r1.w, r8.xyzx, r13.xyzx
+                  max r1.w, r1.w, l(0.000000)
+                  log r1.w, r1.w
+                  mul r1.w, r1.w, r2.w
+                  exp r1.w, r1.w  // spot<0:NaN:Inf>
+                
+                #line 199
+                  mul r14.z, r14.y, r14.y
+                  mov r14.x, l(1.000000)
+                  dp3 r2.w, r15.xyzx, r14.xyzx
+                  div r2.w, r1.w, r2.w  // attenuation<0:NaN:Inf>
+                  mul r2.xyz, r1.wwww, r2.xyzx  // ambient<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                  mul r1.xyz, r1.xyzx, r2.wwww  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                  mul r3.xyz, r2.wwww, r3.xyzx  // specular<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                
+                #line 177
+                else 
+                  mov r2.xyz, l(0,0,0,0)  // ambient<0: 0f,1: 0f,2: 0f>
+                  mov r1.xyz, l(0,0,0,0)  // diffuse<0: 0f,1: 0f,2: 0f>
+                  mov r3.xyz, l(0,0,0,0)  // specular<0: 0f,1: 0f,2: 0f>
+                endif 
+                
+                #line 176 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\Terrain\Terrain.fx"
+                mov r2.xyz, r2.xyzx  // A<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                mov r1.xyz, r1.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                mov r3.xyz, r3.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                add r2.xyz, r2.xyzx, r5.xyzx  // ambient<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                add r1.xyz, r1.xyzx, r6.xyzx  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                add r3.xyz, r3.xyzx, r7.xyzx  // specular<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                
+                #line 183
+                add r1.xyz, r1.xyzx, r2.xyzx
+                mul r1.xyz, r0.xyzx, r1.xyzx
+                add r1.xyz, r3.xyzx, r1.xyzx  // litColor<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                mul r0.xyz, r0.xyzx, cb2[0].yyyy
+                add r0.xyz, r0.xyzx, r1.xyzx  // litColor<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                
+                #line 188
+                mul r0.w, r0.w, cb1[1].w  // litColor<3:NaN:Inf>
                 mov o0.xyz, r0.xyzx  // PSScene_Lights<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov o0.w, r0.w  // PSScene_Lights<3:NaN:Inf>
                 ret 
-                // Approximately 24 instruction slots used
+                // Approximately 288 instruction slots used
                             
             };
             AB_BlendFactor = float4(0, 0, 0, 0);

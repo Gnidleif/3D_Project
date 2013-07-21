@@ -20,6 +20,7 @@ cbuffer cbPerObject
 cbuffer cbFixed
 {
 	float texScale = 15.0f;
+	float lightAddScale = 0.5f;
 };
 
 Texture2D gBlendMap;
@@ -180,7 +181,7 @@ float4 PSScene_Lights(PSIn input,
 		}
 
 		litColor = texColor * (ambient + diffuse) + specular;
-		//litColor += texColor * 0.3f;
+		litColor += texColor * lightAddScale;
 	}
 
 	// Materials later
@@ -252,7 +253,7 @@ technique11 AllLights
 	{
 		SetVertexShader( CompileShader(vs_5_0, VSScene()));
 		SetGeometryShader(NULL);
-		SetPixelShader( CompileShader(ps_5_0, PSScene_Lights(true, 0, 0, 0))); // Testing, testing
+		SetPixelShader( CompileShader(ps_5_0, PSScene_Lights(true, 1, 2, 2)));
 
 		SetBlendState( NULL, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff );
 

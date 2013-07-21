@@ -26,10 +26,13 @@ public:
 
 private:
 	void SwitchDrawSolid();
+	void SwitchLights();
 
 private:
 	float mDrawCooldown;
+	float mLightSwitchCD;
 	bool mDrawSolid;
+	bool mLightsOn;
 	BYTE* mInput;
 	Game* mGame;
 };
@@ -62,7 +65,9 @@ Main::Main(HINSTANCE hInst)
 	mGame(new Game()),
 	//mInput(nullptr),
 	mDrawSolid(true),
-	mDrawCooldown(0.0f)
+	mDrawCooldown(0.0f),
+	mLightsOn(true),
+	mLightSwitchCD(0.0f)
 {
 	mMainWndCaption = "3D2 AwesomesauceMegaSuperTruperBanana Project";
 }
@@ -114,6 +119,7 @@ bool Main::Initialize()
 void Main::Update(float dt)
 {
 	mDrawCooldown += dt;
+	mLightSwitchCD += dt;
 	// Not really optimal to put this here, but whatever
 	if(mInput == D3D11App::mDirectInput->GetKeyboardState())
 	{
@@ -136,6 +142,10 @@ void Main::Update(float dt)
 		else if(mInput[DIK_E] && 0x80 && mDrawCooldown > 2.0f)
 		{
 			this->SwitchDrawSolid();
+		}
+		else if(mInput[DIK_Q] && 0x80 && mLightSwitchCD > 1.0f)
+		{
+			this->SwitchLights();
 		}
 		else if(mInput[DIK_ESCAPE] && 0x80)
 		{
@@ -165,7 +175,7 @@ void Main::Draw()
 	mDirect3D->GetDevCon()->OMSetBlendState(0, blendFactor, 0xffffffff);
 
 	if(mDrawSolid)
-		mGame->SolidDraw(mDirect3D->GetDevCon());
+		mGame->SolidDraw(mDirect3D->GetDevCon(), mLightsOn);
 	else
 		mGame->WireDraw(mDirect3D->GetDevCon());
 
@@ -194,4 +204,13 @@ void Main::SwitchDrawSolid()
 		mDrawSolid = false;
 	else
 		mDrawSolid = true;
+}
+
+void Main::SwitchLights()
+{
+	mLightSwitchCD = 0.0f;
+	if(mLightsOn)
+		mLightsOn = false;
+	else
+		mLightsOn = true;
 }

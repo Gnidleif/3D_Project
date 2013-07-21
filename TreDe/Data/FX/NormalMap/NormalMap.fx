@@ -22,6 +22,11 @@ cbuffer cbSkin
 	float4x4 gBoneTransforms[96];
 };
 
+cbuffer cbFixed
+{
+	float lightAddScale = 0.5f;
+};
+
 Texture2D gDiffMap;
 Texture2D gNormMap;
 
@@ -207,7 +212,7 @@ float4 PSScene_Lights(PSIn input,
 		}
 
 		litColor = texColor * (ambient + diffuse) + specular;
-		//litColor += texColor * 0.3f;
+		litColor += texColor * lightAddScale;
 	}
 
 	// Materials later

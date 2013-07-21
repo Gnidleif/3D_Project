@@ -15,21 +15,21 @@ Game::Game()
 		XMFLOAT4(0.3f, 0.3f, 0.3f, 1.0f), // Ambient
 		XMFLOAT4(0.9f, 0.9f, 0.9f, 1.0f), // Diffuse
 		XMFLOAT4(0.4f, 0.4f, 0.5f, 1.0f), // Specular
-		XMFLOAT3(0.5f, 0.5f, 0.0f), 1.0f); // Direction/Padding
+		XMFLOAT3(0.5f, 0.5f, 0.0f), 0.0f); // Direction/Padding
 
 	mPointLights[0] = PointLight(
 		XMFLOAT4(0.1f, 0.1f, 0.1f, 1.0f), // Ambient
 		XMFLOAT4(0.3f, 0.3f, 0.3f, 1.0f), // Diffuse
 		XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f), // Specular
 		XMFLOAT3(0.0f, 10.0f, 100.0f), 50.0f, // Position/Range
-		XMFLOAT3(1.0f, 1.0f, 1.0f), 1.0f); // Attenuation/Padding
+		XMFLOAT3(1.0f, 1.0f, 1.0f), 0.0f); // Attenuation/Padding
 
 	mPointLights[1] = PointLight(
 		XMFLOAT4(0.1f, 0.1f, 0.1f, 1.0f), // Ambient
 		XMFLOAT4(0.3f, 0.3f, 0.3f, 1.0f), // Diffuse
 		XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f), // Specular
 		XMFLOAT3(100.0f, 10.0f, 0.0f), 10.0f, // Position/Range
-		XMFLOAT3(1.0f, 1.0f, 1.0f), 1.0f); // Attenuation/Padding
+		XMFLOAT3(1.0f, 1.0f, 1.0f), 0.0f); // Attenuation/Padding
 
 	mSpotLights[0] = SpotLight(
 		XMFLOAT4(1.0f, 0.3f, 0.3f, 1.0f), // Ambient
@@ -37,7 +37,7 @@ Game::Game()
 		XMFLOAT4(0.4f, 0.4f, 0.5f, 1.0f), // Specular
 		XMFLOAT3(0.0f, 10.0f, 0.0f), 50.0f, // Position/Range
 		XMFLOAT3(50.0f, 50.0f, 50.0f), 1.0f, // Direction/Spot
-		XMFLOAT3(1.0f, 1.0f, 1.0f), 1.0f); // Attenuation/Padding
+		XMFLOAT3(1.0f, 1.0f, 1.0f), 0.0f); // Attenuation/Padding
 
 	mSpotLights[1] = SpotLight(
 		XMFLOAT4(0.3f, 0.3f, 0.3f, 1.0f), // Ambient
@@ -45,7 +45,7 @@ Game::Game()
 		XMFLOAT4(0.4f, 0.4f, 0.5f, 1.0f), // Specular
 		XMFLOAT3(200.0f, 10.0f, 200.0f), 10.0f, // Position/Range
 		XMFLOAT3(50.0f, 50.0f, 50.0f), 1.0f, // Direction/Spot
-		XMFLOAT3(1.0f, 1.0f, 1.0f), 1.0f); // Attenuation/Padding
+		XMFLOAT3(1.0f, 1.0f, 1.0f), 0.0f); // Attenuation/Padding
 }
 
 Game::~Game()
@@ -109,30 +109,49 @@ void Game::Update(float dt)
 	mPointLights[0].Position = mPlayer->GetCamera()->GetPosition();
 	//mSpotLights[0].Direction = mPlayer->GetCamera()->GetLook();
 
-	Effects::NormalFX->SetEyePos(&mPlayer->GetCamera()->GetPosition());
-	Effects::NormalFX->SetDirLights(mDirLights, mDirLightAmount);
-	Effects::NormalFX->SetPointLights(mPointLights, mPointLightAmount);
-	Effects::NormalFX->SetSpotLights(mSpotLights, mSpotLightAmount);
-
 	//mCharacter->Update(dt);
 
 	mPlayer->Update(dt);
 }
 
-void Game::SolidDraw(ID3D11DeviceContext* devCon)
+void Game::SolidDraw(ID3D11DeviceContext* devCon, bool lightsOn)
 {
 	Camera* playerCam = mPlayer->GetCamera();
 
 	ID3DX11EffectTechnique* activeTech = Effects::SkyFX->mSolid;
 	mSkyBox->Draw(devCon, activeTech, playerCam);
 
-	activeTech = Effects::TerrainFX->mSolid;
-	mTerrain->Draw(devCon, activeTech, playerCam);
-
-	activeTech = Effects::NormalFX->mAllLights;
-	for(UINT i(0); i != mPlatforms.size(); ++i)
+	if(lightsOn)
 	{
-		mPlatforms[i]->Draw(devCon, activeTech, playerCam);
+		Effects::NormalFX->SetEyePos(&playerCam->GetPosition());
+		Effects::NormalFX->SetDirLights(mDirLights, mDirLightAmount);
+		Effects::NormalFX->SetPointLights(mPointLights, mPointLightAmount);
+		Effects::NormalFX->SetSpotLights(mSpotLights, mSpotLightAmount);
+
+		Effects::TerrainFX->SetEyePos(&playerCam->GetPosition());
+		Effects::TerrainFX->SetDirLights(mDirLights, mDirLightAmount);
+		Effects::TerrainFX->SetPointLights(mPointLights, mPointLightAmount);
+		Effects::TerrainFX->SetSpotLights(mSpotLights, mSpotLightAmount);
+
+		activeTech = Effects::TerrainFX->mAllLights;
+		mTerrain->Draw(devCon, activeTech, playerCam);
+
+		activeTech = Effects::NormalFX->mAllLights; // Add an alpha clip with lights later when the lights are fixed
+		for(UINT i(0); i != mPlatforms.size(); ++i)
+		{
+			mPlatforms[i]->Draw(devCon, activeTech, playerCam);
+		}
+	}
+	else
+	{
+		activeTech = Effects::TerrainFX->mSolid;
+		mTerrain->Draw(devCon, activeTech, playerCam);
+
+		activeTech = Effects::NormalFX->mSolidAlpha;
+		for(UINT i(0); i != mPlatforms.size(); ++i)
+		{
+			mPlatforms[i]->Draw(devCon, activeTech, playerCam);
+		}
 	}
 
 	//activeTech = Effects::NormalFX->mSolidSkin;
@@ -173,20 +192,6 @@ void Game::ControlPlayer(DirectInput* di)
 			mPlatforms[i]->SetScale(0.1f);
 		}
 		//mCharacter->SetScale(1.0f);
-	}
-	else if(di->GetKeyboardState()[DIK_NUMPADPLUS] && 0x80)
-	{
-		for(UINT i(0); i != mSpotLightAmount; ++i)
-		{
-			mSpotLights[i].Ambient = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-		}
-	}
-	else if(di->GetKeyboardState()[DIK_NUMPADMINUS] && 0x80)
-	{
-		for(UINT i(0); i != mSpotLightAmount; ++i)
-		{
-			mSpotLights[i].Ambient = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
-		}
 	}
 	else
 		mPlayer->Control(di);

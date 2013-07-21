@@ -17,7 +17,7 @@ public:
 	~Game();
 	void Initialize(ID3D11Device* device);
 	void Update(float dt);
-	void SolidDraw(ID3D11DeviceContext* devCon);
+	void SolidDraw(ID3D11DeviceContext* devCon, bool lightsOn);
 	void WireDraw(ID3D11DeviceContext* devCon);
 	void ControlPlayer(DirectInput* di);
 
