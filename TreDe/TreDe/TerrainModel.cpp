@@ -40,7 +40,8 @@ void TerrainModel::CreateMatsAndMeshes(string filename)
 	// Some more hardcoded bullshit!
 	this->mMaterial->Ambient = XMFLOAT4(0.48f, 0.77f, 0.46f, 1.0f);
 	this->mMaterial->Diffuse = XMFLOAT4(0.48f, 0.77f, 0.46f, 0.5f);
-	this->mMaterial->Specular = XMFLOAT4(0.2f, 0.2f, 0.2f, 16.0f);
+	this->mMaterial->Specular = XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
+	this->mMaterial->Reflect = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
 }
 
 void TerrainModel::CreateBuffers()

@@ -9,6 +9,7 @@
 #include "StaticEntity.h"
 #include "SkinnedEntity.h"
 #include "SkyBox.h"
+#include "LightHandler.h"
 
 class Game
 {
@@ -17,8 +18,9 @@ public:
 	~Game();
 	void Initialize(ID3D11Device* device);
 	void Update(float dt);
-	void SolidDraw(ID3D11DeviceContext* devCon, bool lightsOn);
+	void SolidDraw(ID3D11DeviceContext* devCon);
 	void WireDraw(ID3D11DeviceContext* devCon);
+	void LightDraw(ID3D11DeviceContext* devCon);
 	void ControlPlayer(DirectInput* di);
 
 public:
@@ -30,13 +32,6 @@ private:
 	std::vector<StaticEntity*> mPlatforms;
 	//SkinnedEntity* mCharacter;
 	SkyBox* mSkyBox;
-	std::vector<StaticEntity*> mDucks;
-
-	UINT mDirLightAmount;
-	UINT mPointLightAmount;
-	UINT mSpotLightAmount;
-	DirectionalLight* mDirLights;
-	PointLight* mPointLights;
-	SpotLight* mSpotLights;
+	LightHandler* mLightHandler;
 };
 #endif

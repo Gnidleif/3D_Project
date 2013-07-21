@@ -132,6 +132,9 @@
     <ClInclude Include="SkinnedEntity.h">
       <Filter>ObjectClasses\Entities</Filter>
     </ClInclude>
+    <ClInclude Include="LightHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameTimer.cpp">
@@ -226,6 +229,9 @@
     </ClCompile>
     <ClCompile Include="SkinnedEntity.cpp">
       <Filter>ObjectClasses\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="LightHandler.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

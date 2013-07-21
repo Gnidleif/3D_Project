@@ -25,7 +25,7 @@ struct GenericMaterial
 		ZeroMemory(&mMaterial, sizeof(mMaterial));
 		this->mMaterial.Ambient		= XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
 		this->mMaterial.Diffuse		= XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f);
-		this->mMaterial.Specular	= XMFLOAT4(1.0f, 1.0f, 1.0f, 16.0f);
+		this->mMaterial.Specular	= XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 		this->mMaterial.Reflect		= XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
 
 		this->mDiffMapName = "";

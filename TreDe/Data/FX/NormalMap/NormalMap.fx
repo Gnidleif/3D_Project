@@ -5,6 +5,7 @@ cbuffer cbPerFrame
 	DirectionalLight gDirLights[1];
 	PointLight gPointLights[2];
 	SpotLight gSpotLights[2];
+
 	float3 gEyePos;
 };
 
@@ -158,9 +159,6 @@ float4 PSScene_Lights(PSIn input,
 	if(useTex)
 	{
 		texColor = gDiffMap.Sample(samLinear, input.TexC);
-
-		if(alphaClip) // If alpha clipping is true
-			clip(texColor.a - 0.1f);
 	}
 
 	float3 normMapSamp = gNormMap.Sample(samLinear, input.TexC).rgb;
@@ -182,7 +180,7 @@ float4 PSScene_Lights(PSIn input,
 		for(int i = 0; i < dirLightAmount; ++i)
 		{
 			float4 A, D, S;
-			ComputeDirectionalLight(gMaterial, gDirLights[i], -bumpNormal, toEye, A, D, S);
+			ComputeDirectionalLight(gMaterial, gDirLights[i], bumpNormal, toEye, A, D, S);
 
 			ambient += A;
 			diffuse += D;
@@ -193,7 +191,7 @@ float4 PSScene_Lights(PSIn input,
 		for(int j = 0; j < pointLightAmount; ++j)
 		{
 			float4 A, D, S;
-			ComputePointLight(gMaterial, gPointLights[j], input.PosW, -bumpNormal, toEye, A, D, S);
+			ComputePointLight(gMaterial, gPointLights[j], input.PosW, bumpNormal, toEye, A, D, S);
 
 			ambient += A;
 			diffuse += D;
@@ -204,7 +202,7 @@ float4 PSScene_Lights(PSIn input,
 		for(int k = 0; k < spotLightAmount; ++k)
 		{
 			float4 A, D, S;
-			ComputeSpotLight(gMaterial, gSpotLights[k], input.PosW, -bumpNormal, toEye, A, D, S);
+			ComputeSpotLight(gMaterial, gSpotLights[k], input.PosW, bumpNormal, toEye, A, D, S);
 
 			ambient += A;
 			diffuse += D;
@@ -212,13 +210,17 @@ float4 PSScene_Lights(PSIn input,
 		}
 
 		litColor = texColor * (ambient + diffuse) + specular;
-		//litColor += texColor * lightAddScale;
+		litColor += texColor * lightAddScale;
 	}
+
+	if(alphaClip) // If alpha clipping is true
+		clip(texColor.a - 0.1f);
 
 	// Materials later
 	litColor.a = gMaterial.Ambient.a * texColor.a;
 	return litColor;
 };
+
 RasterizerState Wireframe
 {
 	FillMode = WireFrame;
@@ -301,7 +303,7 @@ technique11 AllLights
 	{
 		SetVertexShader( CompileShader(vs_5_0, VSScene()));
 		SetGeometryShader(NULL);
-		SetPixelShader( CompileShader(ps_5_0, PSScene_Lights(false, true, 0, 1, 0)));
+		SetPixelShader( CompileShader(ps_5_0, PSScene_Lights(false, true, 0, 0, 2)));
 
 		SetBlendState( NULL, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff );
 		SetRasterizerState(Solidframe);
@@ -315,7 +317,7 @@ technique11 AllLightsAlpha
 	{
 		SetVertexShader( CompileShader(vs_5_0, VSScene()));
 		SetGeometryShader(NULL);
-		SetPixelShader( CompileShader(ps_5_0, PSScene_Lights(true, true, 0, 1, 0)));
+		SetPixelShader( CompileShader(ps_5_0, PSScene_Lights(true, true, 0, 0, 2)));
 
 		SetBlendState( NULL, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff );
 		SetRasterizerState(Solidframe);

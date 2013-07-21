@@ -58,9 +58,9 @@ public:
 	void SetTex3(ID3D11ShaderResourceView* t3) { this->mTex3->SetResource(t3); }
 
 	// Set lights
-	void SetDirLights(DirectionalLight* lights, UINT amount) { this->mDirLights->SetRawValue(lights, 0, amount*sizeof(DirectionalLight)); }
-	void SetPointLights(PointLight* lights, UINT amount) { this->mPointLights->SetRawValue(lights, 0, amount*sizeof(PointLight)); }
-	void SetSpotLights(SpotLight* lights, UINT amount) { this->mSpotLights->SetRawValue(lights, 0, amount*sizeof(SpotLight)); }
+	void SetDirLights(DirectionalLight* lights, int amount) { this->mDirLights->SetRawValue(lights, 0, amount*sizeof(DirectionalLight)); }
+	void SetPointLights(PointLight* lights, int amount) { this->mPointLights->SetRawValue(lights, 0, amount*sizeof(PointLight)); }
+	void SetSpotLights(SpotLight* lights, int amount) { this->mSpotLights->SetRawValue(lights, 0, amount*sizeof(SpotLight)); }
 	// Set material
 	void SetMaterial(Material* mat) { mMaterial->SetRawValue(&mat, 0, sizeof(Material)); }
 
@@ -110,9 +110,9 @@ public:
 	void SetNormalMap(ID3D11ShaderResourceView* normMap) { this->mNormalMap->SetResource(normMap); }
 
 	// Set lights
-	void SetDirLights(DirectionalLight* lights, UINT amount) { this->mDirLights->SetRawValue(lights, 0, amount*sizeof(DirectionalLight)); }
-	void SetPointLights(PointLight* lights, UINT amount) { this->mPointLights->SetRawValue(lights, 0, amount*sizeof(PointLight)); }
-	void SetSpotLights(SpotLight* lights, UINT amount) { this->mSpotLights->SetRawValue(lights, 0, amount*sizeof(SpotLight)); }
+	void SetDirLights(DirectionalLight* lights, int amount) { this->mDirLights->SetRawValue(lights, 0, amount*sizeof(DirectionalLight)); }
+	void SetPointLights(PointLight* lights, int amount) { this->mPointLights->SetRawValue(lights, 0, amount*sizeof(PointLight)); }
+	void SetSpotLights(SpotLight* lights, int amount) { this->mSpotLights->SetRawValue(lights, 0, amount*sizeof(SpotLight)); }
 	void SetMaterial(Material* mat) { mMaterial->SetRawValue(&mat, 0, sizeof(Material)); }
 
 public: // Techniques

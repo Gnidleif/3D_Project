@@ -20,7 +20,7 @@ cbuffer cbPerObject
 cbuffer cbFixed
 {
 	float texScale = 15.0f;
-	float lightAddScale = 1.0f;
+	float lightAddScale = 0.3f;
 };
 
 Texture2D gBlendMap;
@@ -72,7 +72,6 @@ PSIn VSScene(VSIn input)
 
 	output.PosW = mul(float4(input.PosL, 1.0f), gWorld).xyz;
 	output.Normal = mul(input.Normal, (float3x3)gWorld);
-	output.Normal = normalize(output.Normal);
 
 	output.Tiled = texScale * input.TexC;
 	output.Stretched = input.TexC;
@@ -83,6 +82,7 @@ PSIn VSScene(VSIn input)
 float4 PSScene(PSIn input,
 			   uniform bool useTex) : SV_Target
 {
+	input.Normal = normalize(input.Normal);
 	//samLinear
 	float4 texColor = float4(0.0f, 0.0f, 1.0f, 1.0f);
 	if(useTex)
@@ -110,6 +110,8 @@ float4 PSScene_Lights(PSIn input,
 			   uniform int pointLightAmount,
 			   uniform int spotLightAmount) : SV_Target
 {
+	input.Normal = normalize(input.Normal);
+
 	//samLinear
 	float4 texColor = float4(0.0f, 0.0f, 1.0f, 1.0f);
 	if(useTex)
@@ -128,7 +130,6 @@ float4 PSScene_Lights(PSIn input,
 	}
 
 	// Lighting!
-
 	float4 litColor = texColor;
 	if(dirLightAmount > 0 || pointLightAmount > 0 || spotLightAmount > 0)
 	{
@@ -138,7 +139,6 @@ float4 PSScene_Lights(PSIn input,
 		float4 ambient = float4(0.0f, 0.0f, 0.0f, 0.0f);
 		float4 diffuse = float4(0.0f, 0.0f, 0.0f, 0.0f);
 		float4 specular = float4(0.0f, 0.0f, 0.0f, 0.0f);
-
 
 		[unroll]
 		for(int i = 0; i < dirLightAmount; ++i)
@@ -173,12 +173,12 @@ float4 PSScene_Lights(PSIn input,
 			specular += S;
 		}
 
-		litColor = texColor + (ambient + diffuse) + specular;
-		//litColor += texColor * lightAddScale;
+		litColor = texColor * (ambient + diffuse) + specular;
 	}
 
 	// Materials later
 	litColor.a = gMaterial.Diffuse.a * texColor.a;
+	litColor += texColor * lightAddScale;
 	return litColor;
 }
 
@@ -235,8 +235,8 @@ technique11 Wire
 		SetGeometryShader(NULL);
 		SetPixelShader( CompileShader(ps_5_0, PSScene(false)));
 
-		SetRasterizerState(Wireframe);
 		SetDepthStencilState(NoDepthWrites, 0);
+		SetRasterizerState(Wireframe);
 	}
 };
 
@@ -246,11 +246,11 @@ technique11 AllLights
 	{
 		SetVertexShader( CompileShader(vs_5_0, VSScene()));
 		SetGeometryShader(NULL);
-		SetPixelShader( CompileShader(ps_5_0, PSScene_Lights(true, 0, 1, 0)));
+		SetPixelShader( CompileShader(ps_5_0, PSScene_Lights(true, 0, 0, 2)));
 
 		SetBlendState( NULL, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff );
 
+		//SetDepthStencilState(NoDepthWrites, 0);
 		SetRasterizerState(Solidframe);
-		SetDepthStencilState(NoDepthWrites, 0);
 	}
 };

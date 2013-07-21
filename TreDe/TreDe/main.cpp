@@ -14,6 +14,14 @@
 #include <iostream>
 using namespace std;
 // The main class, used to handle the "game-loop" and initializing/shutdown of various static classes
+
+enum DrawMode
+{
+	Light,
+	Solid,
+	Wire
+};
+
 class Main : public D3D11App
 {
 public:
@@ -25,14 +33,11 @@ public:
 	void OnResize();
 
 private:
-	void SwitchDrawSolid();
-	void SwitchLights();
+	void Input();
 
 private:
-	float mDrawCooldown;
-	float mLightSwitchCD;
-	bool mDrawSolid;
-	bool mLightsOn;
+	float mDrawSwitchCD;
+	UINT mCurrDraw;
 	BYTE* mInput;
 	Game* mGame;
 };
@@ -64,10 +69,8 @@ Main::Main(HINSTANCE hInst)
 	D3D11App(hInst),
 	mGame(new Game()),
 	//mInput(nullptr),
-	mDrawSolid(true),
-	mDrawCooldown(0.0f),
-	mLightsOn(true),
-	mLightSwitchCD(0.0f)
+	mCurrDraw(Light),
+	mDrawSwitchCD(0.0f)
 {
 	mMainWndCaption = "3D2 AwesomesauceMegaSuperTruperBanana Project";
 }
@@ -118,66 +121,31 @@ bool Main::Initialize()
 
 void Main::Update(float dt)
 {
-	mDrawCooldown += dt;
-	mLightSwitchCD += dt;
-	// Not really optimal to put this here, but whatever
-	if(mInput == D3D11App::mDirectInput->GetKeyboardState())
-	{
-		//BYTE* lpInput = D3D11App::mDirectInput->GetKeyboardState();
-		if(mInput[DIK_1] && 0x80)
-		{
-			Settings->SetResolution(800, 600);
-			D3D11App::SwitchResolution();
-		}
-		else if(mInput[DIK_2] && 0x80)
-		{
-			Settings->SetResolution(1024, 768);
-			D3D11App::SwitchResolution();
-		}
-		else if(mInput[DIK_3] && 0x80)
-		{
-			Settings->SetResolution(1600, 900);
-			D3D11App::SwitchResolution();
-		}
-		else if(mInput[DIK_E] && 0x80 && mDrawCooldown > 2.0f)
-		{
-			this->SwitchDrawSolid();
-		}
-		else if(mInput[DIK_Q] && 0x80 && mLightSwitchCD > 1.0f)
-		{
-			this->SwitchLights();
-		}
-		else if(mInput[DIK_ESCAPE] && 0x80)
-		{
-			SendMessage(mhMainWnd, WM_DESTROY, 0, 0);
-		}
-		// If any button is pressed that isn't in any of the above buttons,
-		// the input-stuff for the player is checked through the game-object instead
-		else
-		{
-			mGame->ControlPlayer(D3D11App::mDirectInput);
-		}
-	}
-	// Kind of an ugly solution to a bug that changed the resolution on startup for some reason
-	mInput = D3D11App::mDirectInput->GetKeyboardState();
+	mDrawSwitchCD += dt;
+
+	this->Input();
+
 	Text->Update(dt);
 	mGame->Update(dt);
 }
-// Draw function, I don't know or care that much about what's going on here, as long as it works
+
 void Main::Draw()
 {
 	mDirect3D->GetDevCon()->ClearRenderTargetView(mDirect3D->GetRTView(), reinterpret_cast<const float*>(&Colors::Black));
 	mDirect3D->GetDevCon()->ClearDepthStencilView(mDirect3D->GetDSView(), D3D11_CLEAR_DEPTH|D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-	float blendFactor[] = {0.0f, 0.0f, 0.0f, 0.0f};
-	mDirect3D->GetDevCon()->RSSetState(0);
-	mDirect3D->GetDevCon()->OMSetDepthStencilState(0, 0);
-	mDirect3D->GetDevCon()->OMSetBlendState(0, blendFactor, 0xffffffff);
-
-	if(mDrawSolid)
-		mGame->SolidDraw(mDirect3D->GetDevCon(), mLightsOn);
-	else
+	switch(mCurrDraw)
+	{
+	case Solid:
+		mGame->SolidDraw(mDirect3D->GetDevCon());
+		break;
+	case Light:
+		mGame->LightDraw(mDirect3D->GetDevCon());
+		break;
+	case Wire:
 		mGame->WireDraw(mDirect3D->GetDevCon());
+		break;
+	}
 
 	// If the text isn't drawn last, objects in the world might hide it
 	Text->Draw();
@@ -197,20 +165,53 @@ void Main::OnResize()
 	mGame->GetPlayerCam()->ComputeFrustum();
 }
 
-void Main::SwitchDrawSolid()
+void Main::Input()
 {
-	mDrawCooldown = 0.0f;
-	if(mDrawSolid)
-		mDrawSolid = false;
-	else
-		mDrawSolid = true;
-}
-
-void Main::SwitchLights()
-{
-	mLightSwitchCD = 0.0f;
-	if(mLightsOn)
-		mLightsOn = false;
-	else
-		mLightsOn = true;
+	// Not really optimal to put this here, but whatever
+	if(mInput == D3D11App::mDirectInput->GetKeyboardState())
+	{
+		//BYTE* lpInput = D3D11App::mDirectInput->GetKeyboardState();
+		if(mInput[DIK_1] && 0x80)
+		{
+			Settings->SetResolution(800, 600);
+			D3D11App::SwitchResolution();
+		}
+		else if(mInput[DIK_2] && 0x80)
+		{
+			Settings->SetResolution(1024, 768);
+			D3D11App::SwitchResolution();
+		}
+		else if(mInput[DIK_3] && 0x80)
+		{
+			Settings->SetResolution(1600, 900);
+			D3D11App::SwitchResolution();
+		}
+		else if(mInput[DIK_NUMPAD0] && 0x80 && mDrawSwitchCD > 1.0f)
+		{
+			mDrawSwitchCD = 0.0f;
+			mCurrDraw = Light;
+		}
+		else if(mInput[DIK_NUMPAD1] && 0x80 && mDrawSwitchCD > 1.0f)
+		{
+			mDrawSwitchCD = 0.0f;
+			mCurrDraw = Solid;
+		}
+		else if(mInput[DIK_NUMPAD2] && 0x80 && mDrawSwitchCD > 1.0f)
+		{
+			mDrawSwitchCD = 0.0f;
+			mCurrDraw = Wire;
+		}
+		else if(mInput[DIK_ESCAPE] && 0x80)
+		{
+			SendMessage(mhMainWnd, WM_DESTROY, 0, 0);
+		}
+		// If any button is pressed that isn't in any of the above buttons,
+		// the input-stuff for the player is checked through the game-object instead
+		else
+		{
+			mGame->ControlPlayer(D3D11App::mDirectInput);
+		}
+	}
+	// Kind of an ugly solution to a bug that changed the resolution on startup for some reason
+	mInput = D3D11App::mDirectInput->GetKeyboardState();
 }
