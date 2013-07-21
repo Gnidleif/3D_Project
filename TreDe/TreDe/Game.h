@@ -30,6 +30,7 @@ private:
 	std::vector<StaticEntity*> mPlatforms;
 	//SkinnedEntity* mCharacter;
 	SkyBox* mSkyBox;
+	std::vector<StaticEntity*> mDucks;
 
 	UINT mDirLightAmount;
 	UINT mPointLightAmount;

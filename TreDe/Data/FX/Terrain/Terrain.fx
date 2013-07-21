@@ -137,11 +137,7 @@ float4 PSScene_Lights(PSIn input,
 	if(dirLightAmount > 0 || pointLightAmount > 0 || spotLightAmount > 0)
 	{
 		// This might be wrong, check later
-		//float3 toEye = normalize(gEyePos - input.PosW);
-
-		float3 toEye = gEyePos - input.PosW;
-		float eyeDist = length(toEye);
-		toEye /= eyeDist;
+		float3 toEye = normalize(gEyePos - input.PosW);
 
 		float4 ambient = float4(0.0f, 0.0f, 0.0f, 0.0f);
 		float4 diffuse = float4(0.0f, 0.0f, 0.0f, 0.0f);
@@ -253,7 +249,7 @@ technique11 AllLights
 	{
 		SetVertexShader( CompileShader(vs_5_0, VSScene()));
 		SetGeometryShader(NULL);
-		SetPixelShader( CompileShader(ps_5_0, PSScene_Lights(true, 1, 2, 2)));
+		SetPixelShader( CompileShader(ps_5_0, PSScene_Lights(true, 0, 1, 0)));
 
 		SetBlendState( NULL, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff );
 

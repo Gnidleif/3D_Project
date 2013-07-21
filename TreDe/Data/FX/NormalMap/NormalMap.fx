@@ -161,6 +161,7 @@ float4 PSScene_Lights(PSIn input,
 		if(alphaClip) // If alpha clipping is true
 			clip(texColor.a - 0.1f);
 	}
+
 	float3 normMapSamp = gNormMap.Sample(samLinear, input.TexC).rgb;
 	float3 bumpNormal = NormalSampleToWorldSpace(normMapSamp, input.Normal, input.TangentW);
 
@@ -170,8 +171,6 @@ float4 PSScene_Lights(PSIn input,
 	if(dirLightAmount > 0 || pointLightAmount > 0 || spotLightAmount > 0)
 	{
 		// This might be wrong, check later
-		//float3 toEye = normalize(gEyePos - input.PosW);
-
 		float3 toEye = normalize(gEyePos - input.PosW);
 
 		float4 ambient = float4(0.0f, 0.0f, 0.0f, 0.0f);
@@ -182,7 +181,7 @@ float4 PSScene_Lights(PSIn input,
 		for(int i = 0; i < dirLightAmount; ++i)
 		{
 			float4 A, D, S;
-			ComputeDirectionalLight(gMaterial, gDirLights[i], input.Normal, toEye, A, D, S);
+			ComputeDirectionalLight(gMaterial, gDirLights[i], bumpNormal, toEye, A, D, S);
 
 			ambient += A;
 			diffuse += D;
@@ -193,7 +192,7 @@ float4 PSScene_Lights(PSIn input,
 		for(int j = 0; j < pointLightAmount; ++j)
 		{
 			float4 A, D, S;
-			ComputePointLight(gMaterial, gPointLights[j], input.PosW, input.Normal, toEye, A, D, S);
+			ComputePointLight(gMaterial, gPointLights[j], input.PosW, bumpNormal, toEye, A, D, S);
 
 			ambient += A;
 			diffuse += D;
@@ -204,7 +203,7 @@ float4 PSScene_Lights(PSIn input,
 		for(int k = 0; k < spotLightAmount; ++k)
 		{
 			float4 A, D, S;
-			ComputeSpotLight(gMaterial, gSpotLights[k], input.PosW, input.Normal, toEye, A, D, S);
+			ComputeSpotLight(gMaterial, gSpotLights[k], input.PosW, bumpNormal, toEye, A, D, S);
 
 			ambient += A;
 			diffuse += D;
@@ -303,7 +302,21 @@ technique11 AllLights
 	{
 		SetVertexShader( CompileShader(vs_5_0, VSScene()));
 		SetGeometryShader(NULL);
-		SetPixelShader( CompileShader(ps_5_0, PSScene_Lights(true, true, 1, 2, 2)));
+		SetPixelShader( CompileShader(ps_5_0, PSScene_Lights(false, true, 1, 2, 2)));
+
+		SetBlendState( NULL, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff );
+		SetRasterizerState(Solidframe);
+		SetDepthStencilState(NoDepthWrites, 0);
+	}
+};
+
+technique11 AllLightsAlpha
+{
+	pass p0
+	{
+		SetVertexShader( CompileShader(vs_5_0, VSScene()));
+		SetGeometryShader(NULL);
+		SetPixelShader( CompileShader(ps_5_0, PSScene_Lights(true, true, 0, 1, 0)));
 
 		SetBlendState( NULL, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff );
 		SetRasterizerState(Solidframe);

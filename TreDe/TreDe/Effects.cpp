@@ -80,6 +80,7 @@ NormalEffect::NormalEffect(ID3D11Device* device, string filename)
 	this->mSolidAlphaSkin = mFX->GetTechniqueByName("SolidAlphaSkin");
 	this->mWire = mFX->GetTechniqueByName("Wire");
 	this->mAllLights = mFX->GetTechniqueByName("AllLights");
+	this->mAllLightsAlpha = mFX->GetTechniqueByName("AllLightsAlpha");
 
 	this->mEyePos = mFX->GetVariableByName("gEyePos")->AsVector();
 

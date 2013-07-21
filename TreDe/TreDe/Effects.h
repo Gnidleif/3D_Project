@@ -122,6 +122,7 @@ public: // Techniques
 	ID3DX11EffectTechnique* mSolidAlphaSkin;
 	ID3DX11EffectTechnique* mWire;
 	ID3DX11EffectTechnique* mAllLights;
+	ID3DX11EffectTechnique* mAllLightsAlpha;
 
 private:
 	ID3DX11EffectVectorVariable* mEyePos;
