@@ -18,9 +18,9 @@ Game::Game()
 		XMFLOAT3(0.5f, 0.5f, 0.0f), 0.0f); // Direction/Padding
 
 	mPointLights[0] = PointLight(
-		XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), // Ambient
-		XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), // Diffuse
-		XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), // Specular
+		XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), // Ambient
+		XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), // Diffuse
+		XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), // Specular
 		XMFLOAT3(0.0f, 10.0f, 100.0f), 50.0f, // Position/Range
 		XMFLOAT3(0.0f, 0.0f, 0.0f), 0.0f); // Attenuation/Padding
 
@@ -221,10 +221,14 @@ void Game::ControlPlayer(DirectInput* di)
 	else if(di->GetKeyboardState()[DIK_NUMPADPLUS] && 0x80)
 	{
 		mPointLights[0].Range += 5.0f;
+		XMFLOAT4 newAmb = XMFLOAT4(mPointLights[0].Ambient.x + 0.1f, mPointLights[0].Ambient.y + 0.1f, mPointLights[0].Ambient.z + 0.1f, mPointLights[0].Ambient.w + 0.1f);
+		mPointLights[0].Ambient = newAmb;
 	}
 	else if(di->GetKeyboardState()[DIK_NUMPADMINUS] && 0x80)
 	{
 		mPointLights[0].Range -= 5.0f;
+		XMFLOAT4 newAmb = XMFLOAT4(mPointLights[0].Ambient.x - 0.1f, mPointLights[0].Ambient.y - 0.1f, mPointLights[0].Ambient.z - 0.1f, mPointLights[0].Ambient.w - 0.1f);
+		mPointLights[0].Ambient = newAmb;
 	}
 	else
 		mPlayer->Control(di);

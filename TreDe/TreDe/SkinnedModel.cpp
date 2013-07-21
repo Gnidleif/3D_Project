@@ -53,10 +53,7 @@ void SkinnedModel::ApplyEffects()
 	{
 		Effects::NormalFX->SetDiffuseMap(this->mDiffMapSRV[mMeshes[i]->GetMaterialIndex()]);
 		Effects::NormalFX->SetNormalMap(this->mNormalMapSRV[mMeshes[i]->GetMaterialIndex()]);
-		for(UINT j(0); j != this->mMaterialCount; ++j)
-		{
-			Effects::NormalFX->SetMaterial(&this->mMaterials[mMeshes[i]->GetMaterialIndex()]);
-		}
+		Effects::NormalFX->SetMaterial(&this->mMaterials[mMeshes[i]->GetMaterialIndex()]);
 	}
 }
 

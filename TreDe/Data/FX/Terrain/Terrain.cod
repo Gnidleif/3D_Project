@@ -23,7 +23,7 @@ cbuffer cbPerObject
 cbuffer cbFixed
 {
     float   texScale = 15;              // Offset:    0, size:    4
-    float   lightAddScale = 0.5;        // Offset:    4, size:    4
+    float   lightAddScale = 1;          // Offset:    4, size:    4
 }
 
 //
@@ -154,7 +154,7 @@ fxgroup
                 //   float4x4 gWorld;                   // Offset:   64 Size:    64
                 //   float4x4 gView;                    // Offset:  128 Size:    64
                 //   float4x4 gProj;                    // Offset:  192 Size:    64
-                //   float4x4 gWorldInvTranspose;       // Offset:  256 Size:    64
+                //   float4x4 gWorldInvTranspose;       // Offset:  256 Size:    64 [unused]
                 //
                 // }
                 //
@@ -164,7 +164,7 @@ fxgroup
                 //   float texScale;                    // Offset:    0 Size:     4
                 //      = 0x41700000 
                 //   float lightAddScale;               // Offset:    4 Size:     4 [unused]
-                //      = 0x3f000000 
+                //      = 0x3f800000 
                 //
                 // }
                 //
@@ -199,7 +199,7 @@ fxgroup
                 //
                 vs_5_0
                 dcl_globalFlags refactoringAllowed
-                dcl_constantbuffer cb0[19], immediateIndexed
+                dcl_constantbuffer cb0[16], immediateIndexed
                 dcl_constantbuffer cb1[1], immediateIndexed
                 dcl_input v0.xyz
                 dcl_input v1.xyz
@@ -274,21 +274,19 @@ fxgroup
                 dp4 r0.y, r4.xyzw, r1.xyzw  // output<1:NaN:Inf>
                 dp4 r0.z, r4.xyzw, r2.xyzw  // output<2:NaN:Inf>
                 dp4 r0.w, r4.xyzw, r3.xyzw  // output<3:NaN:Inf>
-                
-                #line 75
                 dp4 r1.x, r4.xyzw, cb0[4].xyzw  // output<4:NaN:Inf>
                 dp4 r1.y, r4.xyzw, cb0[5].xyzw  // output<5:NaN:Inf>
                 dp4 r1.z, r4.xyzw, cb0[6].xyzw  // output<6:NaN:Inf>
-                
-                #line 78
-                dp3 r2.x, v1.xyzx, cb0[16].xyzx  // output<7:NaN:Inf>
-                dp3 r2.y, v1.xyzx, cb0[17].xyzx  // output<8:NaN:Inf>
-                dp3 r2.z, v1.xyzx, cb0[18].xyzx  // output<9:NaN:Inf>
+                dp3 r2.x, v1.xyzx, cb0[4].xyzx  // output<7:NaN:Inf>
+                dp3 r2.y, v1.xyzx, cb0[5].xyzx  // output<8:NaN:Inf>
+                dp3 r2.z, v1.xyzx, cb0[6].xyzx  // output<9:NaN:Inf>
                 dp3 r1.w, r2.xyzx, r2.xyzx
                 rsq r1.w, r1.w
                 mul r2.xyz, r1.wwww, r2.xyzx  // output<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
                 mul r3.xy, v2.xyxx, cb1[0].xxxx  // output<10:Inf,11:Inf>
                 mov r3.zw, v2.xxxy  // output<12,13>
+                
+                #line 80
                 mov o0.xyzw, r0.xyzw  // VSScene<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
                 mov o3.xy, r3.xyxx  // VSScene<10:Inf,11:Inf>
                 mov o3.zw, r3.zzzw  // VSScene<12,13>
@@ -347,7 +345,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 6
                 
-                #line 94 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\Terrain\Terrain.fx"
+                #line 90 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\Terrain\Terrain.fx"
                 sample_indexable(texture2d)(float,float,float,float) r0.xyzw, v3.xyxx, t1.xyzw, s0  // c0<0:Inf,1:Inf,2:Inf,3:Inf>
                 sample_indexable(texture2d)(float,float,float,float) r1.xyzw, v3.xyxx, t2.xyzw, s0  // c1<0:Inf,1:Inf,2:Inf,3:Inf>
                 sample_indexable(texture2d)(float,float,float,float) r2.xyzw, v3.xyxx, t3.xyzw, s0  // c2<0:Inf,1:Inf,2:Inf,3:Inf>
@@ -368,7 +366,7 @@ fxgroup
                 mul r1.xyzw, r1.xyzw, r4.zzzz
                 add r0.xyzw, r0.xyzw, r1.xyzw  // texColor<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
                 
-                #line 108
+                #line 104
                 mov o0.xyzw, r0.xyzw  // PSScene<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
                 ret 
                 // Approximately 21 instruction slots used
@@ -405,7 +403,7 @@ fxgroup
                 //   float4x4 gWorld;                   // Offset:   64 Size:    64
                 //   float4x4 gView;                    // Offset:  128 Size:    64
                 //   float4x4 gProj;                    // Offset:  192 Size:    64
-                //   float4x4 gWorldInvTranspose;       // Offset:  256 Size:    64
+                //   float4x4 gWorldInvTranspose;       // Offset:  256 Size:    64 [unused]
                 //
                 // }
                 //
@@ -415,7 +413,7 @@ fxgroup
                 //   float texScale;                    // Offset:    0 Size:     4
                 //      = 0x41700000 
                 //   float lightAddScale;               // Offset:    4 Size:     4 [unused]
-                //      = 0x3f000000 
+                //      = 0x3f800000 
                 //
                 // }
                 //
@@ -450,7 +448,7 @@ fxgroup
                 //
                 vs_5_0
                 dcl_globalFlags refactoringAllowed
-                dcl_constantbuffer cb0[19], immediateIndexed
+                dcl_constantbuffer cb0[16], immediateIndexed
                 dcl_constantbuffer cb1[1], immediateIndexed
                 dcl_input v0.xyz
                 dcl_input v1.xyz
@@ -525,21 +523,19 @@ fxgroup
                 dp4 r0.y, r4.xyzw, r1.xyzw  // output<1:NaN:Inf>
                 dp4 r0.z, r4.xyzw, r2.xyzw  // output<2:NaN:Inf>
                 dp4 r0.w, r4.xyzw, r3.xyzw  // output<3:NaN:Inf>
-                
-                #line 75
                 dp4 r1.x, r4.xyzw, cb0[4].xyzw  // output<4:NaN:Inf>
                 dp4 r1.y, r4.xyzw, cb0[5].xyzw  // output<5:NaN:Inf>
                 dp4 r1.z, r4.xyzw, cb0[6].xyzw  // output<6:NaN:Inf>
-                
-                #line 78
-                dp3 r2.x, v1.xyzx, cb0[16].xyzx  // output<7:NaN:Inf>
-                dp3 r2.y, v1.xyzx, cb0[17].xyzx  // output<8:NaN:Inf>
-                dp3 r2.z, v1.xyzx, cb0[18].xyzx  // output<9:NaN:Inf>
+                dp3 r2.x, v1.xyzx, cb0[4].xyzx  // output<7:NaN:Inf>
+                dp3 r2.y, v1.xyzx, cb0[5].xyzx  // output<8:NaN:Inf>
+                dp3 r2.z, v1.xyzx, cb0[6].xyzx  // output<9:NaN:Inf>
                 dp3 r1.w, r2.xyzx, r2.xyzx
                 rsq r1.w, r1.w
                 mul r2.xyz, r1.wwww, r2.xyzx  // output<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
                 mul r3.xy, v2.xyxx, cb1[0].xxxx  // output<10:Inf,11:Inf>
                 mov r3.zw, v2.xxxy  // output<12,13>
+                
+                #line 80
                 mov o0.xyzw, r0.xyzw  // VSScene<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
                 mov o3.xy, r3.xyxx  // VSScene<10:Inf,11:Inf>
                 mov o3.zw, r3.zzzw  // VSScene<12,13>
@@ -577,7 +573,7 @@ fxgroup
                 dcl_globalFlags refactoringAllowed
                 dcl_output o0.xyzw
                 
-                #line 108 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\Terrain\Terrain.fx"
+                #line 104 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\Terrain\Terrain.fx"
                 mov o0.xyzw, l(0,0,1.000000,1.000000)  // PSScene<0: 0f,1: 0f,2: 1f,3: 1f>
                 ret 
                 // Approximately 2 instruction slots used
@@ -616,7 +612,7 @@ fxgroup
                 //   float4x4 gWorld;                   // Offset:   64 Size:    64
                 //   float4x4 gView;                    // Offset:  128 Size:    64
                 //   float4x4 gProj;                    // Offset:  192 Size:    64
-                //   float4x4 gWorldInvTranspose;       // Offset:  256 Size:    64
+                //   float4x4 gWorldInvTranspose;       // Offset:  256 Size:    64 [unused]
                 //
                 // }
                 //
@@ -626,7 +622,7 @@ fxgroup
                 //   float texScale;                    // Offset:    0 Size:     4
                 //      = 0x41700000 
                 //   float lightAddScale;               // Offset:    4 Size:     4 [unused]
-                //      = 0x3f000000 
+                //      = 0x3f800000 
                 //
                 // }
                 //
@@ -661,7 +657,7 @@ fxgroup
                 //
                 vs_5_0
                 dcl_globalFlags refactoringAllowed
-                dcl_constantbuffer cb0[19], immediateIndexed
+                dcl_constantbuffer cb0[16], immediateIndexed
                 dcl_constantbuffer cb1[1], immediateIndexed
                 dcl_input v0.xyz
                 dcl_input v1.xyz
@@ -736,21 +732,19 @@ fxgroup
                 dp4 r0.y, r4.xyzw, r1.xyzw  // output<1:NaN:Inf>
                 dp4 r0.z, r4.xyzw, r2.xyzw  // output<2:NaN:Inf>
                 dp4 r0.w, r4.xyzw, r3.xyzw  // output<3:NaN:Inf>
-                
-                #line 75
                 dp4 r1.x, r4.xyzw, cb0[4].xyzw  // output<4:NaN:Inf>
                 dp4 r1.y, r4.xyzw, cb0[5].xyzw  // output<5:NaN:Inf>
                 dp4 r1.z, r4.xyzw, cb0[6].xyzw  // output<6:NaN:Inf>
-                
-                #line 78
-                dp3 r2.x, v1.xyzx, cb0[16].xyzx  // output<7:NaN:Inf>
-                dp3 r2.y, v1.xyzx, cb0[17].xyzx  // output<8:NaN:Inf>
-                dp3 r2.z, v1.xyzx, cb0[18].xyzx  // output<9:NaN:Inf>
+                dp3 r2.x, v1.xyzx, cb0[4].xyzx  // output<7:NaN:Inf>
+                dp3 r2.y, v1.xyzx, cb0[5].xyzx  // output<8:NaN:Inf>
+                dp3 r2.z, v1.xyzx, cb0[6].xyzx  // output<9:NaN:Inf>
                 dp3 r1.w, r2.xyzx, r2.xyzx
                 rsq r1.w, r1.w
                 mul r2.xyz, r1.wwww, r2.xyzx  // output<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
                 mul r3.xy, v2.xyxx, cb1[0].xxxx  // output<10:Inf,11:Inf>
                 mov r3.zw, v2.xxxy  // output<12,13>
+                
+                #line 80
                 mov o0.xyzw, r0.xyzw  // VSScene<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
                 mov o3.xy, r3.xyxx  // VSScene<10:Inf,11:Inf>
                 mov o3.zw, r3.zzzw  // VSScene<12,13>
@@ -832,16 +826,6 @@ fxgroup
                 //
                 // }
                 //
-                // cbuffer cbFixed
-                // {
-                //
-                //   float texScale;                    // Offset:    0 Size:     4 [unused]
-                //      = 0x41700000 
-                //   float lightAddScale;               // Offset:    4 Size:     4
-                //      = 0x3f000000 
-                //
-                // }
-                //
                 //
                 // Resource Bindings:
                 //
@@ -855,7 +839,6 @@ fxgroup
                 // gTex3                             texture  float4          2d    4        1
                 // cbPerFrame                        cbuffer      NA          NA    0        1
                 // cbPerObject                       cbuffer      NA          NA    1        1
-                // cbFixed                           cbuffer      NA          NA    2        1
                 //
                 //
                 //
@@ -880,7 +863,6 @@ fxgroup
                 dcl_globalFlags refactoringAllowed
                 dcl_constantbuffer cb0[27], immediateIndexed
                 dcl_constantbuffer cb1[3], immediateIndexed
-                dcl_constantbuffer cb2[1], immediateIndexed
                 dcl_sampler s0, mode_default
                 dcl_resource_texture2d (float,float,float,float) t0
                 dcl_resource_texture2d (float,float,float,float) t1
@@ -894,7 +876,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 12
                 
-                #line 121 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\Terrain\Terrain.fx"
+                #line 117 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\Terrain\Terrain.fx"
                 sample_indexable(texture2d)(float,float,float,float) r0.xyzw, v3.xyxx, t1.xyzw, s0  // c0<0:Inf,1:Inf,2:Inf,3:Inf>
                 sample_indexable(texture2d)(float,float,float,float) r1.xyzw, v3.xyxx, t2.xyzw, s0  // c1<0:Inf,1:Inf,2:Inf,3:Inf>
                 sample_indexable(texture2d)(float,float,float,float) r2.xyzw, v3.xyxx, t3.xyzw, s0  // c2<0:Inf,1:Inf,2:Inf,3:Inf>
@@ -915,14 +897,14 @@ fxgroup
                 mul r1.xyzw, r1.xyzw, r4.zzzz
                 add r0.xyzw, r0.xyzw, r1.xyzw  // texColor<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
                 
-                #line 140
+                #line 136
                 mov r1.xyz, -v1.xyzx
                 add r1.xyz, r1.xyzx, cb0[26].xyzx
                 dp3 r1.w, r1.xyzx, r1.xyzx
                 rsq r1.w, r1.w
                 mul r1.xyz, r1.wwww, r1.xyzx  // toEye<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 161
+                #line 158
                 nop 
                 mov r2.xyz, cb1[0].xyzx  // mat<0,1,2>
                 mov r3.xyz, cb1[1].xyzx  // mat<4,5,6>
@@ -995,7 +977,7 @@ fxgroup
                   mov r3.xyz, l(0,0,0,0)  // specular<0: 0f,1: 0f,2: 0f>
                 endif 
                 
-                #line 161 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\Terrain\Terrain.fx"
+                #line 158 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\Terrain\Terrain.fx"
                 mov r2.xyz, r2.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r1.xyz, r1.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r3.xyz, r3.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -1003,19 +985,17 @@ fxgroup
                 add r1.xyz, r1.xyzx, l(0.000000, 0.000000, 0.000000, 0.000000)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 add r3.xyz, r3.xyzx, l(0.000000, 0.000000, 0.000000, 0.000000)  // specular<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 179
+                #line 176
                 add r1.xyz, r1.xyzx, r2.xyzx
-                mul r1.xyz, r0.xyzx, r1.xyzx
-                add r1.xyz, r3.xyzx, r1.xyzx  // litColor<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
-                mul r0.xyz, r0.xyzx, cb2[0].yyyy
-                add r0.xyz, r0.xyzx, r1.xyzx  // litColor<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                add r0.xyz, r0.xyzx, r1.xyzx
+                add r0.xyz, r3.xyzx, r0.xyzx  // litColor<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 184
+                #line 181
                 mul r0.w, r0.w, cb1[1].w  // litColor<3:NaN:Inf>
                 mov o0.xyz, r0.xyzx  // PSScene_Lights<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov o0.w, r0.w  // PSScene_Lights<3:NaN:Inf>
                 ret 
-                // Approximately 90 instruction slots used
+                // Approximately 88 instruction slots used
                             
             };
             AB_BlendFactor = float4(0, 0, 0, 0);

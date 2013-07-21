@@ -24,7 +24,7 @@ cbuffer cbSkin
 
 cbuffer cbFixed
 {
-	float lightAddScale = 0.5f;
+	float lightAddScale = 0.4f;
 };
 
 Texture2D gDiffMap;
@@ -86,7 +86,7 @@ PSIn VSScene(VSIn input)
 	output.PosW = mul(float4(input.PosL, 1.0f), gWorld).xyz;
 	//output.Normal = mul(input.Normal, (float3x3) wvp);
 	//output.Normal = normalize(output.Normal);
-	output.Normal = mul(input.Normal, (float3x3)gWorldInvTranspose);
+	output.Normal = mul(input.Normal, (float3x3) gWorld);
 	output.TangentW = mul(input.TangentL, gWorld);
 	output.TexC = input.TexC;
 
@@ -133,6 +133,7 @@ float4 PSScene(PSIn input,
 			   uniform bool useTex) : SV_Target
 {
 	input.Normal = normalize(input.Normal);
+
 	float4 texColor = float4(1.0f, 0.0f, 0.0f, 1.0f);
 	if(useTex)
 	{
@@ -181,7 +182,7 @@ float4 PSScene_Lights(PSIn input,
 		for(int i = 0; i < dirLightAmount; ++i)
 		{
 			float4 A, D, S;
-			ComputeDirectionalLight(gMaterial, gDirLights[i], bumpNormal, toEye, A, D, S);
+			ComputeDirectionalLight(gMaterial, gDirLights[i], -bumpNormal, toEye, A, D, S);
 
 			ambient += A;
 			diffuse += D;
@@ -192,7 +193,7 @@ float4 PSScene_Lights(PSIn input,
 		for(int j = 0; j < pointLightAmount; ++j)
 		{
 			float4 A, D, S;
-			ComputePointLight(gMaterial, gPointLights[j], input.PosW, bumpNormal, toEye, A, D, S);
+			ComputePointLight(gMaterial, gPointLights[j], input.PosW, -bumpNormal, toEye, A, D, S);
 
 			ambient += A;
 			diffuse += D;
@@ -203,7 +204,7 @@ float4 PSScene_Lights(PSIn input,
 		for(int k = 0; k < spotLightAmount; ++k)
 		{
 			float4 A, D, S;
-			ComputeSpotLight(gMaterial, gSpotLights[k], input.PosW, bumpNormal, toEye, A, D, S);
+			ComputeSpotLight(gMaterial, gSpotLights[k], input.PosW, -bumpNormal, toEye, A, D, S);
 
 			ambient += A;
 			diffuse += D;
@@ -211,14 +212,12 @@ float4 PSScene_Lights(PSIn input,
 		}
 
 		litColor = texColor * (ambient + diffuse) + specular;
-		litColor += texColor * lightAddScale;
+		//litColor += texColor * lightAddScale;
 	}
 
 	// Materials later
-	litColor.a = gMaterial.Diffuse.a * texColor.a;
+	litColor.a = gMaterial.Ambient.a * texColor.a;
 	return litColor;
-
-	return texColor;
 };
 RasterizerState Wireframe
 {
@@ -302,7 +301,7 @@ technique11 AllLights
 	{
 		SetVertexShader( CompileShader(vs_5_0, VSScene()));
 		SetGeometryShader(NULL);
-		SetPixelShader( CompileShader(ps_5_0, PSScene_Lights(false, true, 1, 2, 2)));
+		SetPixelShader( CompileShader(ps_5_0, PSScene_Lights(false, true, 0, 1, 0)));
 
 		SetBlendState( NULL, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff );
 		SetRasterizerState(Solidframe);

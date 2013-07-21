@@ -20,7 +20,7 @@ cbuffer cbPerObject
 cbuffer cbFixed
 {
 	float texScale = 15.0f;
-	float lightAddScale = 0.5f;
+	float lightAddScale = 1.0f;
 };
 
 Texture2D gBlendMap;
@@ -70,12 +70,8 @@ PSIn VSScene(VSIn input)
 
 	output.PosH = mul(float4(input.PosL, 1.0f), wvp);
 
-	//output.PosH = mul(float4(input.PosL, 1.0f), gWVP);
-
 	output.PosW = mul(float4(input.PosL, 1.0f), gWorld).xyz;
-	//output.Normal = mul(input.Normal, (float3x3) wvp);
-	//output.Normal = normalize(output.Normal);
-	output.Normal = mul(input.Normal, (float3x3)gWorldInvTranspose);
+	output.Normal = mul(input.Normal, (float3x3)gWorld);
 	output.Normal = normalize(output.Normal);
 
 	output.Tiled = texScale * input.TexC;
@@ -143,6 +139,7 @@ float4 PSScene_Lights(PSIn input,
 		float4 diffuse = float4(0.0f, 0.0f, 0.0f, 0.0f);
 		float4 specular = float4(0.0f, 0.0f, 0.0f, 0.0f);
 
+
 		[unroll]
 		for(int i = 0; i < dirLightAmount; ++i)
 		{
@@ -176,8 +173,8 @@ float4 PSScene_Lights(PSIn input,
 			specular += S;
 		}
 
-		litColor = texColor * (ambient + diffuse) + specular;
-		litColor += texColor * lightAddScale;
+		litColor = texColor + (ambient + diffuse) + specular;
+		//litColor += texColor * lightAddScale;
 	}
 
 	// Materials later
