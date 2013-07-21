@@ -27,6 +27,7 @@ void TerrainEntity::Draw(ID3D11DeviceContext* devCon, ID3DX11EffectTechnique* ac
 
 	Effects::TerrainFX->SetView(&camera->GetViewMatrix());
 	Effects::TerrainFX->SetProj(&camera->GetProjMatrix());
+	this->mModelInstance.mModel->ApplyEffects();
 
 	for(UINT i(0); i != techDesc.Passes; ++i)
 	{

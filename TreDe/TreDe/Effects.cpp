@@ -47,6 +47,9 @@ TerrainEffect::TerrainEffect(ID3D11Device* device, string filename)
 {
 	this->mSolid = mFX->GetTechniqueByName("Solid");
 	this->mWire = mFX->GetTechniqueByName("Wire");
+	this->mAllLights = mFX->GetTechniqueByName("AllLights");
+
+	this->mEyePos = mFX->GetVariableByName("gEyePos")->AsVector();
 
 	this->mWorld = mFX->GetVariableByName("gWorld")->AsMatrix();
 	this->mView = mFX->GetVariableByName("gView")->AsMatrix();
@@ -58,6 +61,10 @@ TerrainEffect::TerrainEffect(ID3D11Device* device, string filename)
 	this->mTex1 = mFX->GetVariableByName("gTex1")->AsShaderResource();
 	this->mTex2 = mFX->GetVariableByName("gTex2")->AsShaderResource();
 	this->mTex3 = mFX->GetVariableByName("gTex3")->AsShaderResource();
+
+	this->mDirLights = mFX->GetVariableByName("gDirLights");
+	this->mPointLights = mFX->GetVariableByName("gPointLights");
+	this->mSpotLights = mFX->GetVariableByName("gSpotLights");
 
 	this->mMaterial = mFX->GetVariableByName("gMaterial");
 }
@@ -72,6 +79,9 @@ NormalEffect::NormalEffect(ID3D11Device* device, string filename)
 	this->mSolidAlpha = mFX->GetTechniqueByName("SolidAlpha");
 	this->mSolidAlphaSkin = mFX->GetTechniqueByName("SolidAlphaSkin");
 	this->mWire = mFX->GetTechniqueByName("Wire");
+	this->mAllLights = mFX->GetTechniqueByName("AllLights");
+
+	this->mEyePos = mFX->GetVariableByName("gEyePos")->AsVector();
 
 	// Variables
 	this->mWorld = mFX->GetVariableByName("gWorld")->AsMatrix();
@@ -83,6 +93,10 @@ NormalEffect::NormalEffect(ID3D11Device* device, string filename)
 
 	this->mDiffuseMap = mFX->GetVariableByName("gDiffMap")->AsShaderResource();
 	this->mNormalMap = mFX->GetVariableByName("gNormMap")->AsShaderResource();
+
+	this->mDirLights = mFX->GetVariableByName("gDirLights");
+	this->mPointLights = mFX->GetVariableByName("gPointLights");
+	this->mSpotLights = mFX->GetVariableByName("gSpotLights");
 
 	this->mMaterial = mFX->GetVariableByName("gMaterial");
 }

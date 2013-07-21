@@ -2,8 +2,8 @@
 #include "Effects.h"
 using namespace std;
 
-StaticModel::StaticModel(string filename, string texPath)
-	: VirtualModel(),
+StaticModel::StaticModel(ID3D11Device* device, string filename, string texPath)
+	: VirtualModel(device),
 	mMeshes(vector<StaticMesh*>()),
 	mMaterials(vector<Material>()),
 	mDiffMapSRV(vector<ID3D11ShaderResourceView*>()),
@@ -29,6 +29,7 @@ StaticModel::StaticModel(string filename, string texPath)
 		}
 		mNormalMapSRV.push_back(tempNormalMap);
 	}
+	this->CreateBuffers();
 }
 
 StaticModel::~StaticModel(void)
@@ -62,4 +63,13 @@ void StaticModel::CreateMatsAndMeshes(string filename)
 	Loader->CreateStaticObject(mGenMats, mMeshes, filename);
 	this->mMeshCount = mMeshes.size();
 	this->mMaterialCount = mGenMats.size();
+}
+
+void StaticModel::CreateBuffers()
+{
+	for(UINT i(0); i != mMeshCount; ++i)
+	{
+		this->mMeshes[i]->SetVertexBuffer(this->mDevice, &mMeshes[i]->GetVertices()[0], mMeshes[i]->GetVertices().size());
+		this->mMeshes[i]->SetIndexBuffer(this->mDevice, &mMeshes[i]->GetIndices()[0], mMeshes[i]->GetIndices().size());
+	}
 }

@@ -7,13 +7,19 @@
 class VirtualModel
 {
 public:
-	VirtualModel();
+	VirtualModel(ID3D11Device* device);
 	virtual ~VirtualModel();
+
+public:
+	UINT GetMeshCount() const { return this->mMeshCount; }
+	UINT GetMaterialCount() const { return this->mMaterialCount; }
 
 private:
 	virtual void CreateMatsAndMeshes(std::string filename) = 0;
+	virtual void CreateBuffers() = 0;
 
 protected:
+	ID3D11Device* mDevice;
 	UINT mMeshCount;
 	UINT mMaterialCount;
 };

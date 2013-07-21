@@ -4,8 +4,48 @@ using namespace std;
 
 Game::Game()
 	:
-	mPlayer(new Player("Gnidleif", XMFLOAT3(50.0f, 50.0f, 50.0f)))
+	mPlayer(new Player("Gnidleif", XMFLOAT3(50.0f, 50.0f, 50.0f))),
+	mDirLightAmount(1), mPointLightAmount(2), mSpotLightAmount(2)
 {
+	this->mDirLights = new DirectionalLight[mDirLightAmount];
+	this->mPointLights = new PointLight[mPointLightAmount];
+	this->mSpotLights = new SpotLight[mSpotLightAmount];
+
+	mDirLights[0] = DirectionalLight(
+		XMFLOAT4(0.3f, 0.3f, 0.3f, 1.0f), // Ambient
+		XMFLOAT4(0.9f, 0.9f, 0.9f, 1.0f), // Diffuse
+		XMFLOAT4(0.4f, 0.4f, 0.5f, 1.0f), // Specular
+		XMFLOAT3(0.5f, 0.5f, 0.0f), 1.0f); // Direction/Padding
+
+	mPointLights[0] = PointLight(
+		XMFLOAT4(0.1f, 0.1f, 0.1f, 1.0f), // Ambient
+		XMFLOAT4(0.3f, 0.3f, 0.3f, 1.0f), // Diffuse
+		XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f), // Specular
+		XMFLOAT3(0.0f, 10.0f, 100.0f), 50.0f, // Position/Range
+		XMFLOAT3(1.0f, 1.0f, 1.0f), 1.0f); // Attenuation/Padding
+
+	mPointLights[1] = PointLight(
+		XMFLOAT4(0.1f, 0.1f, 0.1f, 1.0f), // Ambient
+		XMFLOAT4(0.3f, 0.3f, 0.3f, 1.0f), // Diffuse
+		XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f), // Specular
+		XMFLOAT3(100.0f, 10.0f, 0.0f), 10.0f, // Position/Range
+		XMFLOAT3(1.0f, 1.0f, 1.0f), 1.0f); // Attenuation/Padding
+
+	mSpotLights[0] = SpotLight(
+		XMFLOAT4(1.0f, 0.3f, 0.3f, 1.0f), // Ambient
+		XMFLOAT4(0.9f, 0.9f, 0.9f, 1.0f), // Diffuse
+		XMFLOAT4(0.4f, 0.4f, 0.5f, 1.0f), // Specular
+		XMFLOAT3(0.0f, 10.0f, 0.0f), 50.0f, // Position/Range
+		XMFLOAT3(50.0f, 50.0f, 50.0f), 1.0f, // Direction/Spot
+		XMFLOAT3(1.0f, 1.0f, 1.0f), 1.0f); // Attenuation/Padding
+
+	mSpotLights[1] = SpotLight(
+		XMFLOAT4(0.3f, 0.3f, 0.3f, 1.0f), // Ambient
+		XMFLOAT4(0.9f, 0.9f, 0.9f, 1.0f), // Diffuse
+		XMFLOAT4(0.4f, 0.4f, 0.5f, 1.0f), // Specular
+		XMFLOAT3(200.0f, 10.0f, 200.0f), 10.0f, // Position/Range
+		XMFLOAT3(50.0f, 50.0f, 50.0f), 1.0f, // Direction/Spot
+		XMFLOAT3(1.0f, 1.0f, 1.0f), 1.0f); // Attenuation/Padding
 }
 
 Game::~Game()
@@ -18,18 +58,19 @@ Game::~Game()
 	}
 	//SafeDelete(mCharacter);
 	SafeDelete(mSkyBox);
+
+	delete[] mDirLights;
+	delete[] mPointLights;
+	delete[] mSpotLights;
 }
 
-void Game::CreateSkyBox(ID3D11Device* device)
-{
-	mSkyBox = new SkyBox();
-	mSkyBox->Initialize(device, 5000.0f);
-}
-
-void Game::Initialize(bool character)
+void Game::Initialize(ID3D11Device* device)
 {
 	mTerrain = new TerrainEntity("../Data/Textures/heightmap.bmp");
 	mTerrain->Initialize(XMFLOAT3(0.0f, 0.0f, 0.0f), 1.0f);
+
+	//mCharacter = new SkinnedEntity("../Data/Models/Skinned/Character/Character.dae", "../Data/Models/Skinned/Character/");
+	//mCharacter->Initialize(XMFLOAT3(150.0f, 20.0f, 100.0f), 1.0f);
 
 	for(UINT i(0); i != 4; ++i)
 	{
@@ -39,8 +80,8 @@ void Game::Initialize(bool character)
 		mPlatforms[i]->Initialize(XMFLOAT3(100.0f * (float)i, 20.0f, 100.0f), 0.05f);
 	}
 
-	//mCharacter = new SkinnedEntity("../Data/Models/Skinned/Character/Character.dae", "../Data/Models/Skinned/Character/");
-	//mCharacter->Initialize(XMFLOAT3(150.0f, 20.0f, 100.0f), 1.0f);
+	mSkyBox = new SkyBox();
+	mSkyBox->Initialize(device, 5000.0f);
 
 	//
 	Text->AddConstantText("PlayerInfo", "Name: " + mPlayer->GetName(), 20.0f, 20.0f, 20.0f, TextColors::White);
@@ -50,9 +91,6 @@ void Game::Update(float dt)
 {
 	Text->AddConstantText("CamRot", "Rotation: " + Text->XMFLOAT3ToString(mPlayer->GetCamera()->GetYawPitchRoll()), 20.0f, 50.0f, 20.0f, TextColors::Red);
 	Text->AddConstantText("CamPos", "Position: " + Text->XMFLOAT3ToString(mPlayer->GetPosition()), 20.0f, 80.0f, 20.0f, TextColors::Red);
-	//static float rotation = 0.0f;
-	//rotation += dt;
-	//mTerrain->RotateXYZ(XMFLOAT3(rotation, rotation, rotation));
 
 	static float xRot(0.0f), zRot(0.0f);
 	xRot += dt;
@@ -60,8 +98,21 @@ void Game::Update(float dt)
 	for(UINT i(0); i != mPlatforms.size(); ++i)
 	{
 		mPlatforms[i]->RotateXYZ(XMFLOAT3(xRot, 0.0f, zRot));
-		//mPlatforms[i]->RotateZ(zRot);
 	}
+
+	//for(UINT i(0); i != mSpotLightAmount; ++i)
+	//{
+	//	mSpotLights[i].Position = mPlayer->GetCamera()->GetPosition();
+	//	mSpotLights[i].Direction = mPlayer->GetCamera()->GetLook();
+	//}
+
+	mPointLights[0].Position = mPlayer->GetCamera()->GetPosition();
+	//mSpotLights[0].Direction = mPlayer->GetCamera()->GetLook();
+
+	Effects::NormalFX->SetEyePos(&mPlayer->GetCamera()->GetPosition());
+	Effects::NormalFX->SetDirLights(mDirLights, mDirLightAmount);
+	Effects::NormalFX->SetPointLights(mPointLights, mPointLightAmount);
+	Effects::NormalFX->SetSpotLights(mSpotLights, mSpotLightAmount);
 
 	//mCharacter->Update(dt);
 
@@ -78,7 +129,7 @@ void Game::SolidDraw(ID3D11DeviceContext* devCon)
 	activeTech = Effects::TerrainFX->mSolid;
 	mTerrain->Draw(devCon, activeTech, playerCam);
 
-	activeTech = Effects::NormalFX->mSolidAlpha;
+	activeTech = Effects::NormalFX->mAllLights;
 	for(UINT i(0); i != mPlatforms.size(); ++i)
 	{
 		mPlatforms[i]->Draw(devCon, activeTech, playerCam);
@@ -122,6 +173,20 @@ void Game::ControlPlayer(DirectInput* di)
 			mPlatforms[i]->SetScale(0.1f);
 		}
 		//mCharacter->SetScale(1.0f);
+	}
+	else if(di->GetKeyboardState()[DIK_NUMPADPLUS] && 0x80)
+	{
+		for(UINT i(0); i != mSpotLightAmount; ++i)
+		{
+			mSpotLights[i].Ambient = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+		}
+	}
+	else if(di->GetKeyboardState()[DIK_NUMPADMINUS] && 0x80)
+	{
+		for(UINT i(0); i != mSpotLightAmount; ++i)
+		{
+			mSpotLights[i].Ambient = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
+		}
 	}
 	else
 		mPlayer->Control(di);

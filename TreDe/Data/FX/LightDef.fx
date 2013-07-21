@@ -5,6 +5,17 @@
 // Suffixes: L (Local), W (World), V (View), H (Homogeneous)
 
 // Keep mirrored with C++ implementation (LightDef.h)
+
+struct DirectionalLight
+{
+	float4 Ambient;
+	float4 Diffuse;
+	float4 Specular;
+
+	float3 Direction;
+	float Padding;
+};
+
 struct PointLight
 {
 	float4 Ambient;
@@ -15,16 +26,6 @@ struct PointLight
 	float Range;
 
 	float3 Attenuation;
-	float Padding;
-};
-
-struct DirectionalLight
-{
-	float4 Ambient;
-	float4 Diffuse;
-	float4 Specular;
-
-	float3 Direction;
 	float Padding;
 };
 
@@ -51,6 +52,42 @@ struct Material
 	float4 Specular;
 	float4 Reflect;
 };
+
+//=============================================================================
+// Directional light
+//=============================================================================
+void ComputeDirectionalLight(
+	Material mat,
+	DirectionalLight light,
+	float3 normal,
+	float3 toEye,
+
+	out float4 ambient,
+	out float4 diffuse,
+	out float4 specular)
+{
+	// Initialize outputs
+	ambient = float4(0.0f, 0.0f, 0.0f, 0.0f);
+	diffuse = float4(0.0f, 0.0f, 0.0f, 0.0f);
+	specular = float4(0.0f, 0.0f, 0.0f, 0.0f);
+
+	// Light vector aims opposite the direction the light rays travel
+	float3 lightVec = -light.Direction;
+
+	ambient = mat.Ambient * light.Ambient;
+
+	float diffuseFactor = dot(lightVec, normal);
+
+	[flatten]
+	if (diffuseFactor > 0.0f)
+	{
+		float3 v = reflect(-lightVec, normal);
+		float specFactor = pow(max(dot(v, toEye), 0.0f), mat.Specular.w);
+
+		diffuse = diffuseFactor * mat.Diffuse * light.Diffuse;
+		specular = specFactor * mat.Specular * light.Specular;
+	}
+}
 
 //=============================================================================
 // Point light
@@ -105,42 +142,6 @@ void ComputePointLight(
 
 	diffuse *= atten;
 	specular *= atten;
-}
-
-//=============================================================================
-// Directional light
-//=============================================================================
-void ComputeDirectionalLight(
-	Material mat,
-	DirectionalLight light,
-	float3 normal,
-	float3 toEye,
-
-	out float4 ambient,
-	out float4 diffuse,
-	out float4 specular)
-{
-	// Initialize outputs
-	ambient = float4(0.0f, 0.0f, 0.0f, 0.0f);
-	diffuse = float4(0.0f, 0.0f, 0.0f, 0.0f);
-	specular = float4(0.0f, 0.0f, 0.0f, 0.0f);
-
-	// Light vector aims opposite the direction the light rays travel
-	float3 lightVec = -light.Direction;
-
-	ambient = mat.Ambient * light.Ambient;
-
-	float diffuseFactor = dot(lightVec, normal);
-
-	[flatten]
-	if (diffuseFactor > 0.0f)
-	{
-		float3 v = reflect(-lightVec, normal);
-		float specFactor = pow(max(dot(v, toEye), 0.0f), mat.Specular.w);
-
-		diffuse = diffuseFactor * mat.Diffuse * light.Diffuse;
-		specular = specFactor * mat.Specular * light.Specular;
-	}
 }
 
 //=============================================================================

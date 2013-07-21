@@ -2,8 +2,8 @@
 #include "Effects.h"
 using namespace std;
 
-SkinnedModel::SkinnedModel(string filename, string texPath)
-	: VirtualModel(),
+SkinnedModel::SkinnedModel(ID3D11Device* device, string filename, string texPath)
+	: VirtualModel(device),
 	mMeshes(vector<SkinnedMesh*>()),
 	mMaterials(vector<Material>()),
 	mDiffMapSRV(vector<ID3D11ShaderResourceView*>()),
@@ -30,6 +30,7 @@ SkinnedModel::SkinnedModel(string filename, string texPath)
 		}
 		mNormalMapSRV.push_back(tempNormalMap);
 	}
+	this->CreateBuffers();
 }
 
 SkinnedModel::~SkinnedModel(void)
@@ -64,6 +65,15 @@ void SkinnedModel::CreateMatsAndMeshes(string filename)
 	Loader->CreateSkinnedObject(mGenMats, mMeshes, filename, mSkinData);
 	this->mMeshCount = mMeshes.size();
 	this->mMaterialCount = mGenMats.size();
+}
+
+void SkinnedModel::CreateBuffers()
+{
+	for(UINT i(0); i != mMeshCount; ++i)
+	{
+		this->mMeshes[i]->SetVertexBuffer(this->mDevice, &mMeshes[i]->GetVertices()[0], mMeshes[i]->GetVertices().size());
+		this->mMeshes[i]->SetIndexBuffer(this->mDevice, &mMeshes[i]->GetIndices()[0], mMeshes[i]->GetIndices().size());
+	}
 }
 
 void SkinnedModel::Instance::Update(float dt)

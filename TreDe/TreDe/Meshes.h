@@ -111,4 +111,22 @@ public:
 private:
 	std::vector<VertexDef::PosNorTexTanSkin> mVertices;
 };
+
+// Particle mesh
+class ParticleMesh : public VirtualMesh
+{
+public:
+	ParticleMesh() : VirtualMesh() {}
+	~ParticleMesh();
+
+public:
+	std::vector<VertexDef::Particle> GetVertices() const { return this->mVertices; }
+	
+public:
+	void SetVerticesSize(UINT size) { this->mVertices.resize(size); }
+	void SetVertices(std::vector<VertexDef::Particle> vertices) { this->mVertices = vertices; }
+
+private:
+	std::vector<VertexDef::Particle> mVertices;
+};
 #endif

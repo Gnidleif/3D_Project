@@ -15,8 +15,7 @@ class Game
 public:
 	Game();
 	~Game();
-	void CreateSkyBox(ID3D11Device* device);
-	void Initialize(bool character);
+	void Initialize(ID3D11Device* device);
 	void Update(float dt);
 	void SolidDraw(ID3D11DeviceContext* devCon);
 	void WireDraw(ID3D11DeviceContext* devCon);
@@ -31,5 +30,12 @@ private:
 	std::vector<StaticEntity*> mPlatforms;
 	//SkinnedEntity* mCharacter;
 	SkyBox* mSkyBox;
+
+	UINT mDirLightAmount;
+	UINT mPointLightAmount;
+	UINT mSpotLightAmount;
+	DirectionalLight* mDirLights;
+	PointLight* mPointLights;
+	SpotLight* mSpotLights;
 };
 #endif

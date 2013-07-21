@@ -8,19 +8,16 @@
 class StaticModel : public VirtualModel
 {
 public:
-	StaticModel(std::string filename, std::string texPath);
+	StaticModel(ID3D11Device* device, std::string filename, std::string texPath);
 	~StaticModel(void);
 	void ApplyEffects();
 
 public:
-	std::vector<StaticMesh*> GetMeshes() const { return this->mMeshes; }
 	StaticMesh* GetMesh(UINT index) const { return this->mMeshes[index]; }
-	std::vector<Material> GetMaterial() const { return this->mMaterials; }
-	std::vector<ID3D11ShaderResourceView*> GetDiffMap() const { return this->mDiffMapSRV; }
-	std::vector<ID3D11ShaderResourceView*> GetNormalMap() const { return this->mNormalMapSRV; }
 
 private:
 	void CreateMatsAndMeshes(std::string filename);
+	void CreateBuffers();
 
 private:
 	std::vector<Material> mMaterials;

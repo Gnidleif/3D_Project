@@ -2,14 +2,18 @@
 
 cbuffer cbPerFrame
 {
-	float4x4 gView;
-	float4x4 gProj;
+	DirectionalLight gDirLights[1];
+	PointLight gPointLights[2];
+	SpotLight gSpotLights[2];
+	float3 gEyePos;
 };
 
 cbuffer cbPerObject
 {
 	Material gMaterial;
 	float4x4 gWorld;
+	float4x4 gView;
+	float4x4 gProj;
 	float4x4 gWorldInvTranspose;
 };
 
@@ -103,6 +107,87 @@ float4 PSScene(PSIn input,
 	return texColor;
 };
 
+float4 PSScene_Lights(PSIn input,
+			   uniform bool useTex,
+			   uniform int dirLightAmount,
+			   uniform int pointLightAmount,
+			   uniform int spotLightAmount) : SV_Target
+{
+	//samLinear
+	float4 texColor = float4(0.0f, 0.0f, 1.0f, 1.0f);
+	if(useTex)
+	{
+		float4 c0 = gTex0.Sample(samLinear, input.Tiled);
+		float4 c1 = gTex1.Sample(samLinear, input.Tiled);
+		float4 c2 = gTex2.Sample(samLinear, input.Tiled);
+		float4 c3 = gTex3.Sample(samLinear, input.Tiled);
+
+		float4 blend = gBlendMap.Sample(samLinear, input.Stretched);
+
+		texColor = c0;
+		texColor = lerp(texColor, c1, blend.r);
+		texColor = lerp(texColor, c2, blend.g);
+		texColor = lerp(texColor, c3, blend.b);
+	}
+
+	// Lighting!
+
+	float4 litColor = texColor;
+	if(dirLightAmount > 0 || pointLightAmount > 0 || spotLightAmount > 0)
+	{
+		// This might be wrong, check later
+		//float3 toEye = normalize(gEyePos - input.PosW);
+
+		float3 toEye = gEyePos - input.PosW;
+		float eyeDist = length(toEye);
+		toEye /= eyeDist;
+
+		float4 ambient = float4(0.0f, 0.0f, 0.0f, 0.0f);
+		float4 diffuse = float4(0.0f, 0.0f, 0.0f, 0.0f);
+		float4 specular = float4(0.0f, 0.0f, 0.0f, 0.0f);
+
+		[unroll]
+		for(int i = 0; i < dirLightAmount; ++i)
+		{
+			float4 A, D, S;
+			ComputeDirectionalLight(gMaterial, gDirLights[i], input.Normal, toEye, A, D, S);
+
+			ambient += A;
+			diffuse += D;
+			specular += S;
+		}
+
+		[unroll]
+		for(int j = 0; j < pointLightAmount; ++j)
+		{
+			float4 A, D, S;
+			ComputePointLight(gMaterial, gPointLights[j], input.PosW, input.Normal, toEye, A, D, S);
+
+			ambient += A;
+			diffuse += D;
+			specular += S;
+		}
+
+		[unroll]
+		for(int k = 0; k < spotLightAmount; ++k)
+		{
+			float4 A, D, S;
+			ComputeSpotLight(gMaterial, gSpotLights[k], input.PosW, input.Normal, toEye, A, D, S);
+
+			ambient += A;
+			diffuse += D;
+			specular += S;
+		}
+
+		litColor = texColor * (ambient + diffuse) + specular;
+		//litColor += texColor * 0.3f;
+	}
+
+	// Materials later
+	litColor.a = gMaterial.Diffuse.a * texColor.a;
+	return litColor;
+}
+
 RasterizerState Wireframe
 {
 	FillMode = WireFrame;
@@ -124,6 +209,19 @@ DepthStencilState NoDepthWrites
 	DepthFunc = LESS_EQUAL;
 };
 
+BlendState AdditiveBlending
+{
+    AlphaToCoverageEnable = FALSE;
+    BlendEnable[0] = TRUE;
+    SrcBlend = SRC_ALPHA;
+    DestBlend = ONE;
+    BlendOp = ADD;
+    SrcBlendAlpha = ZERO;
+    DestBlendAlpha = ZERO;
+    BlendOpAlpha = ADD;
+    RenderTargetWriteMask[0] = 0x0F;
+};
+
 technique11 Solid
 {
 	pass p0
@@ -142,7 +240,23 @@ technique11 Wire
 		SetVertexShader( CompileShader(vs_5_0, VSScene()));
 		SetGeometryShader(NULL);
 		SetPixelShader( CompileShader(ps_5_0, PSScene(false)));
+
 		SetRasterizerState(Wireframe);
+		SetDepthStencilState(NoDepthWrites, 0);
+	}
+};
+
+technique11 AllLights
+{
+	pass p0
+	{
+		SetVertexShader( CompileShader(vs_5_0, VSScene()));
+		SetGeometryShader(NULL);
+		SetPixelShader( CompileShader(ps_5_0, PSScene_Lights(true, 0, 0, 0))); // Testing, testing
+
+		SetBlendState( NULL, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff );
+
+		SetRasterizerState(Solidframe);
 		SetDepthStencilState(NoDepthWrites, 0);
 	}
 };

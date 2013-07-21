@@ -2,14 +2,18 @@
 
 cbuffer cbPerFrame
 {
-	float4x4 gView;
-	float4x4 gProj;
+	DirectionalLight gDirLights[1];
+	PointLight gPointLights[2];
+	SpotLight gSpotLights[2];
+	float3 gEyePos;
 };
 
 cbuffer cbPerObject
 {
 	Material gMaterial;
 	float4x4 gWorld;
+	float4x4 gView;
+	float4x4 gProj;
 	float4x4 gWorldInvTranspose;
 };
 
@@ -58,7 +62,7 @@ struct SkinVSIn
 // Input Pixel shader
 struct PSIn
 {
-	float4 PosH : SV_Position; // Homogenous position
+	float4 PosH : SV_POSITION; // Homogenous position
 	float3 PosW : POSITION; // World position
 	float3 Normal : NORMAL;
 	float2 TexC : TEXCOORD;
@@ -128,8 +132,6 @@ float4 PSScene(PSIn input,
 	if(useTex)
 	{
 		texColor = gDiffMap.Sample(samLinear, input.TexC);
-		float3 normMapSamp = gNormMap.Sample(samLinear, input.TexC).rgb;
-		float3 bumpNormal = NormalSampleToWorldSpace(normMapSamp, input.Normal, input.TangentW);
 
 		if(alphaClip) // If alpha clipping is true
 			clip(texColor.a - 0.1f);
@@ -138,6 +140,82 @@ float4 PSScene(PSIn input,
 	return texColor;
 };
 
+float4 PSScene_Lights(PSIn input,
+			   uniform bool alphaClip,
+			   uniform bool useTex,
+			   uniform int dirLightAmount,
+			   uniform int pointLightAmount,
+			   uniform int spotLightAmount) : SV_Target
+{
+	input.Normal = normalize(input.Normal);
+	float4 texColor = float4(1.0f, 0.0f, 0.0f, 1.0f);
+	if(useTex)
+	{
+		texColor = gDiffMap.Sample(samLinear, input.TexC);
+
+		if(alphaClip) // If alpha clipping is true
+			clip(texColor.a - 0.1f);
+	}
+	float3 normMapSamp = gNormMap.Sample(samLinear, input.TexC).rgb;
+	float3 bumpNormal = NormalSampleToWorldSpace(normMapSamp, input.Normal, input.TangentW);
+
+	// Lighting!
+
+	float4 litColor = texColor;
+	if(dirLightAmount > 0 || pointLightAmount > 0 || spotLightAmount > 0)
+	{
+		// This might be wrong, check later
+		//float3 toEye = normalize(gEyePos - input.PosW);
+
+		float3 toEye = normalize(gEyePos - input.PosW);
+
+		float4 ambient = float4(0.0f, 0.0f, 0.0f, 0.0f);
+		float4 diffuse = float4(0.0f, 0.0f, 0.0f, 0.0f);
+		float4 specular = float4(0.0f, 0.0f, 0.0f, 0.0f);
+
+		[unroll]
+		for(int i = 0; i < dirLightAmount; ++i)
+		{
+			float4 A, D, S;
+			ComputeDirectionalLight(gMaterial, gDirLights[i], input.Normal, toEye, A, D, S);
+
+			ambient += A;
+			diffuse += D;
+			specular += S;
+		}
+
+		[unroll]
+		for(int j = 0; j < pointLightAmount; ++j)
+		{
+			float4 A, D, S;
+			ComputePointLight(gMaterial, gPointLights[j], input.PosW, input.Normal, toEye, A, D, S);
+
+			ambient += A;
+			diffuse += D;
+			specular += S;
+		}
+
+		[unroll]
+		for(int k = 0; k < spotLightAmount; ++k)
+		{
+			float4 A, D, S;
+			ComputeSpotLight(gMaterial, gSpotLights[k], input.PosW, input.Normal, toEye, A, D, S);
+
+			ambient += A;
+			diffuse += D;
+			specular += S;
+		}
+
+		litColor = texColor * (ambient + diffuse) + specular;
+		//litColor += texColor * 0.3f;
+	}
+
+	// Materials later
+	litColor.a = gMaterial.Diffuse.a * texColor.a;
+	return litColor;
+
+	return texColor;
+};
 RasterizerState Wireframe
 {
 	FillMode = WireFrame;
@@ -150,6 +228,13 @@ RasterizerState Solidframe
 	FillMode = Solid;
 	CullMode = None;
 	FrontCounterClockwise = false;
+};
+
+DepthStencilState NoDepthWrites
+{
+	DepthEnable = TRUE;
+	DepthWriteMask = ALL;
+	DepthFunc = LESS_EQUAL;
 };
 
 technique11 Solid
@@ -204,5 +289,19 @@ technique11 Wire
 		SetGeometryShader(NULL);
 		SetPixelShader( CompileShader(ps_5_0, PSScene(false, false)));
 		SetRasterizerState(Wireframe);
+	}
+};
+
+technique11 AllLights
+{
+	pass p0
+	{
+		SetVertexShader( CompileShader(vs_5_0, VSScene()));
+		SetGeometryShader(NULL);
+		SetPixelShader( CompileShader(ps_5_0, PSScene_Lights(true, true, 1, 2, 2)));
+
+		SetBlendState( NULL, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff );
+		SetRasterizerState(Solidframe);
+		SetDepthStencilState(NoDepthWrites, 0);
 	}
 };

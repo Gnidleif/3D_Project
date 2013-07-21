@@ -49,12 +49,13 @@ public:
 		float normFactor,
 		int texRepeat);
 
+	// Function used to create a static object
 	bool CreateStaticObject(
 		std::vector<GenericMaterial>& materials,
 		std::vector<StaticMesh*>& meshes,
 		std::string filename);
-	// Loader->CreateSkinnedObject(mGenMats, mMeshes, filename, mSkinData);
 
+	// Function used to create a skinned object
 	bool CreateSkinnedObject(
 		std::vector<GenericMaterial>& materials,
 		std::vector<SkinnedMesh*>& meshes,

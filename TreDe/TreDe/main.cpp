@@ -101,9 +101,9 @@ bool Main::Initialize()
 	Effects::Initialize(mDirect3D->GetDevice());
 	InputLayouts::Initialize(mDirect3D->GetDevice());
 	Loader->Initialize(mDirect3D->GetDevice());
-	mGame->CreateSkyBox(mDirect3D->GetDevice());
+	Model->Initialize(mDirect3D->GetDevice());
 
-	mGame->Initialize(false);
+	mGame->Initialize(mDirect3D->GetDevice());
 
 	// Last part of the initialize of main
 	D3D11App::ShowWindow();

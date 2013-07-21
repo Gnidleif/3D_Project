@@ -78,8 +78,8 @@ void LoaderClass::CreateHeightMap(
 	mesh->SetVertices(finalVertices);
 	mesh->SetIndices(finalIndices);
 
-	mesh->SetVertexBuffer(mDevice, &mesh->GetVertices()[0], mesh->GetVertices().size());
-	mesh->SetIndexBuffer(mDevice, &mesh->GetIndices()[0], mesh->GetIndices().size());
+	//mesh->SetVertexBuffer(mDevice, &mesh->GetVertices()[0], mesh->GetVertices().size());
+	//mesh->SetIndexBuffer(mDevice, &mesh->GetIndices()[0], mesh->GetIndices().size());
 
 	finalVertices.clear();
 	finalIndices.clear();
@@ -320,8 +320,7 @@ bool LoaderClass::CreateStaticObject(
 				}
 				vertices.push_back(vertex);
 			}
-			tempMesh->SetVerticeSize(vertices.size());
-			tempMesh->SetVertices(vertices);
+
 
 			vector<UINT> indices;
 			for(UINT i(0); i != numFaces; ++i)
@@ -332,13 +331,17 @@ bool LoaderClass::CreateStaticObject(
 				}
 			}
 			// Might need to set some more shit here
+
+			tempMesh->SetVerticeSize(vertices.size());
+			tempMesh->SetVertices(vertices);
+
 			tempMesh->SetIndiceSize(indices.size());
 			tempMesh->SetIndices(indices);
 
 			tempMesh->SetMaterialIndex(mesh->mMaterialIndex);
 
-			tempMesh->SetVertexBuffer(mDevice, &tempMesh->GetVertices()[0], tempMesh->GetVertices().size());
-			tempMesh->SetIndexBuffer(mDevice, &tempMesh->GetIndices()[0], tempMesh->GetIndices().size());
+			//tempMesh->SetVertexBuffer(mDevice, &tempMesh->GetVertices()[0], tempMesh->GetVertices().size());
+			//tempMesh->SetIndexBuffer(mDevice, &tempMesh->GetIndices()[0], tempMesh->GetIndices().size());
 
 			meshes.push_back(tempMesh);
 		}
@@ -396,14 +399,13 @@ bool LoaderClass::CreateSkinnedObject(
 				vertex.mNormal		= XMFLOAT3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z);
 				vertex.mTexCoord	= XMFLOAT2(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y);
 				vertex.mTangentU	= XMFLOAT4(-1.0f, -1.0f, -1.0f, -1.0f);
+				vertex.mWeights = XMFLOAT3(0.0f, 0.0f, 0.0f);
+				vertex.mBoneIndices[0] = vertex.mBoneIndices[1] = vertex.mBoneIndices[2] = vertex.mBoneIndices[3] = 0;
 
 				if(mesh->HasTangentsAndBitangents())
 				{
 					vertex.mTangentU = XMFLOAT4(mesh->mTangents[i].x, mesh->mTangents[i].y, mesh->mTangents[i].z, -1.0f);
 				}
-
-				vertex.mBoneIndices[0] = vertex.mBoneIndices[1] = vertex.mBoneIndices[2] = vertex.mBoneIndices[3] = 0;
-				vertex.mWeights = XMFLOAT3(0.0f, 0.0f, 0.0f);
 
 				vertices.push_back(vertex);
 			}
@@ -482,8 +484,8 @@ bool LoaderClass::CreateSkinnedObject(
 
 			tempMesh->SetMaterialIndex(mesh->mMaterialIndex);
 
-			tempMesh->SetVertexBuffer(mDevice, &tempMesh->GetVertices()[0], tempMesh->GetVertices().size());
-			tempMesh->SetIndexBuffer(mDevice, &tempMesh->GetIndices()[0], tempMesh->GetIndices().size());
+			//tempMesh->SetVertexBuffer(mDevice, &tempMesh->GetVertices()[0], tempMesh->GetVertices().size());
+			//tempMesh->SetIndexBuffer(mDevice, &tempMesh->GetIndices()[0], tempMesh->GetIndices().size());
 
 			meshes.push_back(tempMesh);
 		}

@@ -43,7 +43,7 @@ void SkinnedEntity::Draw(ID3D11DeviceContext* devCon, ID3DX11EffectTechnique* ac
 	for(UINT i(0); i != techDesc.Passes; ++i)
 	{
 		activeTech->GetPassByIndex(i)->Apply(0, devCon);
-		for(UINT j(0); j != mModelInstance->mModel->GetMeshes().size(); ++j)
+		for(UINT j(0); j != mModelInstance->mModel->GetMeshCount(); ++j)
 		{
 			mModelInstance->mModel->GetMesh(j)->Draw(devCon);
 		}

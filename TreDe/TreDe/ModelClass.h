@@ -13,6 +13,7 @@ class ModelClass
 public:
 	static ModelClass* GetInstance();
 	void Shutdown();
+	void Initialize(ID3D11Device* device);
 	TerrainModel* GetTerrainModel(std::string key);
 	StaticModel* GetStaticModel(std::string key, std::string texPath);
 	SkinnedModel* GetSkinnedModel(std::string key, std::string texPath);
@@ -23,6 +24,7 @@ private:
 	std::map<std::string, TerrainModel*> mTerrainModels;
 	std::map<std::string, StaticModel*> mStaticModels;
 	std::map<std::string, SkinnedModel*> mSkinnedModels;
+	ID3D11Device* mDevice;
 
 private:
 	ModelClass() {}

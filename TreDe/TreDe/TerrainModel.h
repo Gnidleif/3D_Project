@@ -9,8 +9,9 @@
 class TerrainModel : public VirtualModel
 {
 public:
-	TerrainModel(std::string filename);
+	TerrainModel(ID3D11Device* device, std::string filename);
 	~TerrainModel();
+	void ApplyEffects();
 
 public:
 	TerrainMesh* GetMesh() const { return this->mMesh; }
@@ -18,6 +19,7 @@ public:
 
 private:
 	void CreateMatsAndMeshes(std::string filename);
+	void CreateBuffers();
 
 private:
 	TerrainMesh* mMesh;

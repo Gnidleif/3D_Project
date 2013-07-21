@@ -29,8 +29,14 @@ void ModelClass::Shutdown()
 	{
 		SafeDelete(it->second);
 	}
+	mSkinnedModels.clear();
 
 	SafeDelete(mInstance);
+}
+
+void ModelClass::Initialize(ID3D11Device* device)
+{
+	mDevice = device;
 }
 
 TerrainModel* ModelClass::GetTerrainModel(std::string key)
@@ -42,7 +48,7 @@ TerrainModel* ModelClass::GetTerrainModel(std::string key)
 	}
 	else // Otherwise create it and return the new object
 	{
-		tm = new TerrainModel(key);
+		tm = new TerrainModel(mDevice, key);
 		mTerrainModels[key] = tm;
 	}
 	return tm;
@@ -57,7 +63,7 @@ StaticModel* ModelClass::GetStaticModel(std::string key, std::string texPath)
 	}
 	else
 	{
-		sm = new StaticModel(key, texPath);
+		sm = new StaticModel(mDevice, key, texPath);
 		mStaticModels[key] = sm;
 	}
 	return sm;
@@ -72,7 +78,7 @@ SkinnedModel* ModelClass::GetSkinnedModel(std::string key, std::string texPath)
 	}
 	else
 	{
-		sm = new SkinnedModel(key, texPath);
+		sm = new SkinnedModel(mDevice, key, texPath);
 		mSkinnedModels[key] = sm;
 	}
 	return sm;
