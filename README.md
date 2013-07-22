@@ -10,6 +10,9 @@ Controls:
 - 1 - Set window size to 800x600 resolution
 - 2 - Set window size to 1024x768 resolution
 - 3 - Set window size to 1600x900 resolution
-- E - Switch between wire/solid-drawing, cooldown is 2 seconds
-- R - Change the scale of the Static/Skinned-Entity objects back to their original size
-- F - Increase the size of the Static/Skinned-Entity objects by changing their scale-value
+- NumPad0 - Draw scene with lights
+- NumPad1 - Draw scene without lights
+- Numpad2 - Draw scene with wire-technique
+- Numpad3 - Draw scene with lights and tessellation
+- Numpad4 - Draw scene without lights, with tessellation
+- Numpad5 - Draw scene with wire-technique and tessellation (check it out, looks awesome!)
