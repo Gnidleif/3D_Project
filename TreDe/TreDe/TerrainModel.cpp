@@ -20,16 +20,6 @@ TerrainModel::~TerrainModel(void)
 	SafeDelete(mMesh);
 }
 
-void TerrainModel::ApplyEffects()
-{
-	Effects::TerrainFX->SetBlendMap(mBlendMap);
-	Effects::TerrainFX->SetTex0(mTex0);
-	Effects::TerrainFX->SetTex1(mTex1);
-	Effects::TerrainFX->SetTex2(mTex2);
-	Effects::TerrainFX->SetTex3(mTex3);
-	Effects::TerrainFX->SetMaterial(this->mMaterial);
-}
-
 void TerrainModel::CreateMatsAndMeshes(string filename)
 {
 	// Sätt in skit för material här sen

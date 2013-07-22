@@ -20,7 +20,7 @@ cbuffer cbPerObject
 cbuffer cbFixed
 {
 	float texScale = 15.0f;
-	float lightAddScale = 0.3f;
+	float lightAddScale = 0.4f;
 };
 
 Texture2D gBlendMap;
@@ -36,13 +36,6 @@ SamplerState samLinear
 	AddressV = WRAP;
 };
 
-SamplerState samAnisotropic
-{
-	Filter = ANISOTROPIC;
-	MaxAnisotropy = 4;
-	AddressU = WRAP;
-	AddressV = WRAP;
-};
 
 // Input Vertex shader
 struct VSIn
@@ -100,7 +93,6 @@ float4 PSScene(VSOut input,
 		texColor = lerp(texColor, c3, blend.b);
 	}
 
-	// Materials later
 	return texColor;
 };
 
@@ -186,35 +178,17 @@ float4 PSScene_Lights(VSOut input,
 RasterizerState Wireframe
 {
 	FillMode = WireFrame;
-	CullMode = None;
+	CullMode = Back;
 	FrontCounterClockwise = false;
+	DepthClipEnable = true;
 };
 
 RasterizerState Solidframe
 {
 	FillMode = Solid;
-	CullMode = None;
+	CullMode = Back;
 	FrontCounterClockwise = false;
-};
-
-DepthStencilState NoDepthWrites
-{
-	DepthEnable = TRUE;
-	DepthWriteMask = ALL;
-	DepthFunc = LESS_EQUAL;
-};
-
-BlendState AdditiveBlending
-{
-    AlphaToCoverageEnable = FALSE;
-    BlendEnable[0] = TRUE;
-    SrcBlend = SRC_ALPHA;
-    DestBlend = ONE;
-    BlendOp = ADD;
-    SrcBlendAlpha = ZERO;
-    DestBlendAlpha = ZERO;
-    BlendOpAlpha = ADD;
-    RenderTargetWriteMask[0] = 0x0F;
+	DepthClipEnable = true;
 };
 
 technique11 Solid
@@ -224,6 +198,7 @@ technique11 Solid
 		SetVertexShader( CompileShader(vs_5_0, VSScene()));
 		SetGeometryShader(NULL);
 		SetPixelShader( CompileShader(ps_5_0, PSScene(true)));
+
 		SetRasterizerState(Solidframe);
 	}
 };
@@ -236,7 +211,6 @@ technique11 Wire
 		SetGeometryShader(NULL);
 		SetPixelShader( CompileShader(ps_5_0, PSScene(false)));
 
-		SetDepthStencilState(NoDepthWrites, 0);
 		SetRasterizerState(Wireframe);
 	}
 };
@@ -247,11 +221,10 @@ technique11 AllLights
 	{
 		SetVertexShader( CompileShader(vs_5_0, VSScene()));
 		SetGeometryShader(NULL);
-		SetPixelShader( CompileShader(ps_5_0, PSScene_Lights(true, 1, 0, 0)));
+		SetPixelShader( CompileShader(ps_5_0, PSScene_Lights(true, 0, 2, 0)));
 
 		SetBlendState( NULL, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff );
 
-		SetDepthStencilState(NoDepthWrites, 0);
 		SetRasterizerState(Solidframe);
 	}
 };

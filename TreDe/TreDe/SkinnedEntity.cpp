@@ -28,23 +28,27 @@ void SkinnedEntity::Initialize(XMFLOAT3 position, float scale)
 void SkinnedEntity::Draw(ID3D11DeviceContext* devCon, ID3DX11EffectTechnique* activeTech, Camera* camera)
 {
 	devCon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	devCon->IAGetInputLayout(&InputLayouts::mPosNorTexTanSkin);
+	devCon->IASetInputLayout(InputLayouts::mPosNorTexTanSkin);
 
 	D3DX11_TECHNIQUE_DESC techDesc = {};
 	activeTech->GetDesc(&techDesc);
 
-	Effects::NormalFX->SetView(&camera->GetViewMatrix());
-	Effects::NormalFX->SetProj(&camera->GetProjMatrix());
-	Effects::NormalFX->SetWorld(&XMLoadFloat4x4(&mModelInstance->mWorld));
-	Effects::NormalFX->SetWorldInvTranspose(&MathHelper::InverseTranspose(XMLoadFloat4x4(&mModelInstance->mWorld)));
+	Effects::NormalFX->SetView(camera->GetViewMatrix());
+	Effects::NormalFX->SetProj(camera->GetProjMatrix());
+	Effects::NormalFX->SetWorld(XMLoadFloat4x4(&mModelInstance->mWorld));
+	Effects::NormalFX->SetWorldInvTranspose(MathHelper::InverseTranspose(XMLoadFloat4x4(&mModelInstance->mWorld)));
 	Effects::NormalFX->SetBoneTransforms(&mModelInstance->mFinalTransforms[0], mModelInstance->mFinalTransforms.size());
 
 	for(UINT i(0); i != techDesc.Passes; ++i)
 	{
-		activeTech->GetPassByIndex(i)->Apply(0, devCon);
 		for(UINT j(0); j != mModelInstance->mModel->GetMeshCount(); ++j)
 		{
-			mModelInstance->mModel->ApplyEffects();
+			UINT index = mModelInstance->mModel->GetMesh(j)->GetMaterialIndex();
+			Effects::NormalFX->SetDiffuseMap(mModelInstance->mModel->GetDiffMapSRV(index));
+			//Effects::NormalFX->SetNormalMap(mModelInstance->mModel->GetNormalMapSRV(index));
+			Effects::NormalFX->SetMaterial(mModelInstance->mModel->GetMaterial(index));
+
+			activeTech->GetPassByIndex(i)->Apply(0, devCon);
 			mModelInstance->mModel->GetMesh(j)->Draw(devCon);
 		}
 	}

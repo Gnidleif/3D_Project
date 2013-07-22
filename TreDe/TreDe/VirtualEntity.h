@@ -27,6 +27,7 @@ private:
 protected:
 	XMFLOAT3 mPosition;
 	float mRotation;
+	float mFloatScale;
 
 	XMFLOAT4X4 mRotMatrix;
 	XMFLOAT4X4 mModelScale;

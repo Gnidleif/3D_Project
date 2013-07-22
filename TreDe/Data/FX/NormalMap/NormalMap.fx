@@ -25,7 +25,7 @@ cbuffer cbSkin
 
 cbuffer cbFixed
 {
-	float lightAddScale = 0.4f;
+	float lightAddScale = 0.5f;
 };
 
 Texture2D gDiffMap;
@@ -224,22 +224,29 @@ float4 PSScene_Lights(VSOut input,
 RasterizerState Wireframe
 {
 	FillMode = WireFrame;
-	CullMode = None;
+	CullMode = Back;
 	FrontCounterClockwise = false;
+	DepthClipEnable = true;
 };
 
 RasterizerState Solidframe
 {
 	FillMode = Solid;
-	CullMode = None;
+	CullMode = Back;
 	FrontCounterClockwise = false;
+	DepthClipEnable = true;
+};
+
+DepthStencilState DisableDepth
+{
+	DepthEnable = TRUE;
+	DepthWriteMask = ZERO;
 };
 
 DepthStencilState NoDepthWrites
 {
 	DepthEnable = TRUE;
-	DepthWriteMask = ALL;
-	DepthFunc = LESS_EQUAL;
+	DepthWriteMask = ZERO;
 };
 
 technique11 Solid
@@ -249,6 +256,7 @@ technique11 Solid
 		SetVertexShader( CompileShader(vs_5_0, VSScene()));
 		SetGeometryShader(NULL);
 		SetPixelShader( CompileShader(ps_5_0, PSScene(false, true)));
+		
 		SetRasterizerState(Solidframe);
 	}
 };
@@ -260,6 +268,7 @@ technique11 SolidSkin
 		SetVertexShader( CompileShader(vs_5_0, SkinVSScene()));
 		SetGeometryShader(NULL);
 		SetPixelShader( CompileShader(ps_5_0, PSScene(false, true)));
+		
 		SetRasterizerState(Solidframe);
 	}
 };
@@ -271,6 +280,7 @@ technique11 SolidAlpha
 		SetVertexShader( CompileShader(vs_5_0, VSScene()));
 		SetGeometryShader(NULL);
 		SetPixelShader( CompileShader(ps_5_0, PSScene(true, true)));
+		
 		SetRasterizerState(Solidframe);
 	}
 };
@@ -282,6 +292,7 @@ technique11 SolidAlphaSkin
 		SetVertexShader( CompileShader(vs_5_0, SkinVSScene()));
 		SetGeometryShader(NULL);
 		SetPixelShader( CompileShader(ps_5_0, PSScene(true, true)));
+		
 		SetRasterizerState(Solidframe);
 	}
 }
@@ -293,6 +304,7 @@ technique11 Wire
 		SetVertexShader( CompileShader(vs_5_0, VSScene()));
 		SetGeometryShader(NULL);
 		SetPixelShader( CompileShader(ps_5_0, PSScene(false, false)));
+		
 		SetRasterizerState(Wireframe);
 	}
 };
@@ -304,10 +316,8 @@ technique11 AllLights
 		SetVertexShader( CompileShader(vs_5_0, VSScene()));
 		SetGeometryShader(NULL);
 		SetPixelShader( CompileShader(ps_5_0, PSScene_Lights(false, true, 1, 0, 0)));
-
-		SetBlendState( NULL, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff );
+		
 		SetRasterizerState(Solidframe);
-		SetDepthStencilState(NoDepthWrites, 0);
 	}
 };
 
@@ -317,10 +327,8 @@ technique11 AllLightsAlpha
 	{
 		SetVertexShader( CompileShader(vs_5_0, VSScene()));
 		SetGeometryShader(NULL);
-		SetPixelShader( CompileShader(ps_5_0, PSScene_Lights(true, true, 1, 0, 0)));
-
-		SetBlendState( NULL, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff );
+		SetPixelShader( CompileShader(ps_5_0, PSScene_Lights(true, true, 0, 2, 0)));
+		
 		SetRasterizerState(Solidframe);
-		SetDepthStencilState(NoDepthWrites, 0);
 	}
 };

@@ -168,13 +168,13 @@ void Main::Draw()
 	// If the text isn't drawn last, objects in the world might hide it
 	Text->Draw();
 
-	//ID3D11ShaderResourceView* nullSRV[16] = { 0 };
-	//mDirect3D->GetDevCon()->PSGetShaderResources(0, 16, nullSRV);
+	ID3D11ShaderResourceView* nullSRV[16] = { 0 };
+	mDirect3D->GetDevCon()->PSGetShaderResources(0, 16, nullSRV);
 
-	//float blendFactor[] = {0.0f, 0.0f, 0.0f, 0.0f};
-	//mDirect3D->GetDevCon()->RSSetState(0);
-	//mDirect3D->GetDevCon()->OMSetDepthStencilState(0, 0);
-	//mDirect3D->GetDevCon()->OMSetBlendState(0, blendFactor, 0xffffffff);
+	float blendFactor[] = {0.0f, 0.0f, 0.0f, 0.0f};
+	mDirect3D->GetDevCon()->RSSetState(0);
+	mDirect3D->GetDevCon()->OMSetDepthStencilState(0, 0);
+	mDirect3D->GetDevCon()->OMSetBlendState(0, blendFactor, 0xffffffff);
 
 	mDirect3D->GetSwapChain()->Present(0, 0);
 }

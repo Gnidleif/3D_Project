@@ -13,6 +13,10 @@ public:
 	void ApplyEffects();
 	void ApplyTessEffects();
 
+	ID3D11ShaderResourceView* GetDiffMapSRV(UINT index) const { return this->mDiffMapSRV[index]; }
+	ID3D11ShaderResourceView* GetNormalMapSRV(UINT index) const { return this->mNormalMapSRV[index]; }
+	Material GetMaterial(UINT index) const { return this->mMaterials[index]; }
+
 public:
 	StaticMesh* GetMesh(UINT index) const { return this->mMeshes[index]; }
 

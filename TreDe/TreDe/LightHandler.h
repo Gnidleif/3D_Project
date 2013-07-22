@@ -14,8 +14,8 @@ public:
 	void ApplyEffects();
 
 public:
-	XMFLOAT3 GetSpot0Pos() const { return this->mSpots[0].Position; }
-	XMFLOAT3 GetSpot1Pos() const { return this->mSpots[1].Position; }
+	XMFLOAT3 GetPoint0Pos() const { return this->mPoints[0].Position; }
+	XMFLOAT3 GetPoint1Pos() const { return this->mPoints[1].Position; }
 
 private:
 	static const int mDirAmount = 1;

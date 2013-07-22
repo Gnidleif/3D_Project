@@ -42,13 +42,12 @@ public:
 
 public:
 	// Set eye pos, try changing this later if something doesn't work to see what happens
-	void SetEyePos(XMFLOAT3* eye) { this->mEyePos->SetRawValue(&eye, 0, sizeof(XMFLOAT3)); }
+	void SetEyePos(const XMFLOAT3& eye) { this->mEyePos->SetRawValue(&eye, 0, sizeof(XMFLOAT3)); }
 
-	// Set matrices
-	void SetWorld(XMMATRIX* matrix) { this->mWorld->SetMatrix(reinterpret_cast<const float*>(matrix)); }
-	void SetView(XMMATRIX* matrix) { this->mView->SetMatrix(reinterpret_cast<const float*>(matrix)); }
-	void SetProj(XMMATRIX* matrix) { this->mProj->SetMatrix(reinterpret_cast<const float*>(matrix)); }
-	void SetWorldInvTranspose(XMMATRIX* matrix) { this->mWorldInvTranspose->SetMatrix(reinterpret_cast<const float*>(matrix)); }
+	void SetWorld(const XMMATRIX& matrix) { this->mWorld->SetMatrix(reinterpret_cast<const float*>(&matrix)); }
+	void SetView(const XMMATRIX& matrix) { this->mView->SetMatrix(reinterpret_cast<const float*>(&matrix)); }
+	void SetProj(const XMMATRIX& matrix) { this->mProj->SetMatrix(reinterpret_cast<const float*>(&matrix)); }
+	void SetWorldInvTranspose(const XMMATRIX& matrix) { this->mWorldInvTranspose->SetMatrix(reinterpret_cast<const float*>(&matrix)); }
 
 	// Set textures
 	void SetBlendMap(ID3D11ShaderResourceView* bm) { this->mBlendMap->SetResource(bm); }
@@ -58,11 +57,11 @@ public:
 	void SetTex3(ID3D11ShaderResourceView* t3) { this->mTex3->SetResource(t3); }
 
 	// Set lights
-	void SetDirLights(DirectionalLight* lights, int amount) { this->mDirLights->SetRawValue(lights, 0, amount*sizeof(DirectionalLight)); }
-	void SetPointLights(PointLight* lights, int amount) { this->mPointLights->SetRawValue(lights, 0, amount*sizeof(PointLight)); }
-	void SetSpotLights(SpotLight* lights, int amount) { this->mSpotLights->SetRawValue(lights, 0, amount*sizeof(SpotLight)); }
+	void SetDirLights(const DirectionalLight* lights, int amount) { this->mDirLights->SetRawValue(lights, 0, amount*sizeof(DirectionalLight)); }
+	void SetPointLights(const PointLight* lights, int amount) { this->mPointLights->SetRawValue(lights, 0, amount*sizeof(PointLight)); }
+	void SetSpotLights(const SpotLight* lights, int amount) { this->mSpotLights->SetRawValue(lights, 0, amount*sizeof(SpotLight)); }
 	// Set material
-	void SetMaterial(Material& mat) { mMaterial->SetRawValue(&mat, 0, sizeof(Material)); }
+	void SetMaterial(const Material& mat) { mMaterial->SetRawValue(&mat, 0, sizeof(Material)); }
 
 public:
 	ID3DX11EffectTechnique* mSolid;
@@ -97,12 +96,12 @@ public:
 	~NormalEffect() {}
 
 public:
-	void SetEyePos(XMFLOAT3* eye) { this->mEyePos->SetRawValue(&eye, 0, sizeof(XMFLOAT3)); }
+	void SetEyePos(const XMFLOAT3& eye) { this->mEyePos->SetRawValue(&eye, 0, sizeof(XMFLOAT3)); }
 
-	void SetWorld(XMMATRIX* matrix) { this->mWorld->SetMatrix(reinterpret_cast<const float*>(matrix)); }
-	void SetView(XMMATRIX* matrix) { this->mView->SetMatrix(reinterpret_cast<const float*>(matrix)); }
-	void SetProj(XMMATRIX* matrix) { this->mProj->SetMatrix(reinterpret_cast<const float*>(matrix)); }
-	void SetWorldInvTranspose(XMMATRIX* matrix) { this->mWorldInvTranspose->SetMatrix(reinterpret_cast<const float*>(matrix)); }
+	void SetWorld(const XMMATRIX& matrix) { this->mWorld->SetMatrix(reinterpret_cast<const float*>(&matrix)); }
+	void SetView(const XMMATRIX& matrix) { this->mView->SetMatrix(reinterpret_cast<const float*>(&matrix)); }
+	void SetProj(const XMMATRIX& matrix) { this->mProj->SetMatrix(reinterpret_cast<const float*>(&matrix)); }
+	void SetWorldInvTranspose(const XMMATRIX& matrix) { this->mWorldInvTranspose->SetMatrix(reinterpret_cast<const float*>(&matrix)); }
 
 	void SetBoneTransforms(XMFLOAT4X4* matrix, int count) { mBoneTransforms->SetMatrixArray(reinterpret_cast<const float*>(matrix), 0, count); }
 
@@ -110,10 +109,10 @@ public:
 	void SetNormalMap(ID3D11ShaderResourceView* normMap) { this->mNormalMap->SetResource(normMap); }
 
 	// Set lights
-	void SetDirLights(DirectionalLight* lights, int amount) { this->mDirLights->SetRawValue(lights, 0, amount*sizeof(DirectionalLight)); }
-	void SetPointLights(PointLight* lights, int amount) { this->mPointLights->SetRawValue(lights, 0, amount*sizeof(PointLight)); }
-	void SetSpotLights(SpotLight* lights, int amount) { this->mSpotLights->SetRawValue(lights, 0, amount*sizeof(SpotLight)); }
-	void SetMaterial(Material& mat) { mMaterial->SetRawValue(&mat, 0, sizeof(Material)); }
+	void SetDirLights(const DirectionalLight* lights, int amount) { this->mDirLights->SetRawValue(lights, 0, amount*sizeof(DirectionalLight)); }
+	void SetPointLights(const PointLight* lights, int amount) { this->mPointLights->SetRawValue(lights, 0, amount*sizeof(PointLight)); }
+	void SetSpotLights(const SpotLight* lights, int amount) { this->mSpotLights->SetRawValue(lights, 0, amount*sizeof(SpotLight)); }
+	void SetMaterial(const Material& mat) { mMaterial->SetRawValue(&mat, 0, sizeof(Material)); }
 
 public: // Techniques
 	ID3DX11EffectTechnique* mSolid;
@@ -152,21 +151,21 @@ public:
 	~TessellationEffect() {}
 
 public:
-	void SetEyePos(XMFLOAT3* eye) { this->mEyePos->SetRawValue(&eye, 0, sizeof(XMFLOAT3)); }
+	void SetEyePos(const XMFLOAT3& eye) { this->mEyePos->SetRawValue(&eye, 0, sizeof(XMFLOAT3)); }
 
-	void SetWorld(XMMATRIX* matrix) { this->mWorld->SetMatrix(reinterpret_cast<const float*>(matrix)); }
-	void SetView(XMMATRIX* matrix) { this->mView->SetMatrix(reinterpret_cast<const float*>(matrix)); }
-	void SetProj(XMMATRIX* matrix) { this->mProj->SetMatrix(reinterpret_cast<const float*>(matrix)); }
-	void SetWorldInvTranspose(XMMATRIX* matrix) { this->mWorldInvTranspose->SetMatrix(reinterpret_cast<const float*>(matrix)); }
+	void SetWorld(const XMMATRIX& matrix) { this->mWorld->SetMatrix(reinterpret_cast<const float*>(&matrix)); }
+	void SetView(const XMMATRIX& matrix) { this->mView->SetMatrix(reinterpret_cast<const float*>(&matrix)); }
+	void SetProj(const XMMATRIX& matrix) { this->mProj->SetMatrix(reinterpret_cast<const float*>(&matrix)); }
+	void SetWorldInvTranspose(const XMMATRIX& matrix) { this->mWorldInvTranspose->SetMatrix(reinterpret_cast<const float*>(&matrix)); }
 
 	void SetDiffuseMap(ID3D11ShaderResourceView* diffMap) { this->mDiffuseMap->SetResource(diffMap); }
 	void SetNormalMap(ID3D11ShaderResourceView* normMap) { this->mNormalMap->SetResource(normMap); }
 
 	// Set lights
-	void SetDirLights(DirectionalLight* lights, int amount) { this->mDirLights->SetRawValue(lights, 0, amount*sizeof(DirectionalLight)); }
-	void SetPointLights(PointLight* lights, int amount) { this->mPointLights->SetRawValue(lights, 0, amount*sizeof(PointLight)); }
-	void SetSpotLights(SpotLight* lights, int amount) { this->mSpotLights->SetRawValue(lights, 0, amount*sizeof(SpotLight)); }
-	void SetMaterial(Material& mat) { mMaterial->SetRawValue(&mat, 0, sizeof(Material)); }
+	void SetDirLights(const DirectionalLight* lights, int amount) { this->mDirLights->SetRawValue(lights, 0, amount*sizeof(DirectionalLight)); }
+	void SetPointLights(const PointLight* lights, int amount) { this->mPointLights->SetRawValue(lights, 0, amount*sizeof(PointLight)); }
+	void SetSpotLights(const SpotLight* lights, int amount) { this->mSpotLights->SetRawValue(lights, 0, amount*sizeof(SpotLight)); }
+	void SetMaterial(const Material& mat) { mMaterial->SetRawValue(&mat, 0, sizeof(Material)); }
 
 	void SetMinTessDist(float data) { this->mMinDist->SetFloat(data); }
 	void SetMaxTessDist(float data) { this->mMaxDist->SetFloat(data); }

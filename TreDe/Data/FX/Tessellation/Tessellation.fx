@@ -166,7 +166,7 @@ DSOut DSScene(PatchTess patchTess,
 		coords.y * tri[1].TexC +
 		coords.z * tri[2].TexC;
 
-	output.TexC = texC; // Might need to add a gTexTransform to multiply here
+	output.TexC = texC;
 
 	float4 tangent =
 		coords.x * tri[0].TangentL +
@@ -301,6 +301,8 @@ technique11 Solid
 		SetGeometryShader(NULL);
 		SetPixelShader(CompileShader(ps_5_0, PSScene(false, true)));
 
+		SetBlendState( NULL, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff );
+		SetDepthStencilState(NoDepthWrites, 0);
 		SetRasterizerState(Solidframe);
 	}
 }
@@ -315,6 +317,8 @@ technique11 SolidAlpha
 		SetGeometryShader(NULL);
 		SetPixelShader(CompileShader(ps_5_0, PSScene(true, true)));
 
+		SetBlendState( NULL, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff );
+		SetDepthStencilState(NoDepthWrites, 0);
 		SetRasterizerState(Solidframe);
 	}
 }
@@ -329,6 +333,8 @@ technique11 Wire
 		SetGeometryShader(NULL);
 		SetPixelShader(CompileShader(ps_5_0, PSScene(false, false)));
 
+		SetBlendState( NULL, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff );
+		SetDepthStencilState(NoDepthWrites, 0);
 		SetRasterizerState(Wireframe);
 	}
 };

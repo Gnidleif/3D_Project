@@ -11,10 +11,12 @@ class SkinnedModel : public VirtualModel
 public:
 	SkinnedModel(ID3D11Device* device, std::string filename, std::string texPath);
 	~SkinnedModel(void);
-	void ApplyEffects();
 
 public:
 	SkinnedMesh* GetMesh(UINT index) const { return this->mMeshes[index]; }
+	Material GetMaterial(UINT index) const { return this->mMaterials[index]; }
+	ID3D11ShaderResourceView* GetDiffMapSRV(UINT index) const { return this->mDiffMapSRV[index]; }
+	ID3D11ShaderResourceView* GetNormalMapSRV(UINT index) const { return this->mNormalMapSRV[index]; }
 
 	SkinData* GetSkinData() const { return this->mSkinData; }
 

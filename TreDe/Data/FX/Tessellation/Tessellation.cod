@@ -584,6 +584,11 @@ fxgroup
                 // Approximately 3 instruction slots used
                             
             };
+            AB_BlendFactor = float4(0, 0, 0, 0);
+            AB_SampleMask = uint(0xffffffff);
+            BlendState = NULL;
+            DS_StencilRef = uint(0);
+            DepthStencilState = NoDepthWrites;
             RasterizerState = Solidframe;
         }
 
@@ -1112,6 +1117,11 @@ fxgroup
                 // Approximately 7 instruction slots used
                             
             };
+            AB_BlendFactor = float4(0, 0, 0, 0);
+            AB_SampleMask = uint(0xffffffff);
+            BlendState = NULL;
+            DS_StencilRef = uint(0);
+            DepthStencilState = NoDepthWrites;
             RasterizerState = Solidframe;
         }
 
@@ -1619,6 +1629,11 @@ fxgroup
                 // Approximately 2 instruction slots used
                             
             };
+            AB_BlendFactor = float4(0, 0, 0, 0);
+            AB_SampleMask = uint(0xffffffff);
+            BlendState = NULL;
+            DS_StencilRef = uint(0);
+            DepthStencilState = NoDepthWrites;
             RasterizerState = Wireframe;
         }
 

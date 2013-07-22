@@ -11,10 +11,17 @@ class TerrainModel : public VirtualModel
 public:
 	TerrainModel(ID3D11Device* device, std::string filename);
 	~TerrainModel();
-	void ApplyEffects();
 
 public:
 	TerrainMesh* GetMesh() const { return this->mMesh; }
+
+	ID3D11ShaderResourceView* GetBlendMap() const { return this->mBlendMap; }
+	ID3D11ShaderResourceView* GetTex0() const { return this->mTex0; }
+	ID3D11ShaderResourceView* GetTex1() const { return this->mTex1; }
+	ID3D11ShaderResourceView* GetTex2() const { return this->mTex2; }
+	ID3D11ShaderResourceView* GetTex3() const { return this->mTex3; }
+
+	Material GetMaterial() const { return this->mMaterial; }
 
 private:
 	void CreateMatsAndMeshes(std::string filename);

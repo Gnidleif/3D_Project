@@ -24,12 +24,20 @@ void TerrainEntity::Draw(ID3D11DeviceContext* devCon, ID3DX11EffectTechnique* ac
 	D3DX11_TECHNIQUE_DESC techDesc = {};
 	activeTech->GetDesc(&techDesc);
 
-	Effects::TerrainFX->SetView(&camera->GetViewMatrix());
-	Effects::TerrainFX->SetProj(&camera->GetProjMatrix());
+	Effects::TerrainFX->SetMaterial(mModelInstance.mModel->GetMaterial());
+	Effects::TerrainFX->SetView(camera->GetViewMatrix());
+	Effects::TerrainFX->SetProj(camera->GetProjMatrix());
+	Effects::TerrainFX->SetWorld(XMLoadFloat4x4(&mModelInstance.mWorld));
+	Effects::TerrainFX->SetWorldInvTranspose(MathHelper::InverseTranspose(XMLoadFloat4x4(&mModelInstance.mWorld)));
+
+	Effects::TerrainFX->SetBlendMap(mModelInstance.mModel->GetBlendMap());
+	Effects::TerrainFX->SetTex0(mModelInstance.mModel->GetTex0());
+	Effects::TerrainFX->SetTex1(mModelInstance.mModel->GetTex1());
+	Effects::TerrainFX->SetTex2(mModelInstance.mModel->GetTex2());
+	Effects::TerrainFX->SetTex3(mModelInstance.mModel->GetTex3());
 
 	for(UINT i(0); i != techDesc.Passes; ++i)
 	{
-		mModelInstance.mModel->ApplyEffects();
 		activeTech->GetPassByIndex(i)->Apply(0, devCon);
 		mModelInstance.mModel->GetMesh()->Draw(devCon);
 	}
@@ -42,6 +50,4 @@ void TerrainEntity::CalcWorld()
 		XMLoadFloat4x4(&this->mModelScale) *
 		XMLoadFloat4x4(&this->mModelRot) *
 		XMLoadFloat4x4(&this->mModelOffset));
-	Effects::TerrainFX->SetWorld(&XMLoadFloat4x4(&mModelInstance.mWorld));
-	Effects::TerrainFX->SetWorldInvTranspose(&MathHelper::InverseTranspose(XMLoadFloat4x4(&mModelInstance.mWorld)));
 }

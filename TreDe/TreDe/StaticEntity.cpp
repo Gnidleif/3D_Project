@@ -18,21 +18,24 @@ void StaticEntity::Initialize(XMFLOAT3 position, float scale)
 void StaticEntity::Draw(ID3D11DeviceContext* devCon, ID3DX11EffectTechnique* activeTech, Camera* camera)
 {
 	devCon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	devCon->IAGetInputLayout(&InputLayouts::mPosNorTexTan);
+	devCon->IASetInputLayout(InputLayouts::mPosNorTexTan);
 
 	D3DX11_TECHNIQUE_DESC techDesc = {};
 	activeTech->GetDesc(&techDesc);
 
-	Effects::NormalFX->SetView(&camera->GetViewMatrix());
-	Effects::NormalFX->SetProj(&camera->GetProjMatrix());
-	Effects::NormalFX->SetWorld(&XMLoadFloat4x4(&mModelInstance.mWorld));
-	Effects::NormalFX->SetWorldInvTranspose(&MathHelper::InverseTranspose(XMLoadFloat4x4(&mModelInstance.mWorld)));
+	Effects::NormalFX->SetView(camera->GetViewMatrix());
+	Effects::NormalFX->SetProj(camera->GetProjMatrix());
+	Effects::NormalFX->SetWorld(XMLoadFloat4x4(&mModelInstance.mWorld));
+	Effects::NormalFX->SetWorldInvTranspose(MathHelper::InverseTranspose(XMLoadFloat4x4(&mModelInstance.mWorld)));
 
 	for(UINT i(0); i != techDesc.Passes; ++i)
 	{
 		for(UINT j(0); j != mModelInstance.mModel->GetMeshCount(); ++j)
 		{
-			mModelInstance.mModel->ApplyEffects();
+			UINT index = mModelInstance.mModel->GetMesh(j)->GetMaterialIndex();
+			Effects::NormalFX->SetDiffuseMap(mModelInstance.mModel->GetDiffMapSRV(index));
+			Effects::NormalFX->SetNormalMap(mModelInstance.mModel->GetNormalMapSRV(index));
+			Effects::NormalFX->SetMaterial(mModelInstance.mModel->GetMaterial(index));
 
 			activeTech->GetPassByIndex(i)->Apply(0, devCon);
 			mModelInstance.mModel->GetMesh(j)->Draw(devCon);
@@ -48,16 +51,19 @@ void StaticEntity::DrawTess(ID3D11DeviceContext* devCon, ID3DX11EffectTechnique*
 	D3DX11_TECHNIQUE_DESC techDesc = {};
 	activeTech->GetDesc(&techDesc);
 
-	Effects::TessFX->SetView(&camera->GetViewMatrix());
-	Effects::TessFX->SetProj(&camera->GetProjMatrix());
-	Effects::TessFX->SetWorld(&XMLoadFloat4x4(&mModelInstance.mWorld));
-	Effects::TessFX->SetWorldInvTranspose(&MathHelper::InverseTranspose(XMLoadFloat4x4(&mModelInstance.mWorld)));
+	Effects::TessFX->SetView(camera->GetViewMatrix());
+	Effects::TessFX->SetProj(camera->GetProjMatrix());
+	Effects::TessFX->SetWorld(XMLoadFloat4x4(&mModelInstance.mWorld));
+	Effects::TessFX->SetWorldInvTranspose(MathHelper::InverseTranspose(XMLoadFloat4x4(&mModelInstance.mWorld)));
 
 	for(UINT i(0); i != techDesc.Passes; ++i)
 	{
 		for(UINT j(0); j != mModelInstance.mModel->GetMeshCount(); ++j)
 		{
-			mModelInstance.mModel->ApplyTessEffects();
+			UINT index = mModelInstance.mModel->GetMesh(j)->GetMaterialIndex();
+			Effects::TessFX->SetDiffuseMap(mModelInstance.mModel->GetDiffMapSRV(index));
+			Effects::TessFX->SetNormalMap(mModelInstance.mModel->GetNormalMapSRV(index));
+			Effects::TessFX->SetMaterial(mModelInstance.mModel->GetMaterial(index));
 
 			activeTech->GetPassByIndex(i)->Apply(0, devCon);
 			mModelInstance.mModel->GetMesh(j)->Draw(devCon);

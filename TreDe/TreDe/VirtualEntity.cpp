@@ -18,8 +18,9 @@ VirtualEntity::~VirtualEntity()
 void VirtualEntity::Initialize(XMFLOAT3 position, float scale)
 {
 	this->mPosition = position;
+	this->mFloatScale = scale;
 
-	XMStoreFloat4x4(&this->mModelScale, XMMatrixScaling(scale, scale, scale));
+	XMStoreFloat4x4(&this->mModelScale, XMMatrixScaling(mFloatScale, mFloatScale, mFloatScale));
 	XMStoreFloat4x4(&this->mModelRot, XMMatrixRotationY(mRotation));
 	XMStoreFloat4x4(&this->mModelOffset, XMMatrixTranslation(mPosition.x, mPosition.y, mPosition.z));
 	this->CalcWorld();
@@ -64,6 +65,7 @@ void VirtualEntity::SetPosition(XMFLOAT3 position)
 
 void VirtualEntity::SetScale(float scale)
 {
-	XMStoreFloat4x4(&this->mModelScale, XMMatrixScaling(scale, scale, scale));
+	mFloatScale = scale;
+	XMStoreFloat4x4(&this->mModelScale, XMMatrixScaling(mFloatScale, mFloatScale, mFloatScale));
 	this->CalcWorld();
 }
