@@ -224,9 +224,8 @@ float4 PSScene_Lights(VSOut input,
 RasterizerState Wireframe
 {
 	FillMode = WireFrame;
-	CullMode = Back;
+	CullMode = None;
 	FrontCounterClockwise = false;
-	DepthClipEnable = true;
 };
 
 RasterizerState Solidframe
@@ -234,13 +233,6 @@ RasterizerState Solidframe
 	FillMode = Solid;
 	CullMode = Back;
 	FrontCounterClockwise = false;
-	DepthClipEnable = true;
-};
-
-DepthStencilState DisableDepth
-{
-	DepthEnable = TRUE;
-	DepthWriteMask = ZERO;
 };
 
 DepthStencilState NoDepthWrites

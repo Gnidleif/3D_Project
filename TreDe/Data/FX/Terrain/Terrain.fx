@@ -180,7 +180,6 @@ RasterizerState Wireframe
 	FillMode = WireFrame;
 	CullMode = Back;
 	FrontCounterClockwise = false;
-	DepthClipEnable = true;
 };
 
 RasterizerState Solidframe
@@ -188,7 +187,6 @@ RasterizerState Solidframe
 	FillMode = Solid;
 	CullMode = Back;
 	FrontCounterClockwise = false;
-	DepthClipEnable = true;
 };
 
 technique11 Solid

@@ -154,12 +154,9 @@ void Game::LightDraw(ID3D11DeviceContext* devCon)
 
 void Game::SolidTessDraw(ID3D11DeviceContext* devCon)
 {
+	this->SetTessEffects();
 	Camera* playerCam = mPlayer->GetCamera();
 
-	Effects::TessFX->SetMinTessDist(1.0f);
-	Effects::TessFX->SetMaxTessDist(1024.0f);
-	Effects::TessFX->SetMinTessFact(1.0f);
-	Effects::TessFX->SetMaxTessFact(64.0f);
 	Effects::TessFX->SetEyePos(playerCam->GetPosition());
 
 	ID3DX11EffectTechnique* activeTech = Effects::SkyFX->mSolid;
@@ -181,12 +178,9 @@ void Game::SolidTessDraw(ID3D11DeviceContext* devCon)
 
 void Game::WireTessDraw(ID3D11DeviceContext* devCon)
 {
+	this->SetTessEffects();
 	Camera* playerCam = mPlayer->GetCamera();
 
-	Effects::TessFX->SetMinTessDist(1.0f);
-	Effects::TessFX->SetMaxTessDist(1024.0f);
-	Effects::TessFX->SetMinTessFact(1.0f);
-	Effects::TessFX->SetMaxTessFact(64.0f);
 	Effects::TessFX->SetEyePos(playerCam->GetPosition());
 
 	ID3DX11EffectTechnique* activeTech = Effects::SkyFX->mWire;
@@ -208,14 +202,10 @@ void Game::WireTessDraw(ID3D11DeviceContext* devCon)
 
 void Game::LightTessDraw(ID3D11DeviceContext* devCon)
 {
+	this->SetTessEffects();
 	Camera* playerCam = mPlayer->GetCamera();
 
 	Effects::TerrainFX->SetEyePos(playerCam->GetPosition());
-	Effects::TessFX->SetMinTessDist(1.0f);
-	Effects::TessFX->SetMaxTessDist(1024.0f);
-	Effects::TessFX->SetMinTessFact(1.0f);
-	Effects::TessFX->SetMaxTessFact(64.0f);
-	Effects::TessFX->SetEyePos(playerCam->GetPosition());
 
 	ID3DX11EffectTechnique* activeTech = Effects::SkyFX->mSolid;
 	mSkyBox->Draw(devCon, activeTech, playerCam);
@@ -225,7 +215,7 @@ void Game::LightTessDraw(ID3D11DeviceContext* devCon)
 	activeTech = Effects::TerrainFX->mAllLights;
 	mTerrain->Draw(devCon, activeTech, playerCam);
 
-	activeTech = Effects::TessFX->mAllLights;
+	activeTech = Effects::TessFX->mAllLightsAlpha;
 	for(UINT i(0); i != mPlatforms.size(); ++i)
 	{
 		mPlatforms[i]->DrawTess(devCon, activeTech, playerCam);
@@ -239,4 +229,13 @@ void Game::LightTessDraw(ID3D11DeviceContext* devCon)
 void Game::ControlPlayer(DirectInput* di)
 {
 	mPlayer->Control(di);
+}
+
+void Game::SetTessEffects()
+{
+	Effects::TessFX->SetMinTessDist(1.0f);
+	Effects::TessFX->SetMaxTessDist(100.0f);
+	Effects::TessFX->SetMinTessFact(1.0f);
+	Effects::TessFX->SetMaxTessFact(2.0f);
+	Effects::TessFX->SetEyePos(mPlayer->GetCamera()->GetPosition());
 }

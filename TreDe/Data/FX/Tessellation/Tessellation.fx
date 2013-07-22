@@ -121,7 +121,7 @@ PatchTess ConstHS(InputPatch<VSOut, 3> patch,
 [outputtopology("triangle_cw")]
 [outputcontrolpoints(3)]
 [patchconstantfunc("ConstHS")]
-[maxtessfactor(64.0f)]
+//[maxtessfactor(64.0f)]
 HSOut HSScene(InputPatch<VSOut, 3> patch,
 			  uint i : SV_OutputControlPointID,
 			  uint patchID : SV_PrimitiveID)
@@ -280,15 +280,8 @@ RasterizerState Wireframe
 RasterizerState Solidframe
 {
 	FillMode = Solid;
-	CullMode = None;
+	CullMode = Back;
 	FrontCounterClockwise = false;
-};
-
-DepthStencilState NoDepthWrites
-{
-	DepthEnable = TRUE;
-	DepthWriteMask = ALL;
-	DepthFunc = LESS_EQUAL;
 };
 
 technique11 Solid
@@ -301,8 +294,6 @@ technique11 Solid
 		SetGeometryShader(NULL);
 		SetPixelShader(CompileShader(ps_5_0, PSScene(false, true)));
 
-		SetBlendState( NULL, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff );
-		SetDepthStencilState(NoDepthWrites, 0);
 		SetRasterizerState(Solidframe);
 	}
 }
@@ -317,8 +308,6 @@ technique11 SolidAlpha
 		SetGeometryShader(NULL);
 		SetPixelShader(CompileShader(ps_5_0, PSScene(true, true)));
 
-		SetBlendState( NULL, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff );
-		SetDepthStencilState(NoDepthWrites, 0);
 		SetRasterizerState(Solidframe);
 	}
 }
@@ -333,8 +322,6 @@ technique11 Wire
 		SetGeometryShader(NULL);
 		SetPixelShader(CompileShader(ps_5_0, PSScene(false, false)));
 
-		SetBlendState( NULL, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff );
-		SetDepthStencilState(NoDepthWrites, 0);
 		SetRasterizerState(Wireframe);
 	}
 };
@@ -347,10 +334,8 @@ technique11 AllLights
 		SetHullShader(CompileShader(hs_5_0, HSScene()));
 		SetDomainShader(CompileShader(ds_5_0, DSScene()));
 		SetGeometryShader(NULL);
-		SetPixelShader(CompileShader(ps_5_0, PSScene_Lights(false, true, 1, 0, 0)));
+		SetPixelShader(CompileShader(ps_5_0, PSScene_Lights(false, true, 0, 2, 0)));
 
-		SetBlendState( NULL, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff );
-		SetDepthStencilState(NoDepthWrites, 0);
 		SetRasterizerState(Solidframe);
 	}
 };
@@ -363,10 +348,8 @@ technique11 AllLightsAlpha
 		SetHullShader(CompileShader(hs_5_0, HSScene()));
 		SetDomainShader(CompileShader(ds_5_0, DSScene()));
 		SetGeometryShader(NULL);
-		SetPixelShader(CompileShader(ps_5_0, PSScene_Lights(true, true, 1, 0, 0)));
-		
-		SetBlendState( NULL, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff );
-		SetDepthStencilState(NoDepthWrites, 0);
+		SetPixelShader(CompileShader(ps_5_0, PSScene_Lights(true, true, 0, 2, 0)));
+
 		SetRasterizerState(Solidframe);
 	}
 };

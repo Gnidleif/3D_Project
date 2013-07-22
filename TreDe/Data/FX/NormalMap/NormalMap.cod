@@ -31,7 +31,7 @@ cbuffer cbFixed
 }
 
 //
-// 8 local object(s)
+// 7 local object(s)
 //
 Texture2D gDiffMap;
 Texture2D gNormMap;
@@ -51,21 +51,14 @@ SamplerState samAnisotropic
 RasterizerState Wireframe
 {
     FillMode = uint(WIREFRAME /* 2 */);
-    CullMode = uint(BACK /* 3 */);
+    CullMode = uint(NONE /* 1 */);
     FrontCounterClockwise = bool(FALSE /* false */);
-    DepthClipEnable = bool(TRUE /* true */);
 };
 RasterizerState Solidframe
 {
     FillMode = uint(SOLID /* 3 */);
     CullMode = uint(BACK /* 3 */);
     FrontCounterClockwise = bool(FALSE /* false */);
-    DepthClipEnable = bool(TRUE /* true */);
-};
-DepthStencilState DisableDepth
-{
-    DepthEnable = bool(TRUE /* 1 */);
-    DepthWriteMask = uint(ZERO /* 0 */);
 };
 DepthStencilState NoDepthWrites
 {

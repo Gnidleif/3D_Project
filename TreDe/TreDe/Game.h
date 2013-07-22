@@ -32,6 +32,9 @@ public:
 	Camera* GetPlayerCam() { return this->mPlayer->GetCamera(); }
 
 private:
+	void SetTessEffects();
+
+private:
 	Player* mPlayer;
 	TerrainEntity* mTerrain;
 	std::vector<StaticEntity*> mPlatforms;

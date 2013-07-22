@@ -45,14 +45,12 @@ RasterizerState Wireframe
     FillMode = uint(WIREFRAME /* 2 */);
     CullMode = uint(BACK /* 3 */);
     FrontCounterClockwise = bool(FALSE /* false */);
-    DepthClipEnable = bool(TRUE /* true */);
 };
 RasterizerState Solidframe
 {
     FillMode = uint(SOLID /* 3 */);
     CullMode = uint(BACK /* 3 */);
     FrontCounterClockwise = bool(FALSE /* false */);
-    DepthClipEnable = bool(TRUE /* true */);
 };
 
 //

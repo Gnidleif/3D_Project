@@ -45,8 +45,8 @@ void StaticEntity::Draw(ID3D11DeviceContext* devCon, ID3DX11EffectTechnique* act
 
 void StaticEntity::DrawTess(ID3D11DeviceContext* devCon, ID3DX11EffectTechnique* activeTech, Camera* camera)
 {
-	devCon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	devCon->IAGetInputLayout(&InputLayouts::mPosNorTexTan);
+	devCon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
+	devCon->IASetInputLayout(InputLayouts::mPosNorTexTan);
 
 	D3DX11_TECHNIQUE_DESC techDesc = {};
 	activeTech->GetDesc(&techDesc);
