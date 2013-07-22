@@ -19,7 +19,10 @@ enum DrawMode
 {
 	Light,
 	Solid,
-	Wire
+	Wire,
+	LightTess,
+	SolidTess,
+	WireTess
 };
 
 class Main : public D3D11App
@@ -34,6 +37,7 @@ public:
 
 private:
 	void Input();
+	void SwitchDraw(UINT drawMode);
 
 private:
 	float mDrawSwitchCD;
@@ -131,8 +135,13 @@ void Main::Update(float dt)
 
 void Main::Draw()
 {
+	ID3D11RenderTargetView* renderTargets[1] = {mDirect3D->GetRTView()};
+	mDirect3D->GetDevCon()->OMSetRenderTargets(1, renderTargets, mDirect3D->GetDSView());
+
 	mDirect3D->GetDevCon()->ClearRenderTargetView(mDirect3D->GetRTView(), reinterpret_cast<const float*>(&Colors::Black));
 	mDirect3D->GetDevCon()->ClearDepthStencilView(mDirect3D->GetDSView(), D3D11_CLEAR_DEPTH|D3D11_CLEAR_STENCIL, 1.0f, 0);
+
+	mDirect3D->GetDevCon()->RSSetViewports(1, &mDirect3D->GetScreenViewport());
 
 	switch(mCurrDraw)
 	{
@@ -145,12 +154,29 @@ void Main::Draw()
 	case Wire:
 		mGame->WireDraw(mDirect3D->GetDevCon());
 		break;
+	case LightTess:
+		mGame->LightTessDraw(mDirect3D->GetDevCon());
+		break;
+	case SolidTess:
+		mGame->SolidTessDraw(mDirect3D->GetDevCon());
+		break;
+	case WireTess:
+		mGame->WireTessDraw(mDirect3D->GetDevCon());
+		break;
 	}
 
 	// If the text isn't drawn last, objects in the world might hide it
 	Text->Draw();
 
-	mDirect3D->GetSwapChain()->Present(1, 0);
+	//ID3D11ShaderResourceView* nullSRV[16] = { 0 };
+	//mDirect3D->GetDevCon()->PSGetShaderResources(0, 16, nullSRV);
+
+	//float blendFactor[] = {0.0f, 0.0f, 0.0f, 0.0f};
+	//mDirect3D->GetDevCon()->RSSetState(0);
+	//mDirect3D->GetDevCon()->OMSetDepthStencilState(0, 0);
+	//mDirect3D->GetDevCon()->OMSetBlendState(0, blendFactor, 0xffffffff);
+
+	mDirect3D->GetSwapChain()->Present(0, 0);
 }
 
 void Main::OnResize()
@@ -188,18 +214,27 @@ void Main::Input()
 		}
 		else if(mInput[DIK_NUMPAD0] && 0x80 && mDrawSwitchCD > 1.0f)
 		{
-			mDrawSwitchCD = 0.0f;
-			mCurrDraw = Light;
+			this->SwitchDraw(Light);
 		}
 		else if(mInput[DIK_NUMPAD1] && 0x80 && mDrawSwitchCD > 1.0f)
 		{
-			mDrawSwitchCD = 0.0f;
-			mCurrDraw = Solid;
+			this->SwitchDraw(Solid);
 		}
 		else if(mInput[DIK_NUMPAD2] && 0x80 && mDrawSwitchCD > 1.0f)
 		{
-			mDrawSwitchCD = 0.0f;
-			mCurrDraw = Wire;
+			this->SwitchDraw(Wire);
+		}
+		else if(mInput[DIK_NUMPAD3] && 0x80 && mDrawSwitchCD > 1.0f)
+		{
+			this->SwitchDraw(LightTess);
+		}
+		else if(mInput[DIK_NUMPAD4] && 0x80 && mDrawSwitchCD > 1.0f)
+		{
+			this->SwitchDraw(SolidTess);
+		}
+		else if(mInput[DIK_NUMPAD5] && 0x80 && mDrawSwitchCD > 1.0f)
+		{
+			this->SwitchDraw(WireTess);
 		}
 		else if(mInput[DIK_ESCAPE] && 0x80)
 		{
@@ -214,4 +249,10 @@ void Main::Input()
 	}
 	// Kind of an ugly solution to a bug that changed the resolution on startup for some reason
 	mInput = D3D11App::mDirectInput->GetKeyboardState();
+}
+
+void Main::SwitchDraw(UINT drawMode)
+{
+	this->mDrawSwitchCD = 0.0f;
+	this->mCurrDraw = drawMode;
 }

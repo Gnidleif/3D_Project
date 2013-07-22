@@ -3,7 +3,6 @@ using namespace std;
 
 TerrainModel::TerrainModel(ID3D11Device* device, string filename)
 	: VirtualModel(device),
-	mMaterial(new Material()),
 	mMesh(new TerrainMesh())
 {
 	this->CreateMatsAndMeshes(filename);
@@ -18,7 +17,6 @@ TerrainModel::TerrainModel(ID3D11Device* device, string filename)
 
 TerrainModel::~TerrainModel(void)
 {
-	SafeDelete(mMaterial);
 	SafeDelete(mMesh);
 }
 
@@ -38,10 +36,10 @@ void TerrainModel::CreateMatsAndMeshes(string filename)
 	Loader->CreateHeightMap(this->mMesh, filename, 15.0f, 1);
 
 	// Some more hardcoded bullshit!
-	this->mMaterial->Ambient = XMFLOAT4(0.48f, 0.77f, 0.46f, 1.0f);
-	this->mMaterial->Diffuse = XMFLOAT4(0.48f, 0.77f, 0.46f, 0.5f);
-	this->mMaterial->Specular = XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
-	this->mMaterial->Reflect = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
+	this->mMaterial.Ambient = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
+	this->mMaterial.Diffuse = XMFLOAT4(0.8f, 0.8f, 0.8f, 0.5f);
+	this->mMaterial.Specular = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
+	this->mMaterial.Reflect = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
 }
 
 void TerrainModel::CreateBuffers()

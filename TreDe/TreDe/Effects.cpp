@@ -102,16 +102,52 @@ NormalEffect::NormalEffect(ID3D11Device* device, string filename)
 	this->mMaterial = mFX->GetVariableByName("gMaterial");
 }
 
+// TessellationEffect functions
+TessellationEffect::TessellationEffect(ID3D11Device* device, string filename)
+	: VirtualEffect(device, filename)
+{
+	// Techniques
+	this->mSolid = mFX->GetTechniqueByName("Solid");
+	this->mSolidAlpha = mFX->GetTechniqueByName("SolidAlpha");
+	this->mWire = mFX->GetTechniqueByName("Wire");
+	this->mAllLights = mFX->GetTechniqueByName("AllLights");
+	this->mAllLightsAlpha = mFX->GetTechniqueByName("AllLightsAlpha");
+
+	this->mEyePos = mFX->GetVariableByName("gEyePos")->AsVector();
+
+	// Variables
+	this->mWorld = mFX->GetVariableByName("gWorld")->AsMatrix();
+	this->mView = mFX->GetVariableByName("gView")->AsMatrix();
+	this->mProj = mFX->GetVariableByName("gProj")->AsMatrix();
+	this->mWorldInvTranspose = mFX->GetVariableByName("gWorldInvTranspose")->AsMatrix();
+
+	this->mDiffuseMap = mFX->GetVariableByName("gDiffMap")->AsShaderResource();
+	this->mNormalMap = mFX->GetVariableByName("gNormMap")->AsShaderResource();
+
+	this->mDirLights = mFX->GetVariableByName("gDirLights");
+	this->mPointLights = mFX->GetVariableByName("gPointLights");
+	this->mSpotLights = mFX->GetVariableByName("gSpotLights");
+
+	this->mMaterial = mFX->GetVariableByName("gMaterial");
+
+	this->mMinDist = mFX->GetVariableByName("gMinDist")->AsScalar();
+	this->mMaxDist = mFX->GetVariableByName("gMaxDist")->AsScalar();
+	this->mMinTess = mFX->GetVariableByName("gMinTess")->AsScalar();
+	this->mMaxTess = mFX->GetVariableByName("gMaxTess")->AsScalar();
+}
+
 // Effects functions
 SkyEffect* Effects::SkyFX = nullptr;
 TerrainEffect* Effects::TerrainFX = nullptr;
 NormalEffect* Effects::NormalFX = nullptr;
+TessellationEffect* Effects::TessFX = nullptr;
 
 void Effects::Initialize(ID3D11Device* device)
 {
 	SkyFX = new SkyEffect(device, "../Data/FX/Sky/Sky.fxo");
 	TerrainFX = new TerrainEffect(device, "../Data/FX/Terrain/Terrain.fxo");
 	NormalFX = new NormalEffect(device, "../Data/FX/NormalMap/NormalMap.fxo");
+	TessFX = new TessellationEffect(device, "../Data/FX/Tessellation/Tessellation.fxo");
 }
 
 void Effects::Shutdown()
@@ -119,4 +155,5 @@ void Effects::Shutdown()
 	SafeDelete(SkyFX);
 	SafeDelete(TerrainFX);
 	SafeDelete(NormalFX);
+	SafeDelete(TessFX);
 }

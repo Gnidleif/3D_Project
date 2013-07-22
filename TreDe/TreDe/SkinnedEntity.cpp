@@ -38,13 +38,13 @@ void SkinnedEntity::Draw(ID3D11DeviceContext* devCon, ID3DX11EffectTechnique* ac
 	Effects::NormalFX->SetWorld(&XMLoadFloat4x4(&mModelInstance->mWorld));
 	Effects::NormalFX->SetWorldInvTranspose(&MathHelper::InverseTranspose(XMLoadFloat4x4(&mModelInstance->mWorld)));
 	Effects::NormalFX->SetBoneTransforms(&mModelInstance->mFinalTransforms[0], mModelInstance->mFinalTransforms.size());
-	mModelInstance->mModel->ApplyEffects();
 
 	for(UINT i(0); i != techDesc.Passes; ++i)
 	{
 		activeTech->GetPassByIndex(i)->Apply(0, devCon);
 		for(UINT j(0); j != mModelInstance->mModel->GetMeshCount(); ++j)
 		{
+			mModelInstance->mModel->ApplyEffects();
 			mModelInstance->mModel->GetMesh(j)->Draw(devCon);
 		}
 	}

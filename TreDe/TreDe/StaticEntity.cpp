@@ -27,13 +27,39 @@ void StaticEntity::Draw(ID3D11DeviceContext* devCon, ID3DX11EffectTechnique* act
 	Effects::NormalFX->SetProj(&camera->GetProjMatrix());
 	Effects::NormalFX->SetWorld(&XMLoadFloat4x4(&mModelInstance.mWorld));
 	Effects::NormalFX->SetWorldInvTranspose(&MathHelper::InverseTranspose(XMLoadFloat4x4(&mModelInstance.mWorld)));
-	mModelInstance.mModel->ApplyEffects();
 
 	for(UINT i(0); i != techDesc.Passes; ++i)
 	{
-		activeTech->GetPassByIndex(i)->Apply(0, devCon);
 		for(UINT j(0); j != mModelInstance.mModel->GetMeshCount(); ++j)
 		{
+			mModelInstance.mModel->ApplyEffects();
+
+			activeTech->GetPassByIndex(i)->Apply(0, devCon);
+			mModelInstance.mModel->GetMesh(j)->Draw(devCon);
+		}
+	}
+}
+
+void StaticEntity::DrawTess(ID3D11DeviceContext* devCon, ID3DX11EffectTechnique* activeTech, Camera* camera)
+{
+	devCon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	devCon->IAGetInputLayout(&InputLayouts::mPosNorTexTan);
+
+	D3DX11_TECHNIQUE_DESC techDesc = {};
+	activeTech->GetDesc(&techDesc);
+
+	Effects::TessFX->SetView(&camera->GetViewMatrix());
+	Effects::TessFX->SetProj(&camera->GetProjMatrix());
+	Effects::TessFX->SetWorld(&XMLoadFloat4x4(&mModelInstance.mWorld));
+	Effects::TessFX->SetWorldInvTranspose(&MathHelper::InverseTranspose(XMLoadFloat4x4(&mModelInstance.mWorld)));
+
+	for(UINT i(0); i != techDesc.Passes; ++i)
+	{
+		for(UINT j(0); j != mModelInstance.mModel->GetMeshCount(); ++j)
+		{
+			mModelInstance.mModel->ApplyTessEffects();
+
+			activeTech->GetPassByIndex(i)->Apply(0, devCon);
 			mModelInstance.mModel->GetMesh(j)->Draw(devCon);
 		}
 	}

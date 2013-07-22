@@ -18,9 +18,14 @@ public:
 	~Game();
 	void Initialize(ID3D11Device* device);
 	void Update(float dt);
+
 	void SolidDraw(ID3D11DeviceContext* devCon);
 	void WireDraw(ID3D11DeviceContext* devCon);
 	void LightDraw(ID3D11DeviceContext* devCon);
+	void SolidTessDraw(ID3D11DeviceContext* devCon);
+	void WireTessDraw(ID3D11DeviceContext* devCon);
+	void LightTessDraw(ID3D11DeviceContext* devCon);
+
 	void ControlPlayer(DirectInput* di);
 
 public:
@@ -33,5 +38,6 @@ private:
 	//SkinnedEntity* mCharacter;
 	SkyBox* mSkyBox;
 	LightHandler* mLightHandler;
+	std::vector<StaticEntity*> mLightDucks;
 };
 #endif

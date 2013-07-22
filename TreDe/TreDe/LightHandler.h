@@ -13,13 +13,17 @@ public:
 	void Update(float dt);
 	void ApplyEffects();
 
-private:
-	int mDirAmount;
-	int mPointAmount;
-	int mSpotAmount;
+public:
+	XMFLOAT3 GetSpot0Pos() const { return this->mSpots[0].Position; }
+	XMFLOAT3 GetSpot1Pos() const { return this->mSpots[1].Position; }
 
-	DirectionalLight* mDirs;
-	PointLight* mPoints;
-	SpotLight* mSpots;
+private:
+	static const int mDirAmount = 1;
+	static const int mPointAmount = 2;
+	static const int mSpotAmount = 2;
+
+	DirectionalLight mDirs[mDirAmount];
+	PointLight mPoints[mPointAmount];
+	SpotLight mSpots[mSpotAmount];
 };
 #endif

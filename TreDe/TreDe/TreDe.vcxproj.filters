@@ -244,6 +244,9 @@
     <CustomBuild Include="..\Data\FX\NormalMap\NormalMap.fx">
       <Filter>FX</Filter>
     </CustomBuild>
+    <CustomBuild Include="..\Data\FX\Tessellation\Tessellation.fx">
+      <Filter>FX</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Data\FX\LightDef.fx">

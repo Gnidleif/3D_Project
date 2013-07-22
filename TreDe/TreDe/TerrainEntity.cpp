@@ -5,7 +5,6 @@ TerrainEntity::TerrainEntity(string key)
 	: VirtualEntity()
 {
 	mModelInstance.mModel = Model->GetTerrainModel(key);
-	Effects::TerrainFX->SetMaterial(mModelInstance.mModel->GetMaterial());
 }
 
 TerrainEntity::~TerrainEntity(void)
@@ -27,13 +26,13 @@ void TerrainEntity::Draw(ID3D11DeviceContext* devCon, ID3DX11EffectTechnique* ac
 
 	Effects::TerrainFX->SetView(&camera->GetViewMatrix());
 	Effects::TerrainFX->SetProj(&camera->GetProjMatrix());
-	this->mModelInstance.mModel->ApplyEffects();
 
 	for(UINT i(0); i != techDesc.Passes; ++i)
 	{
+		mModelInstance.mModel->ApplyEffects();
 		activeTech->GetPassByIndex(i)->Apply(0, devCon);
+		mModelInstance.mModel->GetMesh()->Draw(devCon);
 	}
-	mModelInstance.mModel->GetMesh()->Draw(devCon);
 }
 
 void TerrainEntity::CalcWorld()

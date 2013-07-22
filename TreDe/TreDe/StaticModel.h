@@ -11,6 +11,7 @@ public:
 	StaticModel(ID3D11Device* device, std::string filename, std::string texPath);
 	~StaticModel(void);
 	void ApplyEffects();
+	void ApplyTessEffects();
 
 public:
 	StaticMesh* GetMesh(UINT index) const { return this->mMeshes[index]; }

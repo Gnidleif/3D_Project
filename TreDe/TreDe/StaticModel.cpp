@@ -51,7 +51,17 @@ void StaticModel::ApplyEffects()
 	{
 		Effects::NormalFX->SetDiffuseMap(this->mDiffMapSRV[mMeshes[i]->GetMaterialIndex()]);
 		Effects::NormalFX->SetNormalMap(this->mNormalMapSRV[mMeshes[i]->GetMaterialIndex()]);
-		Effects::NormalFX->SetMaterial(&this->mMaterials[mMeshes[i]->GetMaterialIndex()]);
+		Effects::NormalFX->SetMaterial(this->mMaterials[mMeshes[i]->GetMaterialIndex()]);
+	}
+}
+
+void StaticModel::ApplyTessEffects()
+{
+	for(UINT i(0); i != this->mMeshCount; ++i)
+	{
+		Effects::TessFX->SetDiffuseMap(this->mDiffMapSRV[mMeshes[i]->GetMaterialIndex()]);
+		Effects::TessFX->SetNormalMap(this->mNormalMapSRV[mMeshes[i]->GetMaterialIndex()]);
+		Effects::TessFX->SetMaterial(this->mMaterials[mMeshes[i]->GetMaterialIndex()]);
 	}
 }
 

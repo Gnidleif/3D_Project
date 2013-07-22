@@ -53,7 +53,7 @@ struct VSIn
 };
 
 // Input Pixel shader
-struct PSIn
+struct VSOut
 {
 	float4 PosH : SV_Position; // Homogenous position
 	float3 PosW : POSITION; // World position
@@ -63,9 +63,9 @@ struct PSIn
 };
 
 // VS -> PS
-PSIn VSScene(VSIn input)
+VSOut VSScene(VSIn input)
 {
-	PSIn output = (PSIn)0; // If something goes to shit, it'll be here
+	VSOut output = (VSOut)0; // If something goes to shit, it'll be here
 	float4x4 wvp = mul(gWorld, mul(gView, gProj));
 
 	output.PosH = mul(float4(input.PosL, 1.0f), wvp);
@@ -79,7 +79,7 @@ PSIn VSScene(VSIn input)
 	return output;
 };
 
-float4 PSScene(PSIn input,
+float4 PSScene(VSOut input,
 			   uniform bool useTex) : SV_Target
 {
 	input.Normal = normalize(input.Normal);
@@ -104,7 +104,7 @@ float4 PSScene(PSIn input,
 	return texColor;
 };
 
-float4 PSScene_Lights(PSIn input,
+float4 PSScene_Lights(VSOut input,
 			   uniform bool useTex,
 			   uniform int dirLightAmount,
 			   uniform int pointLightAmount,
@@ -144,7 +144,7 @@ float4 PSScene_Lights(PSIn input,
 		for(int i = 0; i < dirLightAmount; ++i)
 		{
 			float4 A, D, S;
-			ComputeDirectionalLight(gMaterial, gDirLights[i], input.Normal, toEye, A, D, S);
+			ComputeDirectionalLight(gMaterial, gDirLights[i], input.Normal, -toEye, A, D, S);
 
 			ambient += A;
 			diffuse += D;
@@ -155,7 +155,7 @@ float4 PSScene_Lights(PSIn input,
 		for(int j = 0; j < pointLightAmount; ++j)
 		{
 			float4 A, D, S;
-			ComputePointLight(gMaterial, gPointLights[j], input.PosW, input.Normal, toEye, A, D, S);
+			ComputePointLight(gMaterial, gPointLights[j], input.PosW, input.Normal, -toEye, A, D, S);
 
 			ambient += A;
 			diffuse += D;
@@ -166,7 +166,7 @@ float4 PSScene_Lights(PSIn input,
 		for(int k = 0; k < spotLightAmount; ++k)
 		{
 			float4 A, D, S;
-			ComputeSpotLight(gMaterial, gSpotLights[k], input.PosW, input.Normal, toEye, A, D, S);
+			ComputeSpotLight(gMaterial, gSpotLights[k], input.PosW, input.Normal, -toEye, A, D, S);
 
 			ambient += A;
 			diffuse += D;
@@ -179,6 +179,7 @@ float4 PSScene_Lights(PSIn input,
 	// Materials later
 	litColor.a = gMaterial.Diffuse.a * texColor.a;
 	litColor += texColor * lightAddScale;
+
 	return litColor;
 }
 
@@ -246,11 +247,11 @@ technique11 AllLights
 	{
 		SetVertexShader( CompileShader(vs_5_0, VSScene()));
 		SetGeometryShader(NULL);
-		SetPixelShader( CompileShader(ps_5_0, PSScene_Lights(true, 0, 0, 2)));
+		SetPixelShader( CompileShader(ps_5_0, PSScene_Lights(true, 1, 0, 0)));
 
 		SetBlendState( NULL, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff );
 
-		//SetDepthStencilState(NoDepthWrites, 0);
+		SetDepthStencilState(NoDepthWrites, 0);
 		SetRasterizerState(Solidframe);
 	}
 };

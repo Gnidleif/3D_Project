@@ -165,6 +165,48 @@ void InputLayouts::Initialize(ID3D11Device* device)
 		pd.pIAInputSignature,
 		pd.IAInputSignatureSize,
 		&mPosNorTexTanSkin);
+
+
+	// Tessellation techniques
+	Effects::TessFX->mSolid->GetPassByIndex(0)->GetDesc(&pd);
+	device->CreateInputLayout(
+		InputLayoutDesc::PosNorTexTan,
+		4,
+		pd.pIAInputSignature,
+		pd.IAInputSignatureSize,
+		&mPosNorTexTan);
+
+	Effects::TessFX->mSolidAlpha->GetPassByIndex(0)->GetDesc(&pd);
+	device->CreateInputLayout(
+		InputLayoutDesc::PosNorTexTan,
+		4,
+		pd.pIAInputSignature,
+		pd.IAInputSignatureSize,
+		&mPosNorTexTan);
+
+	Effects::TessFX->mWire->GetPassByIndex(0)->GetDesc(&pd);
+	device->CreateInputLayout(
+		InputLayoutDesc::PosNorTexTan,
+		4,
+		pd.pIAInputSignature,
+		pd.IAInputSignatureSize,
+		&mPosNorTexTan);
+
+	Effects::TessFX->mAllLights->GetPassByIndex(0)->GetDesc(&pd);
+	device->CreateInputLayout(
+		InputLayoutDesc::PosNorTexTan,
+		4,
+		pd.pIAInputSignature,
+		pd.IAInputSignatureSize,
+		&mPosNorTexTan);
+
+	Effects::TessFX->mAllLightsAlpha->GetPassByIndex(0)->GetDesc(&pd);
+	device->CreateInputLayout(
+		InputLayoutDesc::PosNorTexTan,
+		4,
+		pd.pIAInputSignature,
+		pd.IAInputSignatureSize,
+		&mPosNorTexTan);
 }
 
 void InputLayouts::Shutdown()

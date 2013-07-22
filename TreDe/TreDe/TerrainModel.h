@@ -15,7 +15,6 @@ public:
 
 public:
 	TerrainMesh* GetMesh() const { return this->mMesh; }
-	Material* GetMaterial() const { return this->mMaterial; }
 
 private:
 	void CreateMatsAndMeshes(std::string filename);
@@ -23,7 +22,7 @@ private:
 
 private:
 	TerrainMesh* mMesh;
-	Material* mMaterial;
+	Material mMaterial;
 	ID3D11ShaderResourceView* mBlendMap;
 	ID3D11ShaderResourceView* mTex0;
 	ID3D11ShaderResourceView* mTex1;

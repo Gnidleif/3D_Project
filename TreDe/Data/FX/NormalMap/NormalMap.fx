@@ -66,7 +66,7 @@ struct SkinVSIn
 };
 
 // Input Pixel shader
-struct PSIn
+struct VSOut
 {
 	float4 PosH : SV_POSITION; // Homogenous position
 	float3 PosW : POSITION; // World position
@@ -76,9 +76,9 @@ struct PSIn
 };
 
 // VS -> PS
-PSIn VSScene(VSIn input)
+VSOut VSScene(VSIn input)
 {
-	PSIn output = (PSIn)0; // If something goes to shit, it'll be here
+	VSOut output = (VSOut)0; // If something goes to shit, it'll be here
 
 	float4x4 wvp = mul(gWorld, mul(gView, gProj));
 
@@ -94,9 +94,9 @@ PSIn VSScene(VSIn input)
 	return output;
 };
 
-PSIn SkinVSScene(SkinVSIn input)
+VSOut SkinVSScene(SkinVSIn input)
 {
-	PSIn output = (PSIn)0;
+	VSOut output = (VSOut)0;
 
 	float weights[4] = {0.0f, 0.0f, 0.0f, 0.0f};
 	weights[0] = input.Weights.x;
@@ -129,7 +129,7 @@ PSIn SkinVSScene(SkinVSIn input)
 	return output;
 }
 
-float4 PSScene(PSIn input,
+float4 PSScene(VSOut input,
 			   uniform bool alphaClip,
 			   uniform bool useTex) : SV_Target
 {
@@ -147,7 +147,7 @@ float4 PSScene(PSIn input,
 	return texColor;
 };
 
-float4 PSScene_Lights(PSIn input,
+float4 PSScene_Lights(VSOut input,
 			   uniform bool alphaClip,
 			   uniform bool useTex,
 			   uniform int dirLightAmount,
@@ -303,7 +303,7 @@ technique11 AllLights
 	{
 		SetVertexShader( CompileShader(vs_5_0, VSScene()));
 		SetGeometryShader(NULL);
-		SetPixelShader( CompileShader(ps_5_0, PSScene_Lights(false, true, 0, 0, 2)));
+		SetPixelShader( CompileShader(ps_5_0, PSScene_Lights(false, true, 1, 0, 0)));
 
 		SetBlendState( NULL, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff );
 		SetRasterizerState(Solidframe);
@@ -317,7 +317,7 @@ technique11 AllLightsAlpha
 	{
 		SetVertexShader( CompileShader(vs_5_0, VSScene()));
 		SetGeometryShader(NULL);
-		SetPixelShader( CompileShader(ps_5_0, PSScene_Lights(true, true, 0, 0, 2)));
+		SetPixelShader( CompileShader(ps_5_0, PSScene_Lights(true, true, 1, 0, 0)));
 
 		SetBlendState( NULL, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff );
 		SetRasterizerState(Solidframe);

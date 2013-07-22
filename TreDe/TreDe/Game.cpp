@@ -20,6 +20,10 @@ Game::~Game()
 	//SafeDelete(mCharacter);
 	SafeDelete(mSkyBox);
 	SafeDelete(mLightHandler);
+	for(auto& it(mLightDucks.begin()); it != mLightDucks.end(); ++it)
+	{
+		SafeDelete(*it);
+	}
 }
 
 void Game::Initialize(ID3D11Device* device)
@@ -40,6 +44,17 @@ void Game::Initialize(ID3D11Device* device)
 
 	mSkyBox = new SkyBox();
 	mSkyBox->Initialize(device, 5000.0f);
+
+	mLightDucks.push_back(new StaticEntity("../Data/Models/Static/Duck/Duck.obj", "../Data/Models/Static/Duck/"));
+	mLightDucks.push_back(new StaticEntity("../Data/Models/Static/Duck/Duck.obj", "../Data/Models/Static/Duck/"));
+
+	XMFLOAT3 duckPos = mLightHandler->GetSpot0Pos();
+	duckPos.y += 10.0f;
+	mLightDucks[0]->Initialize(duckPos, 0.05f);
+
+	duckPos = mLightHandler->GetSpot1Pos();
+	duckPos.y += 10.0f;
+	mLightDucks[1]->Initialize(duckPos, 0.05f);
 
 	//
 	Text->AddConstantText("PlayerInfo", "Name: " + mPlayer->GetName(), 20.0f, 20.0f, 20.0f, TextColors::White);
@@ -78,6 +93,10 @@ void Game::SolidDraw(ID3D11DeviceContext* devCon)
 	{
 		mPlatforms[i]->Draw(devCon, activeTech, playerCam);
 	}
+	for(UINT i(0); i != mLightDucks.size(); ++i)
+	{
+		mLightDucks[i]->Draw(devCon, activeTech, playerCam);
+	}
 
 	//activeTech = Effects::NormalFX->mSolidSkin;
 	//mCharacter->Draw(devCon, activeTech, playerCam);
@@ -96,6 +115,10 @@ void Game::WireDraw(ID3D11DeviceContext* devCon)
 	for(UINT i(0); i != mPlatforms.size(); ++i)
 	{
 		mPlatforms[i]->Draw(devCon, activeTech, playerCam);
+	}
+	for(UINT i(0); i != mLightDucks.size(); ++i)
+	{
+		mLightDucks[i]->Draw(devCon, activeTech, playerCam);
 	}
 	//mCharacter->Draw(devCon, activeTech, playerCam);
 }
@@ -119,6 +142,97 @@ void Game::LightDraw(ID3D11DeviceContext* devCon)
 	for(UINT i(0); i != mPlatforms.size(); ++i)
 	{
 		mPlatforms[i]->Draw(devCon, activeTech, playerCam);
+	}
+	for(UINT i(0); i != mLightDucks.size(); ++i)
+	{
+		mLightDucks[i]->Draw(devCon, activeTech, playerCam);
+	}
+}
+
+// Tessellation draw methods
+
+void Game::SolidTessDraw(ID3D11DeviceContext* devCon)
+{
+	Camera* playerCam = mPlayer->GetCamera();
+
+	Effects::TessFX->SetMinTessDist(1.0f);
+	Effects::TessFX->SetMaxTessDist(1024.0f);
+	Effects::TessFX->SetMinTessFact(1.0f);
+	Effects::TessFX->SetMaxTessFact(64.0f);
+	Effects::TessFX->SetEyePos(&playerCam->GetPosition());
+
+	ID3DX11EffectTechnique* activeTech = Effects::SkyFX->mSolid;
+	mSkyBox->Draw(devCon, activeTech, playerCam);
+
+	activeTech = Effects::TerrainFX->mSolid;
+	mTerrain->Draw(devCon, activeTech, playerCam);
+
+	activeTech = Effects::TessFX->mSolid;
+
+	for(UINT i(0); i != mPlatforms.size(); ++i)
+	{
+		mPlatforms[i]->DrawTess(devCon, activeTech, playerCam);
+	}
+	for(UINT i(0); i != mLightDucks.size(); ++i)
+	{
+		mLightDucks[i]->DrawTess(devCon, activeTech, playerCam);
+	}
+}
+
+void Game::WireTessDraw(ID3D11DeviceContext* devCon)
+{
+	Camera* playerCam = mPlayer->GetCamera();
+
+	Effects::TessFX->SetMinTessDist(1.0f);
+	Effects::TessFX->SetMaxTessDist(1024.0f);
+	Effects::TessFX->SetMinTessFact(100.0f);
+	Effects::TessFX->SetMaxTessFact(500.0f);
+	Effects::TessFX->SetEyePos(&playerCam->GetPosition());
+
+	ID3DX11EffectTechnique* activeTech = Effects::SkyFX->mWire;
+	mSkyBox->Draw(devCon, activeTech, playerCam);
+
+	activeTech = Effects::TerrainFX->mWire;
+	mTerrain->Draw(devCon, activeTech, playerCam);
+
+	activeTech = Effects::TessFX->mWire;
+	for(UINT i(0); i != mPlatforms.size(); ++i)
+	{
+		mPlatforms[i]->DrawTess(devCon, activeTech, playerCam);
+	}
+	for(UINT i(0); i != mLightDucks.size(); ++i)
+	{
+		mLightDucks[i]->DrawTess(devCon, activeTech, playerCam);
+	}
+}
+
+void Game::LightTessDraw(ID3D11DeviceContext* devCon)
+{
+	Camera* playerCam = mPlayer->GetCamera();
+
+	Effects::TerrainFX->SetEyePos(&playerCam->GetPosition());
+	Effects::TessFX->SetMinTessDist(1.0f);
+	Effects::TessFX->SetMaxTessDist(1024.0f);
+	Effects::TessFX->SetMinTessFact(1.0f);
+	Effects::TessFX->SetMaxTessFact(64.0f);
+	Effects::TessFX->SetEyePos(&playerCam->GetPosition());
+
+	ID3DX11EffectTechnique* activeTech = Effects::SkyFX->mSolid;
+	mSkyBox->Draw(devCon, activeTech, playerCam);
+
+	mLightHandler->ApplyEffects();
+
+	activeTech = Effects::TerrainFX->mAllLights;
+	mTerrain->Draw(devCon, activeTech, playerCam);
+
+	activeTech = Effects::TessFX->mAllLights;
+	for(UINT i(0); i != mPlatforms.size(); ++i)
+	{
+		mPlatforms[i]->DrawTess(devCon, activeTech, playerCam);
+	}
+	for(UINT i(0); i != mLightDucks.size(); ++i)
+	{
+		mLightDucks[i]->DrawTess(devCon, activeTech, playerCam);
 	}
 }
 
