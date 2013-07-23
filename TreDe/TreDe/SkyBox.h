@@ -4,14 +4,14 @@
 #include "Camera.h"
 #include "TextureClass.h"
 #include "VertexDef.h"
-#include "GeometryCreator.h"
 #include "InputLayouts.h"
 #include "Effects.h"
+#include "LoaderClass.h"
 
 class SkyBox
 {
 public:
-	SkyBox();
+	SkyBox(std::string fileName);
 	~SkyBox();
 	void Initialize(ID3D11Device* device, float radius);
 	void Draw(ID3D11DeviceContext* devCon, ID3DX11EffectTechnique* activeTech, Camera* camera);

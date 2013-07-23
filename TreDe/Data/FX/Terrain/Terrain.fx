@@ -221,8 +221,6 @@ technique11 AllLights
 		SetGeometryShader(NULL);
 		SetPixelShader( CompileShader(ps_5_0, PSScene_Lights(true, 0, 2, 0)));
 
-		SetBlendState( NULL, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff );
-
 		SetRasterizerState(Solidframe);
 	}
 };

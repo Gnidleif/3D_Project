@@ -84,7 +84,6 @@
     <ClInclude Include="Effects.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameTimer.h" />
-    <ClInclude Include="GeometryCreator.h" />
     <ClInclude Include="InputLayouts.h" />
     <ClInclude Include="LightHandler.h" />
     <ClInclude Include="LoaderClass.h" />
@@ -121,7 +120,6 @@
     <ClCompile Include="Effects.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameTimer.cpp" />
-    <ClCompile Include="GeometryCreator.cpp" />
     <ClCompile Include="InputLayouts.cpp" />
     <ClCompile Include="LightHandler.cpp" />
     <ClCompile Include="LoaderClass.cpp" />

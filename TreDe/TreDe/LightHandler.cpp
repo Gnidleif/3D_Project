@@ -26,8 +26,8 @@ LightHandler::LightHandler(void)
 	mPoints[1].Diffuse		= XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
 	mPoints[1].Specular		= XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
 	mPoints[1].Attenuation  = XMFLOAT3(1.0f, 1.0f, 1.0f);
-	mPoints[1].Range		= 400.0f;
-	mPoints[1].Position		= XMFLOAT3(400.0f, 400.0f, 100.0f);
+	mPoints[1].Range		= 750.0f;
+	mPoints[1].Position		= XMFLOAT3(400.0f, 600.0f, 400.0f);
 
 	// Spotlights initialized
 
@@ -58,8 +58,8 @@ void LightHandler::Update(float dt)
 {
 	static float time = 0.0f;
 	time += dt;
-	float x = 125.0f*cosf(1.0f*time) + 750.0f;
-	float y = 125.0f*sinf(1.0f*time) + 1000.0f;
+	float x = 250.0f*cosf(1.0f*time) + 750.0f;
+	float y = 500.0f*sinf(1.0f*time) + 750.0f;
 	float z = 750.0f;
 
 	mPoints[0].Position = XMFLOAT3(x, y, z);

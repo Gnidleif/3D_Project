@@ -24,6 +24,7 @@ Game::~Game()
 	{
 		SafeDelete(*it);
 	}
+	SafeDelete(mBTH);
 }
 
 void Game::Initialize(ID3D11Device* device)
@@ -39,10 +40,10 @@ void Game::Initialize(ID3D11Device* device)
 		stringstream ss;
 		ss << i + 1;
 		mPlatforms.push_back(new StaticEntity("../Data/Models/Static/Platform" + ss.str() + "/Platform" + ss.str() + ".obj", "../Data/Models/Static/Platform" + ss.str() + "/"));
-		mPlatforms[i]->Initialize(XMFLOAT3(400.0f * (float)i, 500.0f, 100.0f), 0.5f);
+		mPlatforms[i]->Initialize(XMFLOAT3(400.0f * (float)i, 300.0f, 400.0f), 0.5f);
 	}
 
-	mSkyBox = new SkyBox();
+	mSkyBox = new SkyBox("../Data/Textures/SkyBox_Space.dds");
 	mSkyBox->Initialize(device, 5000.0f);
 
 	mLightDucks.push_back(new StaticEntity("../Data/Models/Static/Duck/Duck.obj", "../Data/Models/Static/Duck/"));
@@ -53,6 +54,9 @@ void Game::Initialize(ID3D11Device* device)
 
 	duckPos = mLightHandler->GetPoint1Pos();
 	mLightDucks[1]->Initialize(duckPos, 0.05f);
+
+	mBTH = new StaticEntity("../Data/Models/Static/BTH/BTH.obj", "../Data/Models/Static/BTH/");
+	mBTH->Initialize(XMFLOAT3(750.0f, 150.0f, 200.0f), 2.0f);
 
 	//
 	Text->AddConstantText("PlayerInfo", "Name: " + mPlayer->GetName(), 20.0f, 20.0f, 20.0f, TextColors::White);
@@ -72,6 +76,8 @@ void Game::Update(float dt)
 
 	mLightDucks[0]->SetPosition(mLightHandler->GetPoint0Pos());
 	mLightDucks[1]->SetPosition(mLightHandler->GetPoint1Pos());
+
+	mBTH->RotateX(rot);
 
 	//mCharacter->Update(dt);
 
@@ -98,6 +104,7 @@ void Game::SolidDraw(ID3D11DeviceContext* devCon)
 	{
 		mLightDucks[i]->Draw(devCon, activeTech, playerCam);
 	}
+	mBTH->Draw(devCon, activeTech, playerCam);
 
 	//activeTech = Effects::NormalFX->mSolidSkin;
 	//mCharacter->Draw(devCon, activeTech, playerCam);
@@ -121,6 +128,8 @@ void Game::WireDraw(ID3D11DeviceContext* devCon)
 	{
 		mLightDucks[i]->Draw(devCon, activeTech, playerCam);
 	}
+	mBTH->Draw(devCon, activeTech, playerCam);
+
 	//mCharacter->Draw(devCon, activeTech, playerCam);
 }
 
@@ -148,6 +157,7 @@ void Game::LightDraw(ID3D11DeviceContext* devCon)
 	{
 		mLightDucks[i]->Draw(devCon, activeTech, playerCam);
 	}
+	mBTH->Draw(devCon, activeTech, playerCam);
 }
 
 // Tessellation draw methods
@@ -172,6 +182,7 @@ void Game::SolidTessDraw(ID3D11DeviceContext* devCon)
 	{
 		mLightDucks[i]->DrawTess(devCon, activeTech, playerCam);
 	}
+	mBTH->DrawTess(devCon, activeTech, playerCam);
 }
 
 void Game::WireTessDraw(ID3D11DeviceContext* devCon)
@@ -194,6 +205,7 @@ void Game::WireTessDraw(ID3D11DeviceContext* devCon)
 	{
 		mLightDucks[i]->DrawTess(devCon, activeTech, playerCam);
 	}
+	mBTH->DrawTess(devCon, activeTech, playerCam);
 }
 
 void Game::LightTessDraw(ID3D11DeviceContext* devCon)
@@ -218,6 +230,7 @@ void Game::LightTessDraw(ID3D11DeviceContext* devCon)
 	{
 		mLightDucks[i]->DrawTess(devCon, activeTech, playerCam);
 	}
+	mBTH->DrawTess(devCon, activeTech, playerCam);
 }
 
 void Game::ControlPlayer(DirectInput* di)
@@ -227,7 +240,7 @@ void Game::ControlPlayer(DirectInput* di)
 
 void Game::SetTessEffects()
 {
-	Effects::TessFX->SetMinTessDist(100.0f);
+	Effects::TessFX->SetMinTessDist(10.0f);
 	Effects::TessFX->SetMaxTessDist(1000.0f);
 	Effects::TessFX->SetMinTessFact(1.0f);
 	Effects::TessFX->SetMaxTessFact(2.0f);
@@ -236,6 +249,6 @@ void Game::SetTessEffects()
 	Effects::TerrTessFX->SetMinTessDist(100.0f);
 	Effects::TerrTessFX->SetMaxTessDist(1000.0f);
 	Effects::TerrTessFX->SetMinTessFact(1.0f);
-	Effects::TerrTessFX->SetMaxTessFact(1.0f);
+	Effects::TerrTessFX->SetMaxTessFact(2.0f);
 	Effects::TerrTessFX->SetEyePos(mPlayer->GetCamera()->GetPosition());
 }

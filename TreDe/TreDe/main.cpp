@@ -177,7 +177,7 @@ void Main::Draw()
 	mDirect3D->GetDevCon()->OMSetDepthStencilState(0, 0);
 	mDirect3D->GetDevCon()->OMSetBlendState(0, blendFactor, 0xffffffff);
 
-	mDirect3D->GetSwapChain()->Present(1, 0);
+	mDirect3D->GetSwapChain()->Present(0, 0);
 }
 
 void Main::OnResize()

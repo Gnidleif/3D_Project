@@ -42,6 +42,14 @@ public:
 	void Shutdown();
 	// The device is needed to set the vertex/indexbuffers of the meshes that this class creates
 	void Initialize(ID3D11Device* device);
+	// Function used to load the skybox-mesh
+	void CreateSphere(
+		float radius, 
+		UINT slice, 
+		UINT stack, 
+		std::vector<VertexDef::PosNorTexTan>& vertices, 
+		std::vector<UINT>& indices);
+
 	// Function used to load the heightmap
 	void CreateHeightMap(
 		TerrainMesh* &mesh,

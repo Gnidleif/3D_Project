@@ -42,5 +42,6 @@ private:
 	SkyBox* mSkyBox;
 	LightHandler* mLightHandler;
 	std::vector<StaticEntity*> mLightDucks;
+	StaticEntity* mBTH;
 };
 #endif

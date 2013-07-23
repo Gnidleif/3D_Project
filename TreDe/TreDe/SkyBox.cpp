@@ -1,6 +1,6 @@
 #include "SkyBox.h"
 
-SkyBox::SkyBox(void)
+SkyBox::SkyBox(std::string fileName)
 	:
 	mVertexBuffer(nullptr),
 	mIndexBuffer(nullptr),
@@ -20,7 +20,7 @@ void SkyBox::Initialize(ID3D11Device* device, float radius)
 {
 	this->mCubeMapSRV = Texture->GetTexture(mFileName);
 	std::vector<VertexDef::PosNorTexTan> sphere;
-	GeometryCreator::CreateSphere(radius, 30, 30, sphere, mIndices);
+	Loader->CreateSphere(radius, 50.0f, 50.0f, sphere, mIndices);
 
 	std::vector<XMFLOAT3> positions(sphere.size());
 
@@ -77,9 +77,6 @@ void SkyBox::Draw(ID3D11DeviceContext* devCon, ID3DX11EffectTechnique* activeTec
 	for(UINT i(0); i < td.Passes; ++i)
 	{
 		activeTech->GetPassByIndex(i)->Apply(0, devCon);
-
-		//ID3DX11EffectPass* pass = activeTech->GetPassByIndex(i);
-		//pass->Apply(0, devCon);
 	}
 	devCon->DrawIndexed(mIndexCount, 0, 0);
 }
