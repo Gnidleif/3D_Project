@@ -1,5 +1,6 @@
+#pragma once
 #ifndef SKINNEDENTITY_H
-#define SKINNEDENEITY_H
+#define SKINNEDENTITY_H
 #include "VirtualEntity.h"
 #include "InputLayouts.h"
 #include "Effects.h"

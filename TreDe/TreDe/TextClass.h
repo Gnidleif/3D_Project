@@ -1,3 +1,4 @@
+#pragma once
 #ifndef TEXTCLASS_H
 #define TEXTCLASS_H
 #include "d3dUtilities.h"

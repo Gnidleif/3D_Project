@@ -1,3 +1,4 @@
+#pragma once
 #ifndef EFFECTS_H
 #define EFFECTS_H
 #include "d3dUtilities.h"

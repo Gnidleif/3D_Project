@@ -1,3 +1,4 @@
+#pragma once
 #ifndef SKINDATA_H
 #define SKINDATA_H
 #include "SkinDef.h"

@@ -1,3 +1,4 @@
+#pragma once
 #ifndef TERRAINENTITY_H
 #define TERRAINENTITY_H
 #include "VirtualEntity.h"

@@ -1,10 +1,7 @@
 #include "LightHandler.h"
+#include "Effects.h"
 
 LightHandler::LightHandler(void)
-	//: mDirAmount(1), mPointAmount(2), mSpotAmount(2)
-	//mDirs(new DirectionalLight[mDirAmount]), 
-	//mPoints(new PointLight[mPointAmount]),
-	//mSpots(new SpotLight[mSpotAmount])
 {
 	// Directional lights initialized
 
@@ -23,7 +20,7 @@ LightHandler::LightHandler(void)
 	mPoints[0].Position = XMFLOAT3(1500.0f, 50.0f, 1500.0f);
 
 	mPoints[1].Ambient		= XMFLOAT4(0.3f, 0.3f, 0.3f, 1.0f);
-	mPoints[1].Diffuse		= XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
+	mPoints[1].Diffuse		= XMFLOAT4(0.7f, 0.7f, 0.7f, 1.0f);
 	mPoints[1].Specular		= XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
 	mPoints[1].Attenuation  = XMFLOAT3(1.0f, 1.0f, 1.0f);
 	mPoints[1].Range		= 750.0f;
@@ -49,9 +46,6 @@ LightHandler::LightHandler(void)
 
 LightHandler::~LightHandler(void)
 {
-	//delete[] mDirs;
-	//delete[] mPoints;
-	//delete[] mSpots;
 }
 
 void LightHandler::Update(float dt)

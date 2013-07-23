@@ -1,7 +1,7 @@
+#pragma once
 #ifndef LIGHTHANDLER_H
 #define LIGHTHANDLER_H
 #include "LightDef.h"
-#include "Effects.h"
 
 // Very hardcoded class used to handle them lights and stuff!
 

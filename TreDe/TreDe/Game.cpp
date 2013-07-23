@@ -24,13 +24,12 @@ Game::~Game()
 	{
 		SafeDelete(*it);
 	}
-	SafeDelete(mBTH);
 }
 
 void Game::Initialize(ID3D11Device* device)
 {
 	mTerrain = new TerrainEntity("../Data/Textures/heightmap.bmp");
-	mTerrain->Initialize(XMFLOAT3(0.0f, 0.0f, 0.0f), 5.0f);
+	mTerrain->Initialize(XMFLOAT3(0.0f, 0.0f, 0.0f), 20.0f);
 
 	//mCharacter = new SkinnedEntity("../Data/Models/Skinned/Character/Character.dae", "../Data/Models/Skinned/Character/");
 	//mCharacter->Initialize(XMFLOAT3(150.0f, 20.0f, 100.0f), 1.0f);
@@ -55,9 +54,6 @@ void Game::Initialize(ID3D11Device* device)
 	duckPos = mLightHandler->GetPoint1Pos();
 	mLightDucks[1]->Initialize(duckPos, 0.05f);
 
-	mBTH = new StaticEntity("../Data/Models/Static/BTH/BTH.obj", "../Data/Models/Static/BTH/");
-	mBTH->Initialize(XMFLOAT3(750.0f, 150.0f, 200.0f), 2.0f);
-
 	//
 	Text->AddConstantText("PlayerInfo", "Name: " + mPlayer->GetName(), 20.0f, 20.0f, 20.0f, TextColors::White);
 }
@@ -76,8 +72,6 @@ void Game::Update(float dt)
 
 	mLightDucks[0]->SetPosition(mLightHandler->GetPoint0Pos());
 	mLightDucks[1]->SetPosition(mLightHandler->GetPoint1Pos());
-
-	mBTH->RotateX(rot);
 
 	//mCharacter->Update(dt);
 
@@ -104,7 +98,6 @@ void Game::SolidDraw(ID3D11DeviceContext* devCon)
 	{
 		mLightDucks[i]->Draw(devCon, activeTech, playerCam);
 	}
-	mBTH->Draw(devCon, activeTech, playerCam);
 
 	//activeTech = Effects::NormalFX->mSolidSkin;
 	//mCharacter->Draw(devCon, activeTech, playerCam);
@@ -128,7 +121,6 @@ void Game::WireDraw(ID3D11DeviceContext* devCon)
 	{
 		mLightDucks[i]->Draw(devCon, activeTech, playerCam);
 	}
-	mBTH->Draw(devCon, activeTech, playerCam);
 
 	//mCharacter->Draw(devCon, activeTech, playerCam);
 }
@@ -157,7 +149,6 @@ void Game::LightDraw(ID3D11DeviceContext* devCon)
 	{
 		mLightDucks[i]->Draw(devCon, activeTech, playerCam);
 	}
-	mBTH->Draw(devCon, activeTech, playerCam);
 }
 
 // Tessellation draw methods
@@ -170,8 +161,8 @@ void Game::SolidTessDraw(ID3D11DeviceContext* devCon)
 	ID3DX11EffectTechnique* activeTech = Effects::SkyFX->mSolid;
 	mSkyBox->Draw(devCon, activeTech, playerCam);
 
-	activeTech = Effects::TerrTessFX->mSolid;
-	mTerrain->DrawTess(devCon, activeTech, playerCam);
+	activeTech = Effects::TerrainFX->mSolid;
+	mTerrain->Draw(devCon, activeTech, playerCam);
 
 	activeTech = Effects::TessFX->mSolidAlpha;
 	for(UINT i(0); i != mPlatforms.size(); ++i)
@@ -182,7 +173,6 @@ void Game::SolidTessDraw(ID3D11DeviceContext* devCon)
 	{
 		mLightDucks[i]->DrawTess(devCon, activeTech, playerCam);
 	}
-	mBTH->DrawTess(devCon, activeTech, playerCam);
 }
 
 void Game::WireTessDraw(ID3D11DeviceContext* devCon)
@@ -193,8 +183,8 @@ void Game::WireTessDraw(ID3D11DeviceContext* devCon)
 	ID3DX11EffectTechnique* activeTech = Effects::SkyFX->mWire;
 	mSkyBox->Draw(devCon, activeTech, playerCam);
 
-	activeTech = Effects::TerrTessFX->mWire;
-	mTerrain->DrawTess(devCon, activeTech, playerCam);
+	activeTech = Effects::TerrainFX->mWire;
+	mTerrain->Draw(devCon, activeTech, playerCam);
 
 	activeTech = Effects::TessFX->mWire;
 	for(UINT i(0); i != mPlatforms.size(); ++i)
@@ -205,7 +195,6 @@ void Game::WireTessDraw(ID3D11DeviceContext* devCon)
 	{
 		mLightDucks[i]->DrawTess(devCon, activeTech, playerCam);
 	}
-	mBTH->DrawTess(devCon, activeTech, playerCam);
 }
 
 void Game::LightTessDraw(ID3D11DeviceContext* devCon)
@@ -218,8 +207,8 @@ void Game::LightTessDraw(ID3D11DeviceContext* devCon)
 
 	mLightHandler->ApplyEffects();
 
-	activeTech = Effects::TerrTessFX->mAllLights;
-	mTerrain->DrawTess(devCon, activeTech, playerCam);
+	activeTech = Effects::TerrainFX->mAllLights;
+	mTerrain->Draw(devCon, activeTech, playerCam);
 
 	activeTech = Effects::TessFX->mAllLightsAlpha;
 	for(UINT i(0); i != mPlatforms.size(); ++i)
@@ -230,12 +219,20 @@ void Game::LightTessDraw(ID3D11DeviceContext* devCon)
 	{
 		mLightDucks[i]->DrawTess(devCon, activeTech, playerCam);
 	}
-	mBTH->DrawTess(devCon, activeTech, playerCam);
 }
 
 void Game::ControlPlayer(DirectInput* di)
 {
-	mPlayer->Control(di);
+	if(di->GetKeyboardState()[DIK_NUMPADMINUS] && 0x80)
+	{
+		mTerrain->SetScale(10.0f);
+	}
+	else if(di->GetKeyboardState()[DIK_NUMPADPLUS] && 0x80)
+	{
+		mTerrain->SetScale(20.0f);
+	}
+	else
+		mPlayer->Control(di);
 }
 
 void Game::SetTessEffects()

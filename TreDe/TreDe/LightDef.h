@@ -3,6 +3,7 @@
 //
 // This class is only used to define lights
 //-------------------------------------------------------------------------------------------
+#pragma once
 
 #ifndef LIGHTDEF_H
 #define LIGHTDEF_H

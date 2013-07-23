@@ -1,3 +1,4 @@
+#pragma once
 #ifndef STATICENTITY_H
 #define STATICENTITY_H
 #include "VirtualEntity.h"

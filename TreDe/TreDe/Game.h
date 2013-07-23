@@ -1,3 +1,4 @@
+#pragma once
 #ifndef GAME_H
 #define GAME_H
 #include "SettingsClass.h"
@@ -42,6 +43,5 @@ private:
 	SkyBox* mSkyBox;
 	LightHandler* mLightHandler;
 	std::vector<StaticEntity*> mLightDucks;
-	StaticEntity* mBTH;
 };
 #endif

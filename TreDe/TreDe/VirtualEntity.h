@@ -1,3 +1,4 @@
+#pragma once
 #ifndef VIRTUALENTITY_H
 #define VIRTUALENTITY_H
 #include "d3dUtilities.h"

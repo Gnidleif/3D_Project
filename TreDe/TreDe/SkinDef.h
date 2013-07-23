@@ -1,3 +1,4 @@
+#pragma once
 #ifndef SKINDEF_H
 #define SKINDEF_H
 #include "d3dUtilities.h"

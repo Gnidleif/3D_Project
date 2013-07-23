@@ -1,3 +1,4 @@
+#pragma once
 #ifndef MODELCLASS_H
 #define MODELCLASS_H
 #include "TerrainModel.h"
