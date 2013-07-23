@@ -43,6 +43,33 @@ void TerrainEntity::Draw(ID3D11DeviceContext* devCon, ID3DX11EffectTechnique* ac
 	}
 }
 
+void TerrainEntity::DrawTess(ID3D11DeviceContext* devCon, ID3DX11EffectTechnique* activeTech, Camera* camera)
+{
+	devCon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
+	devCon->IASetInputLayout(InputLayouts::mPosNorTex);
+
+	D3DX11_TECHNIQUE_DESC techDesc = {};
+	activeTech->GetDesc(&techDesc);
+
+	Effects::TerrTessFX->SetMaterial(mModelInstance.mModel->GetMaterial());
+	Effects::TerrTessFX->SetView(camera->GetViewMatrix());
+	Effects::TerrTessFX->SetProj(camera->GetProjMatrix());
+	Effects::TerrTessFX->SetWorld(XMLoadFloat4x4(&mModelInstance.mWorld));
+	Effects::TerrTessFX->SetWorldInvTranspose(MathHelper::InverseTranspose(XMLoadFloat4x4(&mModelInstance.mWorld)));
+
+	Effects::TerrTessFX->SetBlendMap(mModelInstance.mModel->GetBlendMap());
+	Effects::TerrTessFX->SetTex0(mModelInstance.mModel->GetTex0());
+	Effects::TerrTessFX->SetTex1(mModelInstance.mModel->GetTex1());
+	Effects::TerrTessFX->SetTex2(mModelInstance.mModel->GetTex2());
+	Effects::TerrTessFX->SetTex3(mModelInstance.mModel->GetTex3());
+
+	for(UINT i(0); i != techDesc.Passes; ++i)
+	{
+		activeTech->GetPassByIndex(i)->Apply(0, devCon);
+		mModelInstance.mModel->GetMesh()->Draw(devCon);
+	}
+}
+
 void TerrainEntity::CalcWorld()
 {
 	XMStoreFloat4x4(

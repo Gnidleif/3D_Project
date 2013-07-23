@@ -136,11 +136,47 @@ TessellationEffect::TessellationEffect(ID3D11Device* device, string filename)
 	this->mMaxTess = mFX->GetVariableByName("gMaxTess")->AsScalar();
 }
 
+// TessellationEffect functions
+TerrainTessellationEffect::TerrainTessellationEffect(ID3D11Device* device, string filename)
+	: VirtualEffect(device, filename)
+{
+	// Techniques
+	this->mSolid = mFX->GetTechniqueByName("Solid");
+	this->mWire = mFX->GetTechniqueByName("Wire");
+	this->mAllLights = mFX->GetTechniqueByName("AllLights");
+
+	this->mEyePos = mFX->GetVariableByName("gEyePos")->AsVector();
+
+	// Variables
+	this->mWorld = mFX->GetVariableByName("gWorld")->AsMatrix();
+	this->mView = mFX->GetVariableByName("gView")->AsMatrix();
+	this->mProj = mFX->GetVariableByName("gProj")->AsMatrix();
+	this->mWorldInvTranspose = mFX->GetVariableByName("gWorldInvTranspose")->AsMatrix();
+
+	this->mBlendMap = mFX->GetVariableByName("gBlendMap")->AsShaderResource();
+	this->mTex0 = mFX->GetVariableByName("gTex0")->AsShaderResource();
+	this->mTex1 = mFX->GetVariableByName("gTex1")->AsShaderResource();
+	this->mTex2 = mFX->GetVariableByName("gTex2")->AsShaderResource();
+	this->mTex3 = mFX->GetVariableByName("gTex3")->AsShaderResource();
+
+	this->mDirLights = mFX->GetVariableByName("gDirLights");
+	this->mPointLights = mFX->GetVariableByName("gPointLights");
+	this->mSpotLights = mFX->GetVariableByName("gSpotLights");
+
+	this->mMaterial = mFX->GetVariableByName("gMaterial");
+
+	this->mMinDist = mFX->GetVariableByName("gMinDist")->AsScalar();
+	this->mMaxDist = mFX->GetVariableByName("gMaxDist")->AsScalar();
+	this->mMinTess = mFX->GetVariableByName("gMinTess")->AsScalar();
+	this->mMaxTess = mFX->GetVariableByName("gMaxTess")->AsScalar();
+}
+
 // Effects functions
 SkyEffect* Effects::SkyFX = nullptr;
 TerrainEffect* Effects::TerrainFX = nullptr;
 NormalEffect* Effects::NormalFX = nullptr;
 TessellationEffect* Effects::TessFX = nullptr;
+TerrainTessellationEffect* Effects::TerrTessFX = nullptr;
 
 void Effects::Initialize(ID3D11Device* device)
 {
@@ -148,6 +184,7 @@ void Effects::Initialize(ID3D11Device* device)
 	TerrainFX = new TerrainEffect(device, "../Data/FX/Terrain/Terrain.fxo");
 	NormalFX = new NormalEffect(device, "../Data/FX/NormalMap/NormalMap.fxo");
 	TessFX = new TessellationEffect(device, "../Data/FX/Tessellation/Tessellation.fxo");
+	TerrTessFX = new TerrainTessellationEffect(device, "../Data/FX/TerrainTessellation/TerrainTessellation.fxo");
 }
 
 void Effects::Shutdown()
@@ -156,4 +193,5 @@ void Effects::Shutdown()
 	SafeDelete(TerrainFX);
 	SafeDelete(NormalFX);
 	SafeDelete(TessFX);
+	SafeDelete(TerrTessFX);
 }

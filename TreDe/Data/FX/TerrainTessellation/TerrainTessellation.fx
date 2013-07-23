@@ -24,11 +24,15 @@ cbuffer cbPerObject
 	float4x4 gWorldInvTranspose;
 };
 
-Texture2D gDiffMap;
-Texture2D gNormMap;
+Texture2D gBlendMap;
+Texture2D gTex0;
+Texture2D gTex1;
+Texture2D gTex2;
+Texture2D gTex3;
 
 cbuffer cbFixed
 {
+	float texScale = 15.0f;
 	float lightAddScale = 0.5f;
 };
 
@@ -51,7 +55,6 @@ struct VSIn
 	float3 PosL : POSITION;
 	float3 Normal : NORMAL;
 	float2 TexC : TEXCOORD;
-	float4 TangentL : TANGENT;
 };
 
 struct VSOut
@@ -59,7 +62,6 @@ struct VSOut
 	float3 PosL : POSITION;
 	float3 Normal : NORMAL;
 	float2 TexC : TEXCOORD;
-	float4 TangentL : TANGENT;
 };
 
 struct HSOut
@@ -67,7 +69,6 @@ struct HSOut
 	float3 PosL : POSITION;
 	float3 Normal : NORMAL;
 	float2 TexC : TEXCOORD;
-	float4 TangentL : TANGENT;
 };
 
 struct DSOut
@@ -75,8 +76,8 @@ struct DSOut
 	float4 PosH : SV_POSITION;
 	float3 PosW : POSITION;
 	float3 Normal : NORMAL;
-	float2 TexC : TEXCOORD;
-	float4 TangentW : TANGENT;
+	float2 Tiled : TEXCOORD0; // Moving the calculation of this to the DomainShader, the lazy VertexShader deserves some rest
+	float2 Stretched : TEXCOORD1;
 };
 
 VSOut VSScene(VSIn input)
@@ -86,11 +87,10 @@ VSOut VSScene(VSIn input)
 	output.PosL = input.PosL;
 	output.Normal = input.Normal;
 	output.TexC = input.TexC;
-	output.TangentL = input.TangentL;
 
 	return output;
 }
-
+// All the same here, nothing to see!
 struct PatchTess
 {
 	float EdgeTess[3] : SV_TessFactor;
@@ -131,7 +131,6 @@ HSOut HSScene(InputPatch<VSOut, 3> patch,
 	output.PosL = patch[i].PosL;
 	output.Normal = patch[i].Normal;
 	output.TexC = patch[i].TexC;
-	output.TangentL = patch[i].TangentL;
 
 	return output;
 }
@@ -165,53 +164,60 @@ DSOut DSScene(PatchTess patchTess,
 		coords.x * tri[0].TexC +
 		coords.y * tri[1].TexC +
 		coords.z * tri[2].TexC;
+	// Now this is where shit gets interesting.. Let's see here
+	output.Tiled = texScale * texC;
 
-	output.TexC = texC;
-
-	float4 tangent =
-		coords.x * tri[0].TangentL +
-		coords.y * tri[1].TangentL +
-		coords.z * tri[2].TangentL;
-
-	output.TangentW = mul(tangent, gWorld);
+	output.Stretched = texC; // If this is all there's to it, this was barely fun
 
 	return output;
 }
 
 float4 PSScene(DSOut input,
-			   uniform bool alphaClip,
 			   uniform bool useTex) : SV_Target
 {
 	input.Normal = normalize(input.Normal);
 
-	float4 texColor = float4(1.0f, 1.0f, 0.0f, 1.0f);
+	float4 texColor = float4(1.0f, 0.0f, 1.0f, 1.0f); // I think this is a cool color.. I guess. Maybe.
 	if(useTex)
 	{
-		texColor = gDiffMap.Sample(samLinear, input.TexC);
+		float4 c0 = gTex0.Sample(samLinear, input.Tiled);
+		float4 c1 = gTex1.Sample(samLinear, input.Tiled);
+		float4 c2 = gTex2.Sample(samLinear, input.Tiled);
+		float4 c3 = gTex3.Sample(samLinear, input.Tiled);
 
-		if(alphaClip) // If alpha clipping is true
-			clip(texColor.a - 0.1f);
+		float4 blend = gBlendMap.Sample(samLinear, input.Stretched);
+
+		texColor = c0;
+		texColor = lerp(texColor, c1, blend.r);
+		texColor = lerp(texColor, c2, blend.g);
+		texColor = lerp(texColor, c3, blend.b);
 	}
 
 	return texColor;
 };
 
 float4 PSScene_Lights(DSOut input,
-			   uniform bool alphaClip,
 			   uniform bool useTex,
 			   uniform int dirLightAmount,
 			   uniform int pointLightAmount,
 			   uniform int spotLightAmount) : SV_TARGET
 {
 	input.Normal = normalize(input.Normal);
-	float4 texColor = float4(1.0f, 1.0f, 0.0f, 1.0f); // Yellow for tessellation-wire
+	float4 texColor = float4(1.0f, 0.0f, 1.0f, 1.0f);
 	if(useTex)
 	{
-		texColor = gDiffMap.Sample(samLinear, input.TexC);
-	}
+		float4 c0 = gTex0.Sample(samLinear, input.Tiled);
+		float4 c1 = gTex1.Sample(samLinear, input.Tiled);
+		float4 c2 = gTex2.Sample(samLinear, input.Tiled);
+		float4 c3 = gTex3.Sample(samLinear, input.Tiled);
 
-	float3 normMapSamp = gNormMap.Sample(samLinear, input.TexC).rgb;
-	float3 bumpNormal = NormalSampleToWorldSpace(normMapSamp, input.Normal, input.TangentW);
+		float4 blend = gBlendMap.Sample(samLinear, input.Stretched);
+
+		texColor = c0;
+		texColor = lerp(texColor, c1, blend.r);
+		texColor = lerp(texColor, c2, blend.g);
+		texColor = lerp(texColor, c3, blend.b);
+	}
 
 	// Lighting!
 
@@ -229,7 +235,7 @@ float4 PSScene_Lights(DSOut input,
 		for(int i = 0; i < dirLightAmount; ++i)
 		{
 			float4 A, D, S;
-			ComputeDirectionalLight(gMaterial, gDirLights[i], bumpNormal, toEye, A, D, S);
+			ComputeDirectionalLight(gMaterial, gDirLights[i], input.Normal, toEye, A, D, S);
 
 			ambient += A;
 			diffuse += D;
@@ -240,7 +246,7 @@ float4 PSScene_Lights(DSOut input,
 		for(int j = 0; j < pointLightAmount; ++j)
 		{
 			float4 A, D, S;
-			ComputePointLight(gMaterial, gPointLights[j], input.PosW, bumpNormal, toEye, A, D, S);
+			ComputePointLight(gMaterial, gPointLights[j], input.PosW, input.Normal, toEye, A, D, S);
 
 			ambient += A;
 			diffuse += D;
@@ -251,7 +257,7 @@ float4 PSScene_Lights(DSOut input,
 		for(int k = 0; k < spotLightAmount; ++k)
 		{
 			float4 A, D, S;
-			ComputeSpotLight(gMaterial, gSpotLights[k], input.PosW, bumpNormal, toEye, A, D, S);
+			ComputeSpotLight(gMaterial, gSpotLights[k], input.PosW, input.Normal, toEye, A, D, S);
 
 			ambient += A;
 			diffuse += D;
@@ -261,9 +267,6 @@ float4 PSScene_Lights(DSOut input,
 		litColor = texColor * (ambient + diffuse) + specular;
 		litColor += texColor * lightAddScale;
 	}
-
-	if(alphaClip) // If alpha clipping is true
-		clip(texColor.a - 0.1f);
 
 	// Materials later
 	litColor.a = gMaterial.Ambient.a * texColor.a;
@@ -292,21 +295,7 @@ technique11 Solid
 		SetHullShader(CompileShader(hs_5_0, HSScene()));
 		SetDomainShader(CompileShader(ds_5_0, DSScene()));
 		SetGeometryShader(NULL);
-		SetPixelShader(CompileShader(ps_5_0, PSScene(false, true)));
-
-		SetRasterizerState(Solidframe);
-	}
-}
-
-technique11 SolidAlpha
-{
-	pass p0
-	{
-		SetVertexShader(CompileShader(vs_5_0, VSScene()));
-		SetHullShader(CompileShader(hs_5_0, HSScene()));
-		SetDomainShader(CompileShader(ds_5_0, DSScene()));
-		SetGeometryShader(NULL);
-		SetPixelShader(CompileShader(ps_5_0, PSScene(true, true)));
+		SetPixelShader(CompileShader(ps_5_0, PSScene(true)));
 
 		SetRasterizerState(Solidframe);
 	}
@@ -320,7 +309,7 @@ technique11 Wire
 		SetHullShader(CompileShader(hs_5_0, HSScene()));
 		SetDomainShader(CompileShader(ds_5_0, DSScene()));
 		SetGeometryShader(NULL);
-		SetPixelShader(CompileShader(ps_5_0, PSScene(false, false)));
+		SetPixelShader(CompileShader(ps_5_0, PSScene(false)));
 
 		SetRasterizerState(Wireframe);
 	}
@@ -334,21 +323,7 @@ technique11 AllLights
 		SetHullShader(CompileShader(hs_5_0, HSScene()));
 		SetDomainShader(CompileShader(ds_5_0, DSScene()));
 		SetGeometryShader(NULL);
-		SetPixelShader(CompileShader(ps_5_0, PSScene_Lights(false, true, 0, 2, 0)));
-
-		SetRasterizerState(Solidframe);
-	}
-};
-
-technique11 AllLightsAlpha
-{
-	pass p0
-	{
-		SetVertexShader(CompileShader(vs_5_0, VSScene()));
-		SetHullShader(CompileShader(hs_5_0, HSScene()));
-		SetDomainShader(CompileShader(ds_5_0, DSScene()));
-		SetGeometryShader(NULL);
-		SetPixelShader(CompileShader(ps_5_0, PSScene_Lights(true, true, 0, 2, 0)));
+		SetPixelShader(CompileShader(ps_5_0, PSScene_Lights(true, 0, 2, 0)));
 
 		SetRasterizerState(Solidframe);
 	}

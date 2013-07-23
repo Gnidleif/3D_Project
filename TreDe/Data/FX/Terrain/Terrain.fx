@@ -20,7 +20,7 @@ cbuffer cbPerObject
 cbuffer cbFixed
 {
 	float texScale = 15.0f;
-	float lightAddScale = 0.4f;
+	float lightAddScale = 0.5f;
 };
 
 Texture2D gBlendMap;

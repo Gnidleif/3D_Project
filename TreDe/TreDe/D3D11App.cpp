@@ -362,8 +362,8 @@ void D3D11App::CalculateFrameStats()
 		float fps = (float)frameCount;
 		float msPerFrame = 1000.0f / fps;
 
-		Text->AddConstantText("FPS", "FPS: " + Text->FloatToString(fps), 20.0f, 140.0f, 20, TextColors::Red);
-		Text->AddConstantText("MSPF", "ms/frame: " + Text->FloatToString(msPerFrame), 20.0f, 170.0f, 20, TextColors::Red);
+		Text->AddConstantText("FPS", "FPS: " + Text->FloatToString(fps), 20.0f, 140.0f, 20.0f, TextColors::Red);
+		Text->AddConstantText("MSPF", "ms/frame: " + Text->FloatToString(msPerFrame), 20.0f, 170.0f, 20.0f, TextColors::Red);
 
 		// Reset for next average
 		frameCount = 0;

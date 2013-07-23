@@ -23,7 +23,7 @@ cbuffer cbPerObject
 cbuffer cbFixed
 {
     float   texScale = 15;              // Offset:    0, size:    4
-    float   lightAddScale = 0.400000006;// Offset:    4, size:    4
+    float   lightAddScale = 0.5;        // Offset:    4, size:    4
 }
 
 //
@@ -97,7 +97,7 @@ fxgroup
                 //   float texScale;                    // Offset:    0 Size:     4
                 //      = 0x41700000 
                 //   float lightAddScale;               // Offset:    4 Size:     4 [unused]
-                //      = 0x3ecccccd 
+                //      = 0x3f000000 
                 //
                 // }
                 //
@@ -341,7 +341,7 @@ fxgroup
                 //   float texScale;                    // Offset:    0 Size:     4
                 //      = 0x41700000 
                 //   float lightAddScale;               // Offset:    4 Size:     4 [unused]
-                //      = 0x3ecccccd 
+                //      = 0x3f000000 
                 //
                 // }
                 //
@@ -543,7 +543,7 @@ fxgroup
                 //   float texScale;                    // Offset:    0 Size:     4
                 //      = 0x41700000 
                 //   float lightAddScale;               // Offset:    4 Size:     4 [unused]
-                //      = 0x3ecccccd 
+                //      = 0x3f000000 
                 //
                 // }
                 //
@@ -748,7 +748,7 @@ fxgroup
                 //   float texScale;                    // Offset:    0 Size:     4 [unused]
                 //      = 0x41700000 
                 //   float lightAddScale;               // Offset:    4 Size:     4
-                //      = 0x3ecccccd 
+                //      = 0x3f000000 
                 //
                 // }
                 //

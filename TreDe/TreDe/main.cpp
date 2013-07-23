@@ -25,6 +25,7 @@ enum DrawMode
 	WireTess
 };
 
+const float mSwitchCD = 1.0f;
 class Main : public D3D11App
 {
 public:
@@ -40,7 +41,7 @@ private:
 	void SwitchDraw(UINT drawMode);
 
 private:
-	float mDrawSwitchCD;
+	float mCurrCD;
 	UINT mCurrDraw;
 	BYTE* mInput;
 	Game* mGame;
@@ -74,7 +75,7 @@ Main::Main(HINSTANCE hInst)
 	mGame(new Game()),
 	//mInput(nullptr),
 	mCurrDraw(Light),
-	mDrawSwitchCD(0.0f)
+	mCurrCD(0.0f)
 {
 	mMainWndCaption = "3D2 AwesomesauceMegaSuperTruperBanana Project";
 }
@@ -125,7 +126,7 @@ bool Main::Initialize()
 
 void Main::Update(float dt)
 {
-	mDrawSwitchCD += dt;
+	mCurrCD += dt;
 
 	this->Input();
 
@@ -176,7 +177,7 @@ void Main::Draw()
 	mDirect3D->GetDevCon()->OMSetDepthStencilState(0, 0);
 	mDirect3D->GetDevCon()->OMSetBlendState(0, blendFactor, 0xffffffff);
 
-	mDirect3D->GetSwapChain()->Present(0, 0);
+	mDirect3D->GetSwapChain()->Present(1, 0);
 }
 
 void Main::OnResize()
@@ -196,7 +197,6 @@ void Main::Input()
 	// Not really optimal to put this here, but whatever
 	if(mInput == D3D11App::mDirectInput->GetKeyboardState())
 	{
-		//BYTE* lpInput = D3D11App::mDirectInput->GetKeyboardState();
 		if(mInput[DIK_1] && 0x80)
 		{
 			Settings->SetResolution(800, 600);
@@ -212,28 +212,34 @@ void Main::Input()
 			Settings->SetResolution(1600, 900);
 			D3D11App::SwitchResolution();
 		}
-		else if(mInput[DIK_NUMPAD0] && 0x80 && mDrawSwitchCD > 1.0f)
+		else if(mInput[DIK_NUMPAD0] && 0x80 && mCurrCD > mSwitchCD)
 		{
+			Text->AddTimedText("DrawType", "Solidframe with lighting", 20.0f, 200.0f, 20.0f, TextColors::White, 2.0f);
 			this->SwitchDraw(Light);
 		}
-		else if(mInput[DIK_NUMPAD1] && 0x80 && mDrawSwitchCD > 1.0f)
+		else if(mInput[DIK_NUMPAD1] && 0x80 && mCurrCD > mSwitchCD)
 		{
+			Text->AddTimedText("DrawType", "Solidframe", 20.0f, 200.0f, 20.0f, TextColors::White, 2.0f);
 			this->SwitchDraw(Solid);
 		}
-		else if(mInput[DIK_NUMPAD2] && 0x80 && mDrawSwitchCD > 1.0f)
+		else if(mInput[DIK_NUMPAD2] && 0x80 && mCurrCD > mSwitchCD)
 		{
+			Text->AddTimedText("DrawType", "Wireframe", 20.0f, 200.0f, 20.0f, TextColors::White, 2.0f);
 			this->SwitchDraw(Wire);
 		}
-		else if(mInput[DIK_NUMPAD3] && 0x80 && mDrawSwitchCD > 1.0f)
+		else if(mInput[DIK_NUMPAD3] && 0x80 && mCurrCD > mSwitchCD)
 		{
+			Text->AddTimedText("DrawType", "Solidframe with lighting and tessellation", 20.0f, 200.0f, 20.0f, TextColors::White, 2.0f);
 			this->SwitchDraw(LightTess);
 		}
-		else if(mInput[DIK_NUMPAD4] && 0x80 && mDrawSwitchCD > 1.0f)
+		else if(mInput[DIK_NUMPAD4] && 0x80 && mCurrCD > mSwitchCD)
 		{
+			Text->AddTimedText("DrawType", "Solidframe with tessellation", 20.0f, 200.0f, 20.0f, TextColors::White, 2.0f);
 			this->SwitchDraw(SolidTess);
 		}
-		else if(mInput[DIK_NUMPAD5] && 0x80 && mDrawSwitchCD > 1.0f)
+		else if(mInput[DIK_NUMPAD5] && 0x80 && mCurrCD > mSwitchCD)
 		{
+			Text->AddTimedText("DrawType", "Wireframe with tessellation", 20.0f, 200.0f, 20.0f, TextColors::White, 2.0f);
 			this->SwitchDraw(WireTess);
 		}
 		else if(mInput[DIK_ESCAPE] && 0x80)
@@ -253,6 +259,6 @@ void Main::Input()
 
 void Main::SwitchDraw(UINT drawMode)
 {
-	this->mDrawSwitchCD = 0.0f;
+	this->mCurrCD = 0.0f;
 	this->mCurrDraw = drawMode;
 }

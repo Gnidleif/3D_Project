@@ -166,7 +166,6 @@ void InputLayouts::Initialize(ID3D11Device* device)
 		pd.IAInputSignatureSize,
 		&mPosNorTexTanSkin);
 
-
 	// Tessellation techniques
 	Effects::TessFX->mSolid->GetPassByIndex(0)->GetDesc(&pd);
 	device->CreateInputLayout(
@@ -207,6 +206,31 @@ void InputLayouts::Initialize(ID3D11Device* device)
 		pd.pIAInputSignature,
 		pd.IAInputSignatureSize,
 		&mPosNorTexTan);
+
+	// Terrain tessellation techniques
+	Effects::TerrTessFX->mSolid->GetPassByIndex(0)->GetDesc(&pd);
+	device->CreateInputLayout(
+		InputLayoutDesc::PosNorTex,
+		3,
+		pd.pIAInputSignature,
+		pd.IAInputSignatureSize,
+		&mPosNorTex);
+
+	Effects::TerrTessFX->mWire->GetPassByIndex(0)->GetDesc(&pd);
+	device->CreateInputLayout(
+		InputLayoutDesc::PosNorTex,
+		3,
+		pd.pIAInputSignature,
+		pd.IAInputSignatureSize,
+		&mPosNorTex);
+
+	Effects::TerrTessFX->mAllLights->GetPassByIndex(0)->GetDesc(&pd);
+	device->CreateInputLayout(
+		InputLayoutDesc::PosNorTex,
+		3,
+		pd.pIAInputSignature,
+		pd.IAInputSignatureSize,
+		&mPosNorTex);
 }
 
 void InputLayouts::Shutdown()

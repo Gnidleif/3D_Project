@@ -201,6 +201,67 @@ private:
 	ID3DX11EffectScalarVariable* mMaxTess;
 };
 
+class TerrainTessellationEffect : public VirtualEffect
+{
+public:
+	TerrainTessellationEffect(ID3D11Device* device, std::string filename);
+	~TerrainTessellationEffect() {}
+
+public:
+	void SetEyePos(const XMFLOAT3& eye) { this->mEyePos->SetRawValue(&eye, 0, sizeof(XMFLOAT3)); }
+
+	void SetWorld(const XMMATRIX& matrix) { this->mWorld->SetMatrix(reinterpret_cast<const float*>(&matrix)); }
+	void SetView(const XMMATRIX& matrix) { this->mView->SetMatrix(reinterpret_cast<const float*>(&matrix)); }
+	void SetProj(const XMMATRIX& matrix) { this->mProj->SetMatrix(reinterpret_cast<const float*>(&matrix)); }
+	void SetWorldInvTranspose(const XMMATRIX& matrix) { this->mWorldInvTranspose->SetMatrix(reinterpret_cast<const float*>(&matrix)); }
+
+	void SetBlendMap(ID3D11ShaderResourceView* bm) { this->mBlendMap->SetResource(bm); }
+	void SetTex0(ID3D11ShaderResourceView* t0) { this->mTex0->SetResource(t0); }
+	void SetTex1(ID3D11ShaderResourceView* t1) { this->mTex1->SetResource(t1); }
+	void SetTex2(ID3D11ShaderResourceView* t2) { this->mTex2->SetResource(t2); }
+	void SetTex3(ID3D11ShaderResourceView* t3) { this->mTex3->SetResource(t3); }
+
+	// Set lights
+	void SetDirLights(const DirectionalLight* lights, int amount) { this->mDirLights->SetRawValue(lights, 0, amount*sizeof(DirectionalLight)); }
+	void SetPointLights(const PointLight* lights, int amount) { this->mPointLights->SetRawValue(lights, 0, amount*sizeof(PointLight)); }
+	void SetSpotLights(const SpotLight* lights, int amount) { this->mSpotLights->SetRawValue(lights, 0, amount*sizeof(SpotLight)); }
+	void SetMaterial(const Material& mat) { mMaterial->SetRawValue(&mat, 0, sizeof(Material)); }
+
+	void SetMinTessDist(float data) { this->mMinDist->SetFloat(data); }
+	void SetMaxTessDist(float data) { this->mMaxDist->SetFloat(data); }
+	void SetMinTessFact(float data) { this->mMinTess->SetFloat(data); }
+	void SetMaxTessFact(float data) { this->mMaxTess->SetFloat(data); }
+
+public: // Techniques
+	ID3DX11EffectTechnique* mSolid;
+	ID3DX11EffectTechnique* mWire;
+	ID3DX11EffectTechnique* mAllLights;
+
+private:
+	ID3DX11EffectVectorVariable* mEyePos;
+
+	ID3DX11EffectMatrixVariable* mWorld;
+	ID3DX11EffectMatrixVariable* mView;
+	ID3DX11EffectMatrixVariable* mProj;
+	ID3DX11EffectMatrixVariable* mWorldInvTranspose;
+
+	ID3DX11EffectShaderResourceVariable* mBlendMap;
+	ID3DX11EffectShaderResourceVariable* mTex0;
+	ID3DX11EffectShaderResourceVariable* mTex1;
+	ID3DX11EffectShaderResourceVariable* mTex2;
+	ID3DX11EffectShaderResourceVariable* mTex3;
+
+	ID3DX11EffectVariable* mDirLights;
+	ID3DX11EffectVariable* mPointLights;
+	ID3DX11EffectVariable* mSpotLights;
+	ID3DX11EffectVariable* mMaterial;
+
+	ID3DX11EffectScalarVariable* mMinDist;
+	ID3DX11EffectScalarVariable* mMaxDist;
+	ID3DX11EffectScalarVariable* mMinTess;
+	ID3DX11EffectScalarVariable* mMaxTess;
+};
+
 // Class gathering static objects of all the other effectclasses
 class Effects
 {
@@ -212,5 +273,6 @@ public:
 	static TerrainEffect* TerrainFX;
 	static NormalEffect* NormalFX;
 	static TessellationEffect* TessFX;
+	static TerrainTessellationEffect* TerrTessFX;
 };
 #endif

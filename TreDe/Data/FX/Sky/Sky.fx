@@ -10,7 +10,7 @@ cbuffer cbPerFrame
 // Cube map
 TextureCube gCubeMap;
 
-SamplerState samTriLinearSam
+SamplerState samLinear
 {
 	Filter = MIN_MAG_MIP_LINEAR;
 	AddressU = Wrap;
@@ -50,10 +50,10 @@ VertexOut VS(VertexIn vin)
 float4 PS(VertexOut pin,
 		  uniform bool useTex) : SV_Target
 {
-	float4 Color = float4(0.0f, 1.0f, 0.0f, 1.0f);
+	float4 texColor = float4(0.0f, 1.0f, 0.0f, 1.0f);
 	if(useTex)
-		Color = gCubeMap.Sample(samTriLinearSam, pin.PosL);
-	return Color;
+		texColor = gCubeMap.Sample(samLinear, pin.PosL);
+	return texColor;
 }
 
 RasterizerState NoCulling
@@ -69,13 +69,6 @@ DepthStencilState LessEqualDSS
 RasterizerState Wireframe
 {
 	FillMode = WireFrame;
-	CullMode = None;
-	FrontCounterClockwise = false;
-};
-
-RasterizerState Solidframe
-{
-	FillMode = Solid;
 	CullMode = None;
 	FrontCounterClockwise = false;
 };

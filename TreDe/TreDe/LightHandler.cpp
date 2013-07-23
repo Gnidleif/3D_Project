@@ -78,4 +78,8 @@ void LightHandler::ApplyEffects()
 	Effects::TessFX->SetDirLights(mDirs, mDirAmount);
 	Effects::TessFX->SetPointLights(mPoints, mPointAmount);
 	Effects::TessFX->SetSpotLights(mSpots, mSpotAmount);
+
+	Effects::TerrTessFX->SetDirLights(mDirs, mDirAmount);
+	Effects::TerrTessFX->SetPointLights(mPoints, mPointAmount);
+	Effects::TerrTessFX->SetSpotLights(mSpots, mSpotAmount);
 }
