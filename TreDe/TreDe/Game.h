@@ -11,6 +11,7 @@
 #include "SkinnedEntity.h"
 #include "SkyBox.h"
 #include "LightHandler.h"
+#include "ShadowMap.h"
 
 class Game
 {
@@ -23,6 +24,7 @@ public:
 	void SolidDraw(ID3D11DeviceContext* devCon);
 	void WireDraw(ID3D11DeviceContext* devCon);
 	void LightDraw(ID3D11DeviceContext* devCon);
+
 	void SolidTessDraw(ID3D11DeviceContext* devCon);
 	void WireTessDraw(ID3D11DeviceContext* devCon);
 	void LightTessDraw(ID3D11DeviceContext* devCon);
@@ -43,5 +45,6 @@ private:
 	SkyBox* mSkyBox;
 	LightHandler* mLightHandler;
 	std::vector<StaticEntity*> mLightDucks;
+	ShadowMap* mShadowMap;
 };
 #endif
