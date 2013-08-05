@@ -30,6 +30,7 @@ cbuffer cbFixed
 
 Texture2D gDiffMap;
 Texture2D gNormMap;
+Texture2D gShadMap;
 
 SamplerState samLinear
 {

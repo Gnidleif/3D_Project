@@ -77,12 +77,10 @@ void StaticEntity::ShadowDraw(ID3D11DeviceContext* devCon, ID3DX11EffectTechniqu
 {
 	devCon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	devCon->IASetInputLayout(InputLayouts::mPosNorTexTan);
-
+	// Camera grejer för shadowmap sätts i lighthandler
 	D3DX11_TECHNIQUE_DESC techDesc = {};
 	activeTech->GetDesc(&techDesc);
 
-	Effects::ShadowFX->SetView(camera->GetViewMatrix());
-	Effects::ShadowFX->SetProj(camera->GetProjMatrix());
 	Effects::ShadowFX->SetWorld(XMLoadFloat4x4(&mModelInstance->mWorld));
 	Effects::ShadowFX->SetWorldInvTranspose(MathHelper::InverseTranspose(XMLoadFloat4x4(&mModelInstance->mWorld)));
 
@@ -91,9 +89,9 @@ void StaticEntity::ShadowDraw(ID3D11DeviceContext* devCon, ID3DX11EffectTechniqu
 		for(UINT j(0); j != mModelInstance->mModel->GetMeshCount(); ++j)
 		{
 			UINT index = mModelInstance->mModel->GetMesh(j)->GetMaterialIndex();
-			Effects::NormalFX->SetDiffuseMap(mModelInstance->mModel->GetDiffMapSRV(index));
-			Effects::NormalFX->SetNormalMap(mModelInstance->mModel->GetNormalMapSRV(index));
-			Effects::NormalFX->SetMaterial(mModelInstance->mModel->GetMaterial(index));
+			Effects::ShadowFX->SetDiffuseMap(mModelInstance->mModel->GetDiffMapSRV(index));
+			Effects::ShadowFX->SetNormalMap(mModelInstance->mModel->GetNormalMapSRV(index));
+			//Effects::ShadowFX->SetMaterial(mModelInstance->mModel->GetMaterial(index));
 
 			activeTech->GetPassByIndex(i)->Apply(0, devCon);
 			mModelInstance->mModel->GetMesh(j)->Draw(devCon);

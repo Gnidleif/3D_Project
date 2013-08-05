@@ -13,26 +13,27 @@ public:
 	LightHandler();
 	~LightHandler();
 	void Update(float dt);
-	void UpdateViewProj(Camera* camera);
+	void Draw(ID3D11DeviceContext* devCon, Camera* camera);
 	void ApplyEffects();
 
 public:
 	PointLight GetPoint0() const { return this->mPoints[0]; }
 	PointLight GetPoint1() const { return this->mPoints[1]; }
 
-	XMMATRIX GetLightView() const { return XMLoadFloat4x4(&mLightView); }
-	XMMATRIX GetLightProj() const { return XMLoadFloat4x4(&mLightProj); }
+	ID3D11ShaderResourceView* GetDepthMap() const { return this->mShadowMap->GetDepthMapSRV(); }
 
 private:
-	static const int mDirAmount = 1;
-	static const int mPointAmount = 2;
-	static const int mSpotAmount = 2;
+	int mDirAmount;
+	int mPointAmount;
+	int mSpotAmount;
 
-	DirectionalLight mDirs[mDirAmount];
-	PointLight mPoints[mPointAmount];
-	SpotLight mSpots[mSpotAmount];
+	DirectionalLight* mDirs;
+	PointLight* mPoints;
+	SpotLight* mSpots;
 
 	XMFLOAT4X4 mLightView;
 	XMFLOAT4X4 mLightProj;
+
+	ShadowMap* mShadowMap;
 };
 #endif

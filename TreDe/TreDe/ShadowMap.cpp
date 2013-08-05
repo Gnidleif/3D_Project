@@ -32,45 +32,15 @@ void ShadowMap::BindDSVAndSetRenderTarget(ID3D11DeviceContext* devCon)
 
 void ShadowMap::UpdateResolution()
 {
-	SafeRelease(mDepthMapSRV);
-	SafeRelease(mDepthMapDSV);
-	mWidth = Settings->GetData()->mWidth;
-	mHeight = Settings->GetData()->mHeight;
-}
-
-void ShadowMap::Draw(ID3D11DeviceContext* devCon, 
-					 ID3DX11EffectTechnique* activeTech, 
-					 std::vector<StaticEntity*> entities, 
-					 PointLight* light, 
-					 Camera* camera)
-{
-	devCon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	devCon->IASetInputLayout(InputLayouts::mPosNorTexTan);
-
-	D3DX11_TECHNIQUE_DESC techDesc = {};
-	activeTech->GetDesc(&techDesc);
-
-	//Effects::ShadowFX->SetView(XMLoadFloat4x4(&light->View));
-	//Effects::ShadowFX->SetProj(XMLoadFloat4x4(&light->Proj));
-	Effects::ShadowFX->SetEyePos(camera->GetPosition());
-
-	for(UINT i(0); i != techDesc.Passes; ++i)
+	UINT width = Settings->GetData()->mWidth;
+	UINT height = Settings->GetData()->mHeight;
+	if(mWidth != width || mHeight != height)
 	{
-		for(UINT j(0); j != entities.size(); ++j)
-		{
-			Effects::ShadowFX->SetWorld(XMLoadFloat4x4(&entities[j]->GetModelInstance()->mWorld));
-			Effects::ShadowFX->SetWorldInvTranspose(MathHelper::InverseTranspose(XMLoadFloat4x4(&entities[j]->GetModelInstance()->mWorld)));
-
-			for(UINT k(0); k != entities[j]->GetModelInstance()->mModel->GetMeshCount(); ++k)
-			{
-				UINT index = entities[j]->GetModelInstance()->mModel->GetMesh(k)->GetMaterialIndex();
-				entities[j]->GetModelInstance()->mModel->GetDiffMapSRV(index);
-				entities[j]->GetModelInstance()->mModel->GetNormalMapSRV(index);
-
-				activeTech->GetPassByIndex(i)->Apply(0, devCon);
-				entities[j]->GetModelInstance()->mModel->GetMesh(k)->Draw(devCon);
-			}
-		}
+		SafeRelease(mDepthMapSRV);
+		SafeRelease(mDepthMapDSV);
+		mWidth = width;
+		mHeight = height;
+		this->CreateShadowmap();
 	}
 }
 

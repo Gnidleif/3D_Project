@@ -2,9 +2,20 @@
 #include "Effects.h"
 
 LightHandler::LightHandler(void)
+	:
+	mDirAmount(1),
+	mPointAmount(2),
+	mSpotAmount(2),
+	mShadowMap(nullptr)
 {
 	XMStoreFloat4x4(&mLightView, XMMatrixIdentity());
 	XMStoreFloat4x4(&mLightProj, XMMatrixIdentity());
+
+	mDirs = new DirectionalLight[mDirAmount];
+	mPoints = new PointLight[mPointAmount];
+	mSpots = new SpotLight[mSpotAmount];
+
+	mShadowMap = new ShadowMap();
 
 	// Directional lights initialized
 
@@ -48,6 +59,10 @@ LightHandler::LightHandler(void)
 
 LightHandler::~LightHandler(void)
 {
+	delete[] mDirs;
+	delete[] mPoints;
+	delete[] mSpots;
+	SafeDelete(mShadowMap);
 }
 
 void LightHandler::Update(float dt)
@@ -61,14 +76,21 @@ void LightHandler::Update(float dt)
 	mPoints[0].Position = XMFLOAT3(x, y, z);
 }
 
-void LightHandler::UpdateViewProj(Camera* camera)
+void LightHandler::Draw(ID3D11DeviceContext* devCon, Camera* camera)
 {
+	mShadowMap->UpdateResolution();
+	mShadowMap->BindDSVAndSetRenderTarget(devCon);
+
 	XMVECTOR posVec = XMLoadFloat3(&this->mPoints[1].Position);
 	XMVECTOR up		= XMLoadFloat3(&XMFLOAT3(0.0f, 1.0f, 0.0f)); 
 	XMVECTOR look	= XMLoadFloat3(&XMFLOAT3(0.0f, 0.0f, 1.0f)); // Try changing this to 0, 0, 0 if something fucks up
 
 	XMStoreFloat4x4(&mLightView, XMMatrixPerspectiveFovLH(camera->GetFovY(), camera->GetAspect(), camera->GetNearZ(), camera->GetFarZ()));
 	XMStoreFloat4x4(&mLightProj, XMMatrixLookAtLH(posVec, look, up));
+
+	Effects::ShadowFX->SetEyePos(camera->GetPosition());
+	Effects::ShadowFX->SetProj(XMLoadFloat4x4(&mLightProj));
+	Effects::ShadowFX->SetView(XMLoadFloat4x4(&mLightView));
 }
 
 void LightHandler::ApplyEffects()

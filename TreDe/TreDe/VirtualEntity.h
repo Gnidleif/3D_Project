@@ -12,6 +12,8 @@ public:
 	virtual ~VirtualEntity();
 	virtual void Initialize(XMFLOAT3 position, float scale);
 	virtual void Draw(ID3D11DeviceContext* devCon, ID3DX11EffectTechnique* activeTech, Camera* camera) = 0;
+	virtual void DrawTess(ID3D11DeviceContext* devcon, ID3DX11EffectTechnique* activeTech, Camera* camera) = 0;
+	virtual void ShadowDraw(ID3D11DeviceContext* devcon, ID3DX11EffectTechnique* activeTech, Camera* camera) = 0;
 
 	void RotateX(float rot);
 	void RotateY(float rot);
