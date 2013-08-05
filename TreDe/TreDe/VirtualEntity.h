@@ -19,8 +19,12 @@ public:
 	void RotateXYZ(XMFLOAT3 rot);
 	void RotateRollPitchYaw(XMFLOAT3 RPY);
 	
+public:
 	void SetPosition(XMFLOAT3 position);
 	void SetScale(float scale);
+
+public:
+	virtual XMMATRIX GetWorld() const = 0;
 
 private:
 	virtual void CalcWorld() = 0;

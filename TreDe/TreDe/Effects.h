@@ -263,6 +263,40 @@ private:
 	ID3DX11EffectScalarVariable* mMaxTess;
 };
 
+class ShadowMapEffect : public VirtualEffect
+{
+public:
+	ShadowMapEffect(ID3D11Device* device, std::string filename);
+	~ShadowMapEffect() {}
+
+public:
+	void SetLightPos(const XMFLOAT3& lightPos) { this->mLightPos->SetRawValue(&lightPos, 0, sizeof(XMFLOAT3)); }
+
+	void SetWorld(const XMMATRIX& matrix) { this->mWorld->SetMatrix(reinterpret_cast<const float*>(&matrix)); }
+	void SetView(const XMMATRIX& matrix) { this->mView->SetMatrix(reinterpret_cast<const float*>(&matrix)); }
+	void SetProj(const XMMATRIX& matrix) { this->mProj->SetMatrix(reinterpret_cast<const float*>(&matrix)); }
+
+	void SetShadowMap(ID3D11ShaderResourceView* sm) { this->mShadowMap->SetResource(sm); }
+
+	void SetResX(unsigned int data) { this->mResX->SetInt(data); }
+	void SetResY(unsigned int data) { this->mResY->SetInt(data); }
+
+public:
+	ID3DX11EffectTechnique* mShadowTech;
+
+private:
+	ID3DX11EffectVectorVariable* mLightPos;
+
+	ID3DX11EffectMatrixVariable* mWorld;
+	ID3DX11EffectMatrixVariable* mView;
+	ID3DX11EffectMatrixVariable* mProj;
+
+	ID3DX11EffectShaderResourceVariable* mShadowMap;
+
+	ID3DX11EffectScalarVariable* mResX;
+	ID3DX11EffectScalarVariable* mResY;
+};
+
 // Class gathering static objects of all the other effectclasses
 class Effects
 {
@@ -275,5 +309,6 @@ public:
 	static NormalEffect* NormalFX;
 	static TessellationEffect* TessFX;
 	static TerrainTessellationEffect* TerrTessFX;
+	static ShadowMapEffect* ShadowFX;
 };
 #endif

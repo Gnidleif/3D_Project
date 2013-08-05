@@ -58,6 +58,7 @@ ID3D11InputLayout* InputLayouts::mPosNorTexTanSkin = nullptr;
 void InputLayouts::Initialize(ID3D11Device* device)
 {
 	D3DX11_PASS_DESC pd = {};
+
 	// Skybox
 	Effects::SkyFX->mSolid->GetPassByIndex(0)->GetDesc(&pd);
 	device->CreateInputLayout(
@@ -231,6 +232,15 @@ void InputLayouts::Initialize(ID3D11Device* device)
 		pd.pIAInputSignature,
 		pd.IAInputSignatureSize,
 		&mPosNorTex);
+
+	// ShadowMap
+	Effects::ShadowFX->mShadowTech->GetPassByIndex(0)->GetDesc(&pd);
+	device->CreateInputLayout(
+		InputLayoutDesc::Pos,
+		1,
+		pd.pIAInputSignature,
+		pd.IAInputSignatureSize,
+		&mPos);
 }
 
 void InputLayouts::Shutdown()

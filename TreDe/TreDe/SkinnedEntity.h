@@ -15,6 +15,9 @@ public:
 	void Update(float dt);
 	void SetKeyFrames(UINT start, UINT end) { this->mModelInstance->mStart = start; this->mModelInstance->mEnd = end; }
 
+public:
+	XMMATRIX GetWorld() const { return XMLoadFloat4x4(&this->mModelInstance->mWorld); }
+
 private:
 	void CalcWorld();
 	

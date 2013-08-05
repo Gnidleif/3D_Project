@@ -50,6 +50,7 @@ void TerrainEntity::DrawTess(ID3D11DeviceContext* devCon, ID3DX11EffectTechnique
 
 	D3DX11_TECHNIQUE_DESC techDesc = {};
 	activeTech->GetDesc(&techDesc);
+	Effects::ShadowFX->SetWorld(XMLoadFloat4x4(&mModelInstance.mWorld));
 
 	Effects::TerrTessFX->SetMaterial(mModelInstance.mModel->GetMaterial());
 	Effects::TerrTessFX->SetView(camera->GetViewMatrix());

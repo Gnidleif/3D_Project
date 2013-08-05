@@ -171,12 +171,31 @@ TerrainTessellationEffect::TerrainTessellationEffect(ID3D11Device* device, strin
 	this->mMaxTess = mFX->GetVariableByName("gMaxTess")->AsScalar();
 }
 
+// Shadow map effect constructor
+ShadowMapEffect::ShadowMapEffect(ID3D11Device* device, std::string filename)
+	: VirtualEffect(device, filename)
+{
+	this->mShadowTech = mFX->GetTechniqueByName("ShadowTech");
+	
+	this->mLightPos = mFX->GetVariableByName("gLightPos")->AsVector();
+
+	this->mWorld = mFX->GetVariableByName("gShadowWorld")->AsMatrix();
+	this->mView = mFX->GetVariableByName("gShadowView")->AsMatrix();
+	this->mProj = mFX->GetVariableByName("gShadowProj")->AsMatrix();
+
+	this->mShadowMap = mFX->GetVariableByName("gShadowMap")->AsShaderResource();
+
+	this->mResX = mFX->GetVariableByName("gResX")->AsScalar();
+	this->mResY = mFX->GetVariableByName("gResY")->AsScalar();
+}
+
 // Effects functions
 SkyEffect* Effects::SkyFX = nullptr;
 TerrainEffect* Effects::TerrainFX = nullptr;
 NormalEffect* Effects::NormalFX = nullptr;
 TessellationEffect* Effects::TessFX = nullptr;
 TerrainTessellationEffect* Effects::TerrTessFX = nullptr;
+ShadowMapEffect* Effects::ShadowFX = nullptr;
 
 void Effects::Initialize(ID3D11Device* device)
 {
@@ -185,6 +204,7 @@ void Effects::Initialize(ID3D11Device* device)
 	NormalFX = new NormalEffect(device, "../Data/FX/NormalMap/NormalMap.fxo");
 	TessFX = new TessellationEffect(device, "../Data/FX/Tessellation/Tessellation.fxo");
 	TerrTessFX = new TerrainTessellationEffect(device, "../Data/FX/TerrainTessellation/TerrainTessellation.fxo");
+	ShadowFX = new ShadowMapEffect(device, "../Data/FX/ShadowMap/ShadowMap.fxo");
 }
 
 void Effects::Shutdown()
@@ -194,4 +214,5 @@ void Effects::Shutdown()
 	SafeDelete(NormalFX);
 	SafeDelete(TessFX);
 	SafeDelete(TerrTessFX);
+	SafeDelete(ShadowFX);
 }

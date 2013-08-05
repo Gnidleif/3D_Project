@@ -32,6 +32,7 @@ void SkinnedEntity::Draw(ID3D11DeviceContext* devCon, ID3DX11EffectTechnique* ac
 
 	D3DX11_TECHNIQUE_DESC techDesc = {};
 	activeTech->GetDesc(&techDesc);
+	Effects::ShadowFX->SetWorld(XMLoadFloat4x4(&mModelInstance->mWorld));
 
 	Effects::NormalFX->SetView(camera->GetViewMatrix());
 	Effects::NormalFX->SetProj(camera->GetProjMatrix());

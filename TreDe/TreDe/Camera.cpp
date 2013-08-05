@@ -75,7 +75,6 @@ void Camera::UpdateViewMatrix()
 	XMVECTOR Look = XMLoadFloat3(&XMFLOAT3(0, 0, 1));
 	XMVECTOR Right = XMLoadFloat3(&XMFLOAT3(1, 0, 0));
 
-
 	XMMATRIX yawMatrix = XMMatrixRotationAxis(Up, mYaw);
 	Look = XMVector3TransformCoord(Look, yawMatrix);
 	Right = XMVector3TransformCoord(Right, yawMatrix);
@@ -87,7 +86,6 @@ void Camera::UpdateViewMatrix()
 	XMMATRIX rollMatrix = XMMatrixRotationAxis(Look, mRoll);
 	Right = XMVector3TransformCoord(Right, rollMatrix);
 	Up = XMVector3TransformCoord(Up, rollMatrix);
-
 
 	mView(0,0) = XMVectorGetX(Right); mView(0,1) = XMVectorGetX(Up); mView(0,2) = XMVectorGetX(Look);
 	mView(1,0) = XMVectorGetY(Right); mView(1,1) = XMVectorGetY(Up); mView(1,2) = XMVectorGetY(Look);

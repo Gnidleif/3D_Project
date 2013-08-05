@@ -2,7 +2,16 @@
 #include "Effects.h"
 
 LightHandler::LightHandler(void)
+	: 
+	mShadowMap(new ShadowMap()),
+	mDirAmount(1),
+	mPointAmount(2),
+	mSpotAmount(2)
 {
+	mDirs = new DirectionalLight[mDirAmount];
+	mPoints = new PointLight[mPointAmount];
+	mSpots = new SpotLight[mSpotAmount];
+
 	// Directional lights initialized
 
 	mDirs[0].Ambient	= XMFLOAT4(0.3f, 0.3f, 0.3f, 1.0f);
@@ -43,9 +52,16 @@ LightHandler::LightHandler(void)
 	mSpots[1].Direction = XMFLOAT3(-0.5f, -0.5f, 0.5f);
 }
 
-
 LightHandler::~LightHandler(void)
 {
+	delete[] mDirs;
+	delete[] mPoints;
+	delete[] mSpots;
+}
+
+void LightHandler::Initialize(ID3D11Device* device)
+{
+	this->mShadowMap->Initialize(device);
 }
 
 void LightHandler::Update(float dt)
@@ -59,6 +75,18 @@ void LightHandler::Update(float dt)
 	mPoints[0].Position = XMFLOAT3(x, y, z);
 }
 
+void LightHandler::Draw(Camera* camera)
+{
+	ID3DX11EffectTechnique* activeTech = Effects::ShadowFX->mShadowTech;
+
+	this->mShadowMap->CreateMap();
+	
+	Effects::ShadowFX->SetLightPos(this->mPoints[0].Position);
+	Effects::ShadowFX->SetView(this->CalcView(camera));
+	Effects::ShadowFX->SetProj(this->CalcProj(camera));
+	Effects::ShadowFX->SetShadowMap(mShadowMap->GetDepthSRV());
+}
+
 void LightHandler::ApplyEffects()
 {
 	Effects::TerrainFX->SetDirLights(mDirs, mDirAmount);
@@ -68,7 +96,10 @@ void LightHandler::ApplyEffects()
 	Effects::NormalFX->SetDirLights(mDirs, mDirAmount);
 	Effects::NormalFX->SetPointLights(mPoints, mPointAmount);
 	Effects::NormalFX->SetSpotLights(mSpots, mSpotAmount);
+}
 
+void LightHandler::ApplyTessEffects()
+{
 	Effects::TessFX->SetDirLights(mDirs, mDirAmount);
 	Effects::TessFX->SetPointLights(mPoints, mPointAmount);
 	Effects::TessFX->SetSpotLights(mSpots, mSpotAmount);
@@ -76,4 +107,16 @@ void LightHandler::ApplyEffects()
 	Effects::TerrTessFX->SetDirLights(mDirs, mDirAmount);
 	Effects::TerrTessFX->SetPointLights(mPoints, mPointAmount);
 	Effects::TerrTessFX->SetSpotLights(mSpots, mSpotAmount);
+}
+
+XMMATRIX LightHandler::CalcView(Camera* camera)
+{
+	XMFLOAT3 at = XMFLOAT3(0.0f, 0.0f, 0.0f); // Check if this should be 1.0f at Z instead of 0.0f
+	XMFLOAT3 up = XMFLOAT3(0.0f, 1.0f, 0.0f);
+	return XMMatrixLookAtLH(XMLoadFloat3(&mSpots[0].Position), XMLoadFloat3(&at), XMLoadFloat3(&up));
+}
+
+XMMATRIX LightHandler::CalcProj(Camera* camera)
+{
+	return XMMatrixPerspectiveFovLH(camera->GetFovY(), camera->GetAspect(), camera->GetNearZ(), camera->GetFarZ());
 }

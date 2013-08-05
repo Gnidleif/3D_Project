@@ -28,8 +28,9 @@ Game::~Game()
 
 void Game::Initialize(ID3D11Device* device)
 {
+	mLightHandler->Initialize(device);
 	mTerrain = new TerrainEntity("../Data/Textures/heightmap.bmp");
-	mTerrain->Initialize(XMFLOAT3(0.0f, 0.0f, 0.0f), 20.0f);
+	mTerrain->Initialize(XMFLOAT3(0.0f, 0.0f, 0.0f), 5.0f);
 
 	//mCharacter = new SkinnedEntity("../Data/Models/Skinned/Character/Character.dae", "../Data/Models/Skinned/Character/");
 	//mCharacter->Initialize(XMFLOAT3(150.0f, 20.0f, 100.0f), 1.0f);
@@ -133,6 +134,7 @@ void Game::LightDraw(ID3D11DeviceContext* devCon)
 	mSkyBox->Draw(devCon, activeTech, playerCam);
 
 	mLightHandler->ApplyEffects();
+	mLightHandler->Draw(playerCam);
 
 	Effects::TerrainFX->SetEyePos(playerCam->GetPosition());
 	Effects::NormalFX->SetEyePos(playerCam->GetPosition());
@@ -161,8 +163,8 @@ void Game::SolidTessDraw(ID3D11DeviceContext* devCon)
 	ID3DX11EffectTechnique* activeTech = Effects::SkyFX->mSolid;
 	mSkyBox->Draw(devCon, activeTech, playerCam);
 
-	activeTech = Effects::TerrainFX->mSolid;
-	mTerrain->Draw(devCon, activeTech, playerCam);
+	activeTech = Effects::TerrTessFX->mSolid;
+	mTerrain->DrawTess(devCon, activeTech, playerCam);
 
 	activeTech = Effects::TessFX->mSolidAlpha;
 	for(UINT i(0); i != mPlatforms.size(); ++i)
@@ -183,8 +185,8 @@ void Game::WireTessDraw(ID3D11DeviceContext* devCon)
 	ID3DX11EffectTechnique* activeTech = Effects::SkyFX->mWire;
 	mSkyBox->Draw(devCon, activeTech, playerCam);
 
-	activeTech = Effects::TerrainFX->mWire;
-	mTerrain->Draw(devCon, activeTech, playerCam);
+	activeTech = Effects::TerrTessFX->mWire;
+	mTerrain->DrawTess(devCon, activeTech, playerCam);
 
 	activeTech = Effects::TessFX->mWire;
 	for(UINT i(0); i != mPlatforms.size(); ++i)
@@ -205,10 +207,10 @@ void Game::LightTessDraw(ID3D11DeviceContext* devCon)
 	ID3DX11EffectTechnique* activeTech = Effects::SkyFX->mSolid;
 	mSkyBox->Draw(devCon, activeTech, playerCam);
 
-	mLightHandler->ApplyEffects();
+	mLightHandler->ApplyTessEffects();
 
-	activeTech = Effects::TerrainFX->mAllLights;
-	mTerrain->Draw(devCon, activeTech, playerCam);
+	activeTech = Effects::TerrTessFX->mAllLights;
+	mTerrain->DrawTess(devCon, activeTech, playerCam);
 
 	activeTech = Effects::TessFX->mAllLightsAlpha;
 	for(UINT i(0); i != mPlatforms.size(); ++i)
@@ -223,16 +225,7 @@ void Game::LightTessDraw(ID3D11DeviceContext* devCon)
 
 void Game::ControlPlayer(DirectInput* di)
 {
-	if(di->GetKeyboardState()[DIK_NUMPADMINUS] && 0x80)
-	{
-		mTerrain->SetScale(10.0f);
-	}
-	else if(di->GetKeyboardState()[DIK_NUMPADPLUS] && 0x80)
-	{
-		mTerrain->SetScale(20.0f);
-	}
-	else
-		mPlayer->Control(di);
+	mPlayer->Control(di);
 }
 
 void Game::SetTessEffects()

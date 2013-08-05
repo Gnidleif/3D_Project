@@ -1,4 +1,4 @@
-#include "../LightDef.fx"
+#include "../ShadowMap/ShadowMap.fx"
 
 cbuffer cbPerFrame
 {
