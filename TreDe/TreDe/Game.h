@@ -29,8 +29,6 @@ public:
 	void WireTessDraw(ID3D11DeviceContext* devCon);
 	void LightTessDraw(ID3D11DeviceContext* devCon);
 
-	void SolidShadowDraw(ID3D11DeviceContext* devCon);
-
 	void ControlPlayer(DirectInput* di);
 
 public:

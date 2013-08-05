@@ -74,8 +74,8 @@ void Game::Update(float dt)
 		mPlatforms[i]->RotateXYZ(XMFLOAT3(rot, 0.0f, rot));
 	}
 
-	mLightDucks[0]->SetPosition(mLightHandler->GetPoint0().Position);
-	mLightDucks[1]->SetPosition(mLightHandler->GetPoint1().Position);
+	mLightDucks[0]->SetPosition(mLightHandler->GetPoint0().Position;
+	mLightDucks[1]->SetPosition(mLightHandler->GetPoint1().Position;
 
 	//mCharacter->Update(dt);
 
@@ -224,16 +224,6 @@ void Game::LightTessDraw(ID3D11DeviceContext* devCon)
 	{
 		mLightDucks[i]->DrawTess(devCon, activeTech, playerCam);
 	}
-}
-
-void Game::SolidShadowDraw(ID3D11DeviceContext* devCon)
-{
-	Camera* playerCam = mPlayer->GetCamera();
-
-	ID3DX11EffectTechnique* activeTech = Effects::ShadowFX->mBuild;
-	mLightHandler->Draw(devCon, playerCam);
-
-
 }
 
 void Game::ControlPlayer(DirectInput* di)
