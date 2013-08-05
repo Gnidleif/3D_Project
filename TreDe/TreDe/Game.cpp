@@ -5,8 +5,7 @@ using namespace std;
 Game::Game()
 	:
 	mPlayer(new Player("Gnidleif", XMFLOAT3(50.0f, 50.0f, 50.0f))),
-	mLightHandler(new LightHandler()),
-	mShadowMap(new ShadowMap())
+	mLightHandler(new LightHandler())
 {
 }
 
@@ -25,15 +24,12 @@ Game::~Game()
 	{
 		SafeDelete(*it);
 	}
-	SafeDelete(mShadowMap);
 }
 
 void Game::Initialize(ID3D11Device* device)
 {
-	mShadowMap->Initialize(device);
-
 	mTerrain = new TerrainEntity("../Data/Textures/heightmap.bmp");
-	mTerrain->Initialize(XMFLOAT3(0.0f, 0.0f, 0.0f), 10.0f);
+	mTerrain->Initialize(XMFLOAT3(0.0f, 0.0f, 0.0f), 20.0f);
 
 	//mCharacter = new SkinnedEntity("../Data/Models/Skinned/Character/Character.dae", "../Data/Models/Skinned/Character/");
 	//mCharacter->Initialize(XMFLOAT3(150.0f, 20.0f, 100.0f), 1.0f);
@@ -52,10 +48,10 @@ void Game::Initialize(ID3D11Device* device)
 	mLightDucks.push_back(new StaticEntity("../Data/Models/Static/Duck/Duck.obj", "../Data/Models/Static/Duck/"));
 	mLightDucks.push_back(new StaticEntity("../Data/Models/Static/Duck/Duck.obj", "../Data/Models/Static/Duck/"));
 
-	XMFLOAT3 duckPos = mLightHandler->GetPoint0().Position;
+	XMFLOAT3 duckPos = mLightHandler->GetPoint0Pos();
 	mLightDucks[0]->Initialize(duckPos, 0.05f);
 
-	duckPos = mLightHandler->GetPoint1().Position;
+	duckPos = mLightHandler->GetPoint1Pos();
 	mLightDucks[1]->Initialize(duckPos, 0.05f);
 
 	//
@@ -74,8 +70,8 @@ void Game::Update(float dt)
 		mPlatforms[i]->RotateXYZ(XMFLOAT3(rot, 0.0f, rot));
 	}
 
-	mLightDucks[0]->SetPosition(mLightHandler->GetPoint0().Position;
-	mLightDucks[1]->SetPosition(mLightHandler->GetPoint1().Position;
+	mLightDucks[0]->SetPosition(mLightHandler->GetPoint0Pos());
+	mLightDucks[1]->SetPosition(mLightHandler->GetPoint1Pos());
 
 	//mCharacter->Update(dt);
 
@@ -136,7 +132,6 @@ void Game::LightDraw(ID3D11DeviceContext* devCon)
 	ID3DX11EffectTechnique* activeTech = Effects::SkyFX->mSolid;
 	mSkyBox->Draw(devCon, activeTech, playerCam);
 
-	//mLightHandler->Draw(devCon, this->mPlatforms, playerCam);
 	mLightHandler->ApplyEffects();
 
 	Effects::TerrainFX->SetEyePos(playerCam->GetPosition());
@@ -166,8 +161,8 @@ void Game::SolidTessDraw(ID3D11DeviceContext* devCon)
 	ID3DX11EffectTechnique* activeTech = Effects::SkyFX->mSolid;
 	mSkyBox->Draw(devCon, activeTech, playerCam);
 
-	activeTech = Effects::TerrTessFX->mSolid;
-	mTerrain->DrawTess(devCon, activeTech, playerCam);
+	activeTech = Effects::TerrainFX->mSolid;
+	mTerrain->Draw(devCon, activeTech, playerCam);
 
 	activeTech = Effects::TessFX->mSolidAlpha;
 	for(UINT i(0); i != mPlatforms.size(); ++i)
@@ -188,8 +183,8 @@ void Game::WireTessDraw(ID3D11DeviceContext* devCon)
 	ID3DX11EffectTechnique* activeTech = Effects::SkyFX->mWire;
 	mSkyBox->Draw(devCon, activeTech, playerCam);
 
-	activeTech = Effects::TerrTessFX->mWire;
-	mTerrain->DrawTess(devCon, activeTech, playerCam);
+	activeTech = Effects::TerrainFX->mWire;
+	mTerrain->Draw(devCon, activeTech, playerCam);
 
 	activeTech = Effects::TessFX->mWire;
 	for(UINT i(0); i != mPlatforms.size(); ++i)
@@ -212,8 +207,8 @@ void Game::LightTessDraw(ID3D11DeviceContext* devCon)
 
 	mLightHandler->ApplyEffects();
 
-	activeTech = Effects::TerrTessFX->mAllLights;
-	mTerrain->DrawTess(devCon, activeTech, playerCam);
+	activeTech = Effects::TerrainFX->mAllLights;
+	mTerrain->Draw(devCon, activeTech, playerCam);
 
 	activeTech = Effects::TessFX->mAllLightsAlpha;
 	for(UINT i(0); i != mPlatforms.size(); ++i)
@@ -228,7 +223,16 @@ void Game::LightTessDraw(ID3D11DeviceContext* devCon)
 
 void Game::ControlPlayer(DirectInput* di)
 {
-	mPlayer->Control(di);
+	if(di->GetKeyboardState()[DIK_NUMPADMINUS] && 0x80)
+	{
+		mTerrain->SetScale(10.0f);
+	}
+	else if(di->GetKeyboardState()[DIK_NUMPADPLUS] && 0x80)
+	{
+		mTerrain->SetScale(20.0f);
+	}
+	else
+		mPlayer->Control(di);
 }
 
 void Game::SetTessEffects()

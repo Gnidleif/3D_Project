@@ -89,7 +89,6 @@
     <ClInclude Include="LoaderClass.h" />
     <ClInclude Include="ModelClass.h" />
     <ClInclude Include="Player.h" />
-    <ClInclude Include="ShadowMap.h" />
     <ClInclude Include="SkinData.h" />
     <ClInclude Include="SkinDef.h" />
     <ClInclude Include="SkinnedEntity.h" />
@@ -126,7 +125,6 @@
     <ClCompile Include="LoaderClass.cpp" />
     <ClCompile Include="ModelClass.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="ShadowMap.cpp" />
     <ClCompile Include="SkinData.cpp" />
     <ClCompile Include="SkinnedEntity.cpp" />
     <ClCompile Include="SkinnedModel.cpp" />
@@ -177,12 +175,6 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RelativeDir)\%(Filename).fxo</Outputs>
     </CustomBuild>
     <CustomBuild Include="..\Data\FX\TerrainTessellation\TerrainTessellation.fx">
-      <FileType>Document</FileType>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">fxc /Fc /Od /Zi /T fx_5_0 /Fo "%(RelativeDir)\%(Filename).fxo" "%(FullPath)"</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">fxc compile for debug: %(FullPath)</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RelativeDir)\%(Filename).fxo</Outputs>
-    </CustomBuild>
-    <CustomBuild Include="..\Data\FX\ShadowMap\ShadowMap.fx">
       <FileType>Document</FileType>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">fxc /Fc /Od /Zi /T fx_5_0 /Fo "%(RelativeDir)\%(Filename).fxo" "%(FullPath)"</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">fxc compile for debug: %(FullPath)</Message>

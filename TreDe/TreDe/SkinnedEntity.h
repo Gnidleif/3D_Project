@@ -15,8 +15,6 @@ public:
 	void Update(float dt);
 	void SetKeyFrames(UINT start, UINT end) { this->mModelInstance->mStart = start; this->mModelInstance->mEnd = end; }
 
-	SkinnedModel::Instance* GetModelInstance() const { return this->mModelInstance; }
-
 private:
 	void CalcWorld();
 	

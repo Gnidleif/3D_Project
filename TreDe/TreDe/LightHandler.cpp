@@ -3,9 +3,6 @@
 
 LightHandler::LightHandler(void)
 {
-	XMStoreFloat4x4(&mLightView, XMMatrixIdentity());
-	XMStoreFloat4x4(&mLightProj, XMMatrixIdentity());
-
 	// Directional lights initialized
 
 	mDirs[0].Ambient	= XMFLOAT4(0.3f, 0.3f, 0.3f, 1.0f);
@@ -46,6 +43,7 @@ LightHandler::LightHandler(void)
 	mSpots[1].Direction = XMFLOAT3(-0.5f, -0.5f, 0.5f);
 }
 
+
 LightHandler::~LightHandler(void)
 {
 }
@@ -59,16 +57,6 @@ void LightHandler::Update(float dt)
 	float z = 750.0f;
 
 	mPoints[0].Position = XMFLOAT3(x, y, z);
-}
-
-void LightHandler::UpdateViewProj(Camera* camera)
-{
-	XMVECTOR posVec = XMLoadFloat3(&this->mPoints[1].Position);
-	XMVECTOR up		= XMLoadFloat3(&XMFLOAT3(0.0f, 1.0f, 0.0f)); 
-	XMVECTOR look	= XMLoadFloat3(&XMFLOAT3(0.0f, 0.0f, 1.0f)); // Try changing this to 0, 0, 0 if something fucks up
-
-	XMStoreFloat4x4(&mLightView, XMMatrixPerspectiveFovLH(camera->GetFovY(), camera->GetAspect(), camera->GetNearZ(), camera->GetFarZ()));
-	XMStoreFloat4x4(&mLightProj, XMMatrixLookAtLH(posVec, look, up));
 }
 
 void LightHandler::ApplyEffects()
