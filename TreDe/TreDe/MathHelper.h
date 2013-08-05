@@ -3,6 +3,7 @@
 //
 // This class is used for math calculations
 //-------------------------------------------------------------------------------------------
+#pragma once
 
 #ifndef MATHHELPER_H_
 #define MATHHELPER_H_

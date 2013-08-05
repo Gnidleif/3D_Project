@@ -25,6 +25,7 @@ void LoaderClass::Initialize(ID3D11Device* device)
 // Creates the skybox sphere
 void LoaderClass::CreateSphere(float radius, UINT slice, UINT stack,  std::vector<VertexDef::PosNorTexTan>& vertices, std::vector<UINT>& indices)
 {
+	cout << "Creating sphere..." << endl;
 	vertices.clear();
 	indices.clear();
 
@@ -124,6 +125,7 @@ void LoaderClass::CreateHeightMap(
 	float normFactor, 
 	int texRepeat)
 {
+	cout << "Creating heightmap..." << endl;
 	this->LoadHeightMapFile(filename); // Opens the heightmap file and puts the positions into the mHeightMap
 	this->NormalizeY(normFactor); // Normalizes y-coords by a certain factor
 	this->CalcNormals(); // Calculates the normals and inputs them into the mHeightMap
@@ -369,6 +371,7 @@ bool LoaderClass::CreateStaticObject(
 	std::vector<StaticMesh*>& meshes,
 	string filename)
 {
+	cout << "Creating static object..." << endl;
 	using namespace Assimp;
 	Importer importer;
 	string logName("../Data/StaticMeshLoader.log");
@@ -415,7 +418,6 @@ bool LoaderClass::CreateStaticObject(
 				vertices.push_back(vertex);
 			}
 
-
 			vector<UINT> indices;
 			for(UINT i(0); i != numFaces; ++i)
 			{
@@ -451,6 +453,7 @@ bool LoaderClass::CreateSkinnedObject(
 	std::string filename,
 	SkinData* &skinData)
 {
+	cout << "Creating skinned object..." << endl;
 	using namespace Assimp;
 	Importer importer;
 	string logName("../Data/SkinnedMeshLoader.log");

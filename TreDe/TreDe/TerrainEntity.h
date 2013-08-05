@@ -1,3 +1,4 @@
+#pragma once
 #ifndef TERRAINENTITY_H
 #define TERRAINENTITY_H
 #include "VirtualEntity.h"
@@ -12,11 +13,14 @@ public:
 	void Initialize(XMFLOAT3 position, float scale);
 	void Draw(ID3D11DeviceContext* devCon, ID3DX11EffectTechnique* activeTech, Camera* camera);
 	void DrawTess(ID3D11DeviceContext* devCon, ID3DX11EffectTechnique* activeTech, Camera* camera);
+	void ShadowDraw(ID3D11DeviceContext* devCon, ID3DX11EffectTechnique* activeTech, Camera* camera) {}
+
+	TerrainModel::Instance* GetModelInstance() const { return this->mModelInstance; }
 
 private:
 	void CalcWorld();
 
 private:
-	TerrainModel::Instance mModelInstance;
+	TerrainModel::Instance* mModelInstance;
 };
 #endif

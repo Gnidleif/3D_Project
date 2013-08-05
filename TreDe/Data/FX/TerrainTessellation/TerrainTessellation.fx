@@ -100,7 +100,7 @@ struct PatchTess
 PatchTess ConstHS(InputPatch<VSOut, 3> patch,
 				  uint patchID : SV_PrimitiveID)
 {
-	PatchTess output;
+	PatchTess output = (PatchTess)0;
 
 	float3 centerL = 0.333f*(patch[0].PosL + patch[1].PosL + patch[2].PosL);
 	float3 centerW = mul(float4(centerL, 1.0f), gWorld).xyz;
@@ -126,7 +126,7 @@ HSOut HSScene(InputPatch<VSOut, 3> patch,
 			  uint i : SV_OutputControlPointID,
 			  uint patchID : SV_PrimitiveID)
 {
-	HSOut output;
+	HSOut output = (HSOut)0;
 
 	output.PosL = patch[i].PosL;
 	output.Normal = patch[i].Normal;
@@ -140,7 +140,7 @@ DSOut DSScene(PatchTess patchTess,
 			  float3 coords : SV_DomainLocation,
 			  const OutputPatch<HSOut, 3> tri)
 {
-	DSOut output;
+	DSOut output = (DSOut)0;
 
 	float3 pos =
 		coords.x * tri[0].PosL +

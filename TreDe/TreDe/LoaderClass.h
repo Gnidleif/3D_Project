@@ -1,3 +1,4 @@
+#pragma once
 #ifndef LOADERCLASS_H
 #define LOADERCLASS_H
 #include "d3dUtilities.h"

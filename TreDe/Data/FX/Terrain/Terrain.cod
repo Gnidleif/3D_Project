@@ -1006,9 +1006,6 @@ fxgroup
                 // Approximately 142 instruction slots used
                             
             };
-            AB_BlendFactor = float4(0, 0, 0, 0);
-            AB_SampleMask = uint(0xffffffff);
-            BlendState = NULL;
             RasterizerState = Solidframe;
         }
 

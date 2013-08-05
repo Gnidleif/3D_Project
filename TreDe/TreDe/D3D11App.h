@@ -1,3 +1,4 @@
+#pragma once
 #ifndef D3D11APP_H
 #define D3D11APP_H
 

@@ -17,42 +17,36 @@ SamplerState samLinear
 	AddressV = Wrap;
 };
 
-struct VertexIn
+struct VSIn
 {
 	float3 PosL : POSITION;
 };
 
-struct VertexOut
+struct VSOut
 {
 	float4 PosH : SV_POSITION;
     float3 PosL : POSITION;
 };
 
-//=======================================================================
-// Vertex shader
-//=======================================================================
-VertexOut VS(VertexIn vin)
+VSOut VSScene(VSIn input)
 {
-	VertexOut vout;
+	VSOut output = (VSOut)0;
 	
 	// Set z = w so that z/w = 1 (i.e., skydome always on far plane).
-	vout.PosH = mul(float4(vin.PosL, 1.0f), gWVP).xyww;
+	output.PosH = mul(float4(input.PosL, 1.0f), gWVP).xyww;
 	
 	// Use local vertex position as cubemap lookup vector.
-	vout.PosL = vin.PosL;
+	output.PosL = input.PosL;
 	
-	return vout;
+	return output;
 }
 
-//=======================================================================
-// Pixel shader
-//=======================================================================
-float4 PS(VertexOut pin,
+float4 PSScene(VSOut input,
 		  uniform bool useTex) : SV_Target
 {
 	float4 texColor = float4(0.0f, 1.0f, 0.0f, 1.0f);
 	if(useTex)
-		texColor = gCubeMap.Sample(samLinear, pin.PosL);
+		texColor = gCubeMap.Sample(samLinear, input.PosL);
 	return texColor;
 }
 
@@ -77,9 +71,9 @@ technique11 Solid
 {
     pass P0
     {
-        SetVertexShader(CompileShader(vs_5_0, VS()));
+        SetVertexShader(CompileShader(vs_5_0, VSScene()));
         SetGeometryShader(NULL);
-        SetPixelShader(CompileShader(ps_5_0, PS(true)));
+        SetPixelShader(CompileShader(ps_5_0, PSScene(true)));
         
         SetRasterizerState(NoCulling);
         SetDepthStencilState(LessEqualDSS, 0);
@@ -90,9 +84,9 @@ technique11 Wire
 {
 	pass p0
 	{
-		SetVertexShader(CompileShader(vs_5_0, VS()));
+		SetVertexShader(CompileShader(vs_5_0, VSScene()));
 		SetGeometryShader(NULL);
-		SetPixelShader(CompileShader(ps_5_0, PS(false)));
+		SetPixelShader(CompileShader(ps_5_0, PSScene(false)));
 
 		SetRasterizerState(Wireframe);
 		SetDepthStencilState(LessEqualDSS, 0);

@@ -1,3 +1,4 @@
+#pragma once
 #ifndef TEXTURECLASS_H
 #define TEXTURECLASS_H
 #include "d3dUtilities.h"

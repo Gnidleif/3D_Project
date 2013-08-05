@@ -1,10 +1,9 @@
 #include "SkinnedEntity.h"
 
 SkinnedEntity::SkinnedEntity(std::string key, std::string texPath)
-	: VirtualEntity()
+	: VirtualEntity(),
+	mModelInstance(new SkinnedModel::Instance())
 {
-	mModelInstance = new SkinnedModel::Instance();
-
 	mModelInstance->mModel = Model->GetSkinnedModel(key, texPath);
 	mModelInstance->mTimePos = 0.0f;
 	mModelInstance->mAnimName = "combinedAnim_1";
