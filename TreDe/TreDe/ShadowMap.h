@@ -10,12 +10,14 @@ public:
 	ShadowMap(void);
 	~ShadowMap(void);
 	void Initialize(ID3D11Device* device);
-	void CreateMap();
+	void BindDSVAndSetRTV(ID3D11DeviceContext* devCon);
+	void ResetMap();
 
 public:
 	ID3D11ShaderResourceView* GetDepthSRV() const { return this->mDepthSRV; }
 
 private:
+	void CreateMap();
 
 private:
 	ID3D11Device* mDevice;

@@ -57,6 +57,7 @@ LightHandler::~LightHandler(void)
 	delete[] mDirs;
 	delete[] mPoints;
 	delete[] mSpots;
+	SafeDelete(mShadowMap);
 }
 
 void LightHandler::Initialize(ID3D11Device* device)
@@ -75,12 +76,12 @@ void LightHandler::Update(float dt)
 	mPoints[0].Position = XMFLOAT3(x, y, z);
 }
 
-void LightHandler::Draw(Camera* camera)
+void LightHandler::Draw(ID3D11DeviceContext* devCon, Camera* camera)
 {
 	ID3DX11EffectTechnique* activeTech = Effects::ShadowFX->mShadowTech;
 
-	this->mShadowMap->CreateMap();
-	
+	this->mShadowMap->ResetMap(devCon);
+
 	Effects::ShadowFX->SetLightPos(this->mPoints[0].Position);
 	Effects::ShadowFX->SetView(this->CalcView(camera));
 	Effects::ShadowFX->SetProj(this->CalcProj(camera));
@@ -111,9 +112,10 @@ void LightHandler::ApplyTessEffects()
 
 XMMATRIX LightHandler::CalcView(Camera* camera)
 {
-	XMFLOAT3 at = XMFLOAT3(0.0f, 0.0f, 0.0f); // Check if this should be 1.0f at Z instead of 0.0f
-	XMFLOAT3 up = XMFLOAT3(0.0f, 1.0f, 0.0f);
-	return XMMatrixLookAtLH(XMLoadFloat3(&mSpots[0].Position), XMLoadFloat3(&at), XMLoadFloat3(&up));
+	XMVECTOR posVec = XMLoadFloat3(&mSpots[0].Position);
+	XMVECTOR up = XMLoadFloat3(&XMFLOAT3(0.0f, 1.0f, 0.0f));
+	XMVECTOR look = XMLoadFloat3(&XMFLOAT3(0.0f, 0.0f, 1.0f));
+	return XMMatrixLookAtLH(posVec, look, up);
 }
 
 XMMATRIX LightHandler::CalcProj(Camera* camera)

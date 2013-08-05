@@ -14,7 +14,7 @@ public:
 	~LightHandler();
 	void Initialize(ID3D11Device* device);
 	void Update(float dt);
-	void Draw(Camera* camera);
+	void Draw(ID3D11DeviceContext* devCon, Camera* camera);
 	void ApplyEffects();
 	void ApplyTessEffects();
 

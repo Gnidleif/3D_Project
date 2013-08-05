@@ -134,7 +134,7 @@ void Game::LightDraw(ID3D11DeviceContext* devCon)
 	mSkyBox->Draw(devCon, activeTech, playerCam);
 
 	mLightHandler->ApplyEffects();
-	mLightHandler->Draw(playerCam);
+	mLightHandler->Draw(devCon, playerCam);
 
 	Effects::TerrainFX->SetEyePos(playerCam->GetPosition());
 	Effects::NormalFX->SetEyePos(playerCam->GetPosition());

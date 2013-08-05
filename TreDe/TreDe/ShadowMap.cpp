@@ -21,18 +21,34 @@ ShadowMap::~ShadowMap(void)
 void ShadowMap::Initialize(ID3D11Device* device)
 {
 	this->mDevice = device;
-	CreateMap();
+	ResetMap();
+}
+
+void ShadowMap::BindDSVAndSetRTV(ID3D11DeviceContext* devCon)
+{
+
+}
+
+void ShadowMap::ResetMap()
+{
+	UINT width = Settings->GetData()->mWidth;
+	UINT height = Settings->GetData()->mHeight;
+
+	if(mWidth != width && mHeight != height)
+	{
+		SafeRelease(mDepthSRV);
+		SafeRelease(mDepthDSV);
+		mWidth = width;
+		mHeight = height;
+		Effects::ShadowFX->SetResX(mWidth);
+		Effects::ShadowFX->SetResY(mHeight);
+		CreateMap();
+	}
 }
 
 void ShadowMap::CreateMap()
 {
 	// Try changing the .Format stuff on the descriptions if shit fucks up
-	mWidth = Settings->GetData()->mWidth;
-	mHeight = Settings->GetData()->mHeight;
-	SafeRelease(mDepthSRV);
-	SafeRelease(mDepthDSV);
-	Effects::ShadowFX->SetResX(mWidth);
-	Effects::ShadowFX->SetResY(mHeight);
 
 	this->mViewport.TopLeftX = 0;
 	this->mViewport.TopLeftY = 0;
