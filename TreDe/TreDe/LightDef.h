@@ -3,14 +3,12 @@
 //
 // This class is only used to define lights
 //-------------------------------------------------------------------------------------------
-#pragma once
 
 #ifndef LIGHTDEF_H
 #define LIGHTDEF_H
 
 #include <windows.h>
 #include <xnamath.h>
-#include "Camera.h"
 
 struct DirectionalLight
 {
@@ -30,7 +28,7 @@ struct DirectionalLight
 	DirectionalLight(XMFLOAT4 ambient, XMFLOAT4 diffuse, XMFLOAT4 specular, XMFLOAT3 direction, float padding)
 		: Ambient(ambient), Diffuse(diffuse), Specular(specular), Direction(direction), Padding(padding)
 	{
-		ZeroMemory(this, sizeof(this));
+		ZeroMemory(this, sizeof(this)); 
 	}
 };
 
@@ -47,15 +45,10 @@ struct PointLight
 	// Forms into a 4D vector
 	XMFLOAT3 Attenuation;
 	float Padding;
-	
-	//XMFLOAT4X4 View;
-	//XMFLOAT4X4 Proj;
 
 	PointLight()
 	{ 
-		ZeroMemory(this, sizeof(this));
-		//XMStoreFloat4x4(&View, XMMatrixIdentity());
-		//XMStoreFloat4x4(&Proj, XMMatrixIdentity());
+		ZeroMemory(this, sizeof(this)); 
 	}
 
 	PointLight(XMFLOAT4 ambient, XMFLOAT4 diffuse, XMFLOAT4 specular, 
@@ -63,8 +56,6 @@ struct PointLight
 		: Ambient(ambient), Diffuse(diffuse), Specular(specular), Position(position), Range(range), Attenuation(attenuation), Padding(padding)
 	{
 		ZeroMemory(this, sizeof(this)); 
-		//XMStoreFloat4x4(&View, XMMatrixIdentity());
-		//XMStoreFloat4x4(&Proj, XMMatrixIdentity());
 	}
 };
 

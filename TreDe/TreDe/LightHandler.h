@@ -1,9 +1,7 @@
-#pragma once
 #ifndef LIGHTHANDLER_H
 #define LIGHTHANDLER_H
 #include "LightDef.h"
-#include "ShadowMap.h"
-#include "StaticEntity.h"
+#include "Effects.h"
 
 // Very hardcoded class used to handle them lights and stuff!
 
@@ -13,27 +11,19 @@ public:
 	LightHandler();
 	~LightHandler();
 	void Update(float dt);
-	void Draw(ID3D11DeviceContext* devCon, Camera* camera);
 	void ApplyEffects();
 
 public:
-	PointLight GetPoint0() const { return this->mPoints[0]; }
-	PointLight GetPoint1() const { return this->mPoints[1]; }
-
-	ID3D11ShaderResourceView* GetDepthMap() const { return this->mShadowMap->GetDepthMapSRV(); }
+	XMFLOAT3 GetPoint0Pos() const { return this->mPoints[0].Position; }
+	XMFLOAT3 GetPoint1Pos() const { return this->mPoints[1].Position; }
 
 private:
-	int mDirAmount;
-	int mPointAmount;
-	int mSpotAmount;
+	static const int mDirAmount = 1;
+	static const int mPointAmount = 2;
+	static const int mSpotAmount = 2;
 
-	DirectionalLight* mDirs;
-	PointLight* mPoints;
-	SpotLight* mSpots;
-
-	XMFLOAT4X4 mLightView;
-	XMFLOAT4X4 mLightProj;
-
-	ShadowMap* mShadowMap;
+	DirectionalLight mDirs[mDirAmount];
+	PointLight mPoints[mPointAmount];
+	SpotLight mSpots[mSpotAmount];
 };
 #endif

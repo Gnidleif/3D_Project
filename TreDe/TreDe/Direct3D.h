@@ -1,4 +1,3 @@
-#pragma once
 #ifndef DIRECT3D_H
 #define DIRECT3D_H
 #include "d3dUtilities.h"

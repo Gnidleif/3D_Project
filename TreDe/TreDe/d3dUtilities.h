@@ -1,4 +1,3 @@
-#pragma once
 #ifndef D3DUTILITIES_H_
 #define D3DUTILITIES_H_
 

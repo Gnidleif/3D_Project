@@ -1,4 +1,3 @@
-#pragma once
 #ifndef INPUTLAYOUTS_H
 #define INPUTLAYOUTS_H
 #include "VertexDef.h"

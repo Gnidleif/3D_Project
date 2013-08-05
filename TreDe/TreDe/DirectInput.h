@@ -1,4 +1,3 @@
-#pragma once
 #ifndef DIRECTINPUT_H_
 #define DIRECTINPUT_H_
 

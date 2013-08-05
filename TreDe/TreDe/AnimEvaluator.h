@@ -1,4 +1,3 @@
-#pragma once
 #ifndef ANIMEVALUATOR_H
 #define ANIMEVALUATOR_H
 #include "d3dUtilities.h"

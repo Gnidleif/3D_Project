@@ -1,4 +1,3 @@
-#pragma once
 #ifndef EFFECTS_H
 #define EFFECTS_H
 #include "d3dUtilities.h"
@@ -108,7 +107,6 @@ public:
 
 	void SetDiffuseMap(ID3D11ShaderResourceView* diffMap) { this->mDiffuseMap->SetResource(diffMap); }
 	void SetNormalMap(ID3D11ShaderResourceView* normMap) { this->mNormalMap->SetResource(normMap); }
-	void SetShadowMap(ID3D11ShaderResourceView* shadMap) { this->mNormalMap->SetResource(shadMap); }
 
 	// Set lights
 	void SetDirLights(const DirectionalLight* lights, int amount) { this->mDirLights->SetRawValue(lights, 0, amount*sizeof(DirectionalLight)); }
@@ -137,7 +135,7 @@ private:
 
 	ID3DX11EffectShaderResourceVariable* mDiffuseMap;
 	ID3DX11EffectShaderResourceVariable* mNormalMap;
-	ID3DX11EffectShaderResourceVariable* mShadowMap;
+
 
 	ID3DX11EffectVariable* mDirLights;
 	ID3DX11EffectVariable* mPointLights;
@@ -264,41 +262,6 @@ private:
 	ID3DX11EffectScalarVariable* mMaxTess;
 };
 
-class ShadowMapEffect : public VirtualEffect
-{
-public:
-	ShadowMapEffect(ID3D11Device* device, std::string filename);
-	~ShadowMapEffect() {}
-
-public:
-	void SetEyePos(const XMFLOAT3& eye) { this->mEyePos->SetRawValue(&eye, 0, sizeof(XMFLOAT3)); }
-	void SetHeightScale(float data) { this->mHeightScale->SetFloat(data); }
-
-	void SetWorld(const XMMATRIX& matrix) { this->mWorld->SetMatrix(reinterpret_cast<const float*>(&matrix)); }
-	void SetView(const XMMATRIX& matrix) { this->mView->SetMatrix(reinterpret_cast<const float*>(&matrix)); }
-	void SetProj(const XMMATRIX& matrix) { this->mProj->SetMatrix(reinterpret_cast<const float*>(&matrix)); }
-	void SetWorldInvTranspose(const XMMATRIX& matrix) { this->mWorldInvTranspose->SetMatrix(reinterpret_cast<const float*>(&matrix)); }
-
-	void SetDiffuseMap(ID3D11ShaderResourceView* diffMap) { this->mDiffuseMap->SetResource(diffMap); }
-	void SetNormalMap(ID3D11ShaderResourceView* normMap) { this->mNormalMap->SetResource(normMap); }
-
-public:
-	ID3DX11EffectTechnique* mBuild;
-	ID3DX11EffectTechnique* mBuildAlpha;
-
-private:
-	ID3DX11EffectVectorVariable* mEyePos;
-	ID3DX11EffectScalarVariable* mHeightScale;
-
-	ID3DX11EffectMatrixVariable* mWorld;
-	ID3DX11EffectMatrixVariable* mView;
-	ID3DX11EffectMatrixVariable* mProj;
-	ID3DX11EffectMatrixVariable* mWorldInvTranspose;
-
-	ID3DX11EffectShaderResourceVariable* mDiffuseMap;
-	ID3DX11EffectShaderResourceVariable* mNormalMap;
-};
-
 // Class gathering static objects of all the other effectclasses
 class Effects
 {
@@ -311,6 +274,5 @@ public:
 	static NormalEffect* NormalFX;
 	static TessellationEffect* TessFX;
 	static TerrainTessellationEffect* TerrTessFX;
-	static ShadowMapEffect* ShadowFX;
 };
 #endif

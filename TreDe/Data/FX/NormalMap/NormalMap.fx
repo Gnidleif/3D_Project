@@ -30,7 +30,6 @@ cbuffer cbFixed
 
 Texture2D gDiffMap;
 Texture2D gNormMap;
-Texture2D gShadMap;
 
 SamplerState samLinear
 {
@@ -45,17 +44,6 @@ SamplerState samAnisotropic
 	MaxAnisotropy = 4;
 	AddressU = WRAP;
 	AddressV = WRAP;
-};
-
-SamplerState samShadow
-{
-	Filter = COMPARISON_MIN_MAG_LINEAR_MIP_POINT;
-	AddressU = BORDER;
-	AddressV = BORDER;
-	AddressW = BORDER;
-	BorderColor = float4(0.0f, 0.0f, 0.0f, 0.0f);
-
-	ComparisonFunc = LESS_EQUAL;
 };
 
 // Input Vertex shader
@@ -85,16 +73,6 @@ struct VSOut
 	float3 Normal : NORMAL;
 	float2 TexC : TEXCOORD;
 	float4 TangentW : TANGENT;
-};
-
-struct SVSOut
-{
-	float4 PosH : SV_POSITION;
-	float3 PosW : POSITION;
-	float3 Normal : NORMAL;
-	float2 TexC : TEXCOORD;
-	float4 TangentW : TANGENT;
-	float4 ShadowPos : TEXCOORD1;
 };
 
 // VS -> PS

@@ -1,4 +1,3 @@
-#pragma once
 #ifndef VERTEXDEF_H
 #define VERTEXDEF_H
 #include "d3dUtilities.h"

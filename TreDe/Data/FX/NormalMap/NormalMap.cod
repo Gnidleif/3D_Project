@@ -31,11 +31,10 @@ cbuffer cbFixed
 }
 
 //
-// 8 local object(s)
+// 7 local object(s)
 //
 Texture2D gDiffMap;
 Texture2D gNormMap;
-Texture2D gShadMap;
 SamplerState samLinear
 {
     Filter   = uint(MIN_MAG_MIP_LINEAR /* 21 */);
@@ -148,7 +147,7 @@ fxgroup
                 dcl_output o4.xyzw
                 dcl_temps 6
                 
-                #line 84 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\NormalMap\NormalMap.fx"
+                #line 83 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\NormalMap\NormalMap.fx"
                 mul r0.xyzw, cb0[8].xyzw, cb0[12].xxxx
                 mul r1.xyzw, cb0[9].xyzw, cb0[12].yyyy
                 add r0.xyzw, r0.xyzw, r1.xyzw
@@ -215,7 +214,7 @@ fxgroup
                 dp4 r1.y, r4.xyzw, cb0[5].xyzw  // output<5:NaN:Inf>
                 dp4 r1.z, r4.xyzw, cb0[6].xyzw  // output<6:NaN:Inf>
                 
-                #line 91
+                #line 90
                 dp3 r2.x, v1.xyzx, cb0[4].xyzx  // output<7:NaN:Inf>
                 dp3 r2.y, v1.xyzx, cb0[5].xyzx  // output<8:NaN:Inf>
                 dp3 r2.z, v1.xyzx, cb0[6].xyzx  // output<9:NaN:Inf>
@@ -273,10 +272,10 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 1
                 
-                #line 142 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\NormalMap\NormalMap.fx"
+                #line 141 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\NormalMap\NormalMap.fx"
                 sample_indexable(texture2d)(float,float,float,float) r0.xyzw, v3.xyxx, t0.xyzw, s0  // texColor<0:Inf,1:Inf,2:Inf,3:Inf>
                 
-                #line 148
+                #line 147
                 mov o0.xyzw, r0.xyzw  // PSScene<0:Inf,1:Inf,2:Inf,3:Inf>
                 ret 
                 // Approximately 3 instruction slots used
@@ -378,7 +377,7 @@ fxgroup
                 dcl_temps 9
                 dcl_indexableTemp x0[4], 4
                 
-                #line 103 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\NormalMap\NormalMap.fx"
+                #line 102 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\NormalMap\NormalMap.fx"
                 mov x0[0].x, v4.x  // weights<0>
                 mov x0[1].x, v4.y  // weights<1>
                 mov x0[2].x, v4.z  // weights<2>
@@ -390,7 +389,7 @@ fxgroup
                 add r0.x, r0.y, r0.x
                 mov x0[3].x, r0.x  // weights<3>
                 
-                #line 112
+                #line 111
                 mov r0.xyz, l(0,0,0,0)  // pos<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r1.xyz, l(0,0,0,0)  // normal<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r2.xyz, l(0,0,0,0)  // tangent<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -422,11 +421,11 @@ fxgroup
                   mul r3.xyz, r3.xxxx, r4.xyzx
                   add r2.xyz, r2.xyzx, r3.xyzx  // tangent<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 112
+                #line 111
                   iadd r1.w, r1.w, l(1)  // i<0>
                 endloop 
                 
-                #line 119
+                #line 118
                 mul r3.xyzw, cb0[8].xyzw, cb0[12].xxxx
                 mul r4.xyzw, cb0[9].xyzw, cb0[12].yyyy
                 add r3.xyzw, r3.xyzw, r4.xyzw
@@ -492,7 +491,7 @@ fxgroup
                 dp4 r4.y, r0.xyzw, cb0[5].xyzw  // output<5:NaN:Inf>
                 dp4 r4.z, r0.xyzw, cb0[6].xyzw  // output<6:NaN:Inf>
                 
-                #line 126
+                #line 125
                 dp3 r0.x, r1.xyzx, cb0[16].xyzx  // output<7:NaN:Inf>
                 dp3 r0.y, r1.xyzx, cb0[17].xyzx  // output<8:NaN:Inf>
                 dp3 r0.z, r1.xyzx, cb0[18].xyzx  // output<9:NaN:Inf>
@@ -550,10 +549,10 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 1
                 
-                #line 142 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\NormalMap\NormalMap.fx"
+                #line 141 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\NormalMap\NormalMap.fx"
                 sample_indexable(texture2d)(float,float,float,float) r0.xyzw, v3.xyxx, t0.xyzw, s0  // texColor<0:Inf,1:Inf,2:Inf,3:Inf>
                 
-                #line 148
+                #line 147
                 mov o0.xyzw, r0.xyzw  // PSScene<0:Inf,1:Inf,2:Inf,3:Inf>
                 ret 
                 // Approximately 3 instruction slots used
@@ -637,7 +636,7 @@ fxgroup
                 dcl_output o4.xyzw
                 dcl_temps 6
                 
-                #line 84 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\NormalMap\NormalMap.fx"
+                #line 83 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\NormalMap\NormalMap.fx"
                 mul r0.xyzw, cb0[8].xyzw, cb0[12].xxxx
                 mul r1.xyzw, cb0[9].xyzw, cb0[12].yyyy
                 add r0.xyzw, r0.xyzw, r1.xyzw
@@ -704,7 +703,7 @@ fxgroup
                 dp4 r1.y, r4.xyzw, cb0[5].xyzw  // output<5:NaN:Inf>
                 dp4 r1.z, r4.xyzw, cb0[6].xyzw  // output<6:NaN:Inf>
                 
-                #line 91
+                #line 90
                 dp3 r2.x, v1.xyzx, cb0[4].xyzx  // output<7:NaN:Inf>
                 dp3 r2.y, v1.xyzx, cb0[5].xyzx  // output<8:NaN:Inf>
                 dp3 r2.z, v1.xyzx, cb0[6].xyzx  // output<9:NaN:Inf>
@@ -762,16 +761,16 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 2
                 
-                #line 142 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\NormalMap\NormalMap.fx"
+                #line 141 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\NormalMap\NormalMap.fx"
                 sample_indexable(texture2d)(float,float,float,float) r0.xyzw, v3.xyxx, t0.xyzw, s0  // texColor<0:Inf,1:Inf,2:Inf,3:Inf>
                 
-                #line 145
+                #line 144
                 add r1.x, r0.w, l(-0.100000)
                 lt r1.x, r1.x, l(0.000000)
                 and r1.x, r1.x, l(-1)
                 discard r1.x
                 
-                #line 148
+                #line 147
                 mov o0.xyzw, r0.xyzw  // PSScene<0:Inf,1:Inf,2:Inf,3:Inf>
                 ret 
                 // Approximately 7 instruction slots used
@@ -873,7 +872,7 @@ fxgroup
                 dcl_temps 9
                 dcl_indexableTemp x0[4], 4
                 
-                #line 103 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\NormalMap\NormalMap.fx"
+                #line 102 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\NormalMap\NormalMap.fx"
                 mov x0[0].x, v4.x  // weights<0>
                 mov x0[1].x, v4.y  // weights<1>
                 mov x0[2].x, v4.z  // weights<2>
@@ -885,7 +884,7 @@ fxgroup
                 add r0.x, r0.y, r0.x
                 mov x0[3].x, r0.x  // weights<3>
                 
-                #line 112
+                #line 111
                 mov r0.xyz, l(0,0,0,0)  // pos<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r1.xyz, l(0,0,0,0)  // normal<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r2.xyz, l(0,0,0,0)  // tangent<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -917,11 +916,11 @@ fxgroup
                   mul r3.xyz, r3.xxxx, r4.xyzx
                   add r2.xyz, r2.xyzx, r3.xyzx  // tangent<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 112
+                #line 111
                   iadd r1.w, r1.w, l(1)  // i<0>
                 endloop 
                 
-                #line 119
+                #line 118
                 mul r3.xyzw, cb0[8].xyzw, cb0[12].xxxx
                 mul r4.xyzw, cb0[9].xyzw, cb0[12].yyyy
                 add r3.xyzw, r3.xyzw, r4.xyzw
@@ -987,7 +986,7 @@ fxgroup
                 dp4 r4.y, r0.xyzw, cb0[5].xyzw  // output<5:NaN:Inf>
                 dp4 r4.z, r0.xyzw, cb0[6].xyzw  // output<6:NaN:Inf>
                 
-                #line 126
+                #line 125
                 dp3 r0.x, r1.xyzx, cb0[16].xyzx  // output<7:NaN:Inf>
                 dp3 r0.y, r1.xyzx, cb0[17].xyzx  // output<8:NaN:Inf>
                 dp3 r0.z, r1.xyzx, cb0[18].xyzx  // output<9:NaN:Inf>
@@ -1045,16 +1044,16 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 2
                 
-                #line 142 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\NormalMap\NormalMap.fx"
+                #line 141 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\NormalMap\NormalMap.fx"
                 sample_indexable(texture2d)(float,float,float,float) r0.xyzw, v3.xyxx, t0.xyzw, s0  // texColor<0:Inf,1:Inf,2:Inf,3:Inf>
                 
-                #line 145
+                #line 144
                 add r1.x, r0.w, l(-0.100000)
                 lt r1.x, r1.x, l(0.000000)
                 and r1.x, r1.x, l(-1)
                 discard r1.x
                 
-                #line 148
+                #line 147
                 mov o0.xyzw, r0.xyzw  // PSScene<0:Inf,1:Inf,2:Inf,3:Inf>
                 ret 
                 // Approximately 7 instruction slots used
@@ -1138,7 +1137,7 @@ fxgroup
                 dcl_output o4.xyzw
                 dcl_temps 6
                 
-                #line 84 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\NormalMap\NormalMap.fx"
+                #line 83 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\NormalMap\NormalMap.fx"
                 mul r0.xyzw, cb0[8].xyzw, cb0[12].xxxx
                 mul r1.xyzw, cb0[9].xyzw, cb0[12].yyyy
                 add r0.xyzw, r0.xyzw, r1.xyzw
@@ -1205,7 +1204,7 @@ fxgroup
                 dp4 r1.y, r4.xyzw, cb0[5].xyzw  // output<5:NaN:Inf>
                 dp4 r1.z, r4.xyzw, cb0[6].xyzw  // output<6:NaN:Inf>
                 
-                #line 91
+                #line 90
                 dp3 r2.x, v1.xyzx, cb0[4].xyzx  // output<7:NaN:Inf>
                 dp3 r2.y, v1.xyzx, cb0[5].xyzx  // output<8:NaN:Inf>
                 dp3 r2.z, v1.xyzx, cb0[6].xyzx  // output<9:NaN:Inf>
@@ -1251,7 +1250,7 @@ fxgroup
                 dcl_globalFlags refactoringAllowed
                 dcl_output o0.xyzw
                 
-                #line 148 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\NormalMap\NormalMap.fx"
+                #line 147 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\NormalMap\NormalMap.fx"
                 mov o0.xyzw, l(1.000000,0,0,1.000000)  // PSScene<0: 1f,1: 0f,2: 0f,3: 1f>
                 ret 
                 // Approximately 2 instruction slots used
@@ -1335,7 +1334,7 @@ fxgroup
                 dcl_output o4.xyzw
                 dcl_temps 6
                 
-                #line 84 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\NormalMap\NormalMap.fx"
+                #line 83 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\NormalMap\NormalMap.fx"
                 mul r0.xyzw, cb0[8].xyzw, cb0[12].xxxx
                 mul r1.xyzw, cb0[9].xyzw, cb0[12].yyyy
                 add r0.xyzw, r0.xyzw, r1.xyzw
@@ -1402,7 +1401,7 @@ fxgroup
                 dp4 r1.y, r4.xyzw, cb0[5].xyzw  // output<5:NaN:Inf>
                 dp4 r1.z, r4.xyzw, cb0[6].xyzw  // output<6:NaN:Inf>
                 
-                #line 91
+                #line 90
                 dp3 r2.x, v1.xyzx, cb0[4].xyzx  // output<7:NaN:Inf>
                 dp3 r2.y, v1.xyzx, cb0[5].xyzx  // output<8:NaN:Inf>
                 dp3 r2.z, v1.xyzx, cb0[6].xyzx  // output<9:NaN:Inf>
@@ -1546,16 +1545,16 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 10
                 
-                #line 158 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\NormalMap\NormalMap.fx"
+                #line 157 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\NormalMap\NormalMap.fx"
                 dp3 r0.x, v2.xyzx, v2.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v2.xyzx  // input<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
                 mov r1.xyz, r0.zxyz  // input<9:NaN:Inf,7:NaN:Inf,8:NaN:Inf>
                 
-                #line 162
+                #line 161
                 sample_indexable(texture2d)(float,float,float,float) r2.xyzw, v3.xyxx, t0.xyzw, s0  // texColor<0:Inf,1:Inf,2:Inf,3:Inf>
                 
-                #line 165
+                #line 164
                 sample_indexable(texture2d)(float,float,float,float) r3.xyz, v3.xyxx, t1.xyzw, s0
                 mov r3.xyz, r3.xyzx  // normMapSamp<0:Inf,1:Inf,2:Inf>
                 nop 
@@ -1591,17 +1590,17 @@ fxgroup
                 add r0.xyz, r0.xyzx, r1.xyzx  // bumpedNormalW<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r0.xyz, r0.xyzx  // NormalSampleToWorldSpace<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 166 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\NormalMap\NormalMap.fx"
+                #line 165 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\NormalMap\NormalMap.fx"
                 mov r0.xyz, r0.xyzx  // bumpNormal<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 174
+                #line 173
                 mov r1.xyz, -v1.xyzx
                 add r1.xyz, r1.xyzx, cb0[26].xyzx
                 dp3 r0.w, r1.xyzx, r1.xyzx
                 rsq r0.w, r0.w
                 mul r1.xyz, r0.wwww, r1.xyzx  // toEye<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 184
+                #line 183
                 nop 
                 mov r3.xyz, cb1[0].xyzx  // mat<0,1,2>
                 mov r4.xyz, cb1[1].xyzx  // mat<4,5,6>
@@ -1640,7 +1639,7 @@ fxgroup
                 movc r0.xyz, r1.wwww, r0.yzwy, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r1.xyz, r1.wwww, r1.xyzx, l(0,0,0,0)  // specular<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 184 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\NormalMap\NormalMap.fx"
+                #line 183 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\NormalMap\NormalMap.fx"
                 mov r3.xyz, r3.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r0.xyz, r0.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r1.xyz, r1.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -1648,14 +1647,14 @@ fxgroup
                 add r0.xyz, r0.xyzx, l(0.000000, 0.000000, 0.000000, 0.000000)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 add r1.xyz, r1.xyzx, l(0.000000, 0.000000, 0.000000, 0.000000)  // specular<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 213
+                #line 212
                 add r0.xyz, r0.xyzx, r3.xyzx
                 mul r0.xyz, r0.xyzx, r2.xyzx
                 add r0.xyz, r1.xyzx, r0.xyzx  // litColor<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mul r1.xyz, r2.xyzx, cb2[0].xxxx
                 add r0.xyz, r0.xyzx, r1.xyzx  // litColor<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 221
+                #line 220
                 mul r0.w, r2.w, cb1[0].w  // litColor<3:NaN:Inf>
                 mov o0.xyz, r0.xyzx  // PSScene_Lights<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov o0.w, r0.w  // PSScene_Lights<3:NaN:Inf>
@@ -1741,7 +1740,7 @@ fxgroup
                 dcl_output o4.xyzw
                 dcl_temps 6
                 
-                #line 84 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\NormalMap\NormalMap.fx"
+                #line 83 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\NormalMap\NormalMap.fx"
                 mul r0.xyzw, cb0[8].xyzw, cb0[12].xxxx
                 mul r1.xyzw, cb0[9].xyzw, cb0[12].yyyy
                 add r0.xyzw, r0.xyzw, r1.xyzw
@@ -1808,7 +1807,7 @@ fxgroup
                 dp4 r1.y, r4.xyzw, cb0[5].xyzw  // output<5:NaN:Inf>
                 dp4 r1.z, r4.xyzw, cb0[6].xyzw  // output<6:NaN:Inf>
                 
-                #line 91
+                #line 90
                 dp3 r2.x, v1.xyzx, cb0[4].xyzx  // output<7:NaN:Inf>
                 dp3 r2.y, v1.xyzx, cb0[5].xyzx  // output<8:NaN:Inf>
                 dp3 r2.z, v1.xyzx, cb0[6].xyzx  // output<9:NaN:Inf>
@@ -1952,16 +1951,16 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 15
                 
-                #line 158 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\NormalMap\NormalMap.fx"
+                #line 157 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\NormalMap\NormalMap.fx"
                 dp3 r0.x, v2.xyzx, v2.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v2.xyzx  // input<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
                 mov r1.xyz, r0.zxyz  // input<9:NaN:Inf,7:NaN:Inf,8:NaN:Inf>
                 
-                #line 162
+                #line 161
                 sample_indexable(texture2d)(float,float,float,float) r2.xyzw, v3.xyxx, t0.xyzw, s0  // texColor<0:Inf,1:Inf,2:Inf,3:Inf>
                 
-                #line 165
+                #line 164
                 sample_indexable(texture2d)(float,float,float,float) r3.xyz, v3.xyxx, t1.xyzw, s0
                 mov r3.xyz, r3.xyzx  // normMapSamp<0:Inf,1:Inf,2:Inf>
                 nop 
@@ -1997,17 +1996,17 @@ fxgroup
                 add r0.xyz, r0.xyzx, r1.xyzx  // bumpedNormalW<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r0.xyz, r0.xyzx  // NormalSampleToWorldSpace<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 166 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\NormalMap\NormalMap.fx"
+                #line 165 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\NormalMap\NormalMap.fx"
                 mov r0.xyz, r0.xyzx  // bumpNormal<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 174
+                #line 173
                 mov r1.xyz, -v1.xyzx
                 add r1.xyz, r1.xyzx, cb0[26].xyzx
                 dp3 r0.w, r1.xyzx, r1.xyzx
                 rsq r0.w, r0.w
                 mul r1.xyz, r0.wwww, r1.xyzx  // toEye<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 195
+                #line 194
                 nop 
                 mov r3.xyz, cb1[0].xyzx  // mat<0,1,2>
                 mov r4.xyz, cb1[1].xyzx  // mat<4,5,6>
@@ -2080,7 +2079,7 @@ fxgroup
                   mov r8.xyz, l(0,0,0,0)  // specular<0: 0f,1: 0f,2: 0f>
                 endif 
                 
-                #line 195 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\NormalMap\NormalMap.fx"
+                #line 194 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\NormalMap\NormalMap.fx"
                 mov r6.xyz, r6.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r7.xyz, r7.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r8.xyz, r8.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -2088,7 +2087,7 @@ fxgroup
                 add r7.xyz, r7.xyzx, l(0.000000, 0.000000, 0.000000, 0.000000)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 add r8.xyz, r8.xyzx, l(0.000000, 0.000000, 0.000000, 0.000000)  // specular<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 195
+                #line 194
                 nop 
                 mov r9.xyz, cb0[9].xyzx  // light<0,1,2>
                 mov r10.xyz, cb0[10].xyzx  // light<4,5,6>
@@ -2154,7 +2153,7 @@ fxgroup
                   mov r1.xyz, l(0,0,0,0)  // specular<0: 0f,1: 0f,2: 0f>
                 endif 
                 
-                #line 195 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\NormalMap\NormalMap.fx"
+                #line 194 "C:\Users\Gnidleif\Documents\GitHub\3D_Project\TreDe\Data\FX\NormalMap\NormalMap.fx"
                 mov r3.xyz, r3.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r0.xyz, r0.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r1.xyz, r1.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -2162,20 +2161,20 @@ fxgroup
                 add r0.xyz, r0.xyzx, r7.xyzx  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 add r1.xyz, r1.xyzx, r8.xyzx  // specular<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 213
+                #line 212
                 add r0.xyz, r0.xyzx, r3.xyzx
                 mul r0.xyz, r0.xyzx, r2.xyzx
                 add r0.xyz, r1.xyzx, r0.xyzx  // litColor<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mul r1.xyz, r2.xyzx, cb2[0].xxxx
                 add r0.xyz, r0.xyzx, r1.xyzx  // litColor<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 218
+                #line 217
                 add r0.w, r2.w, l(-0.100000)
                 lt r0.w, r0.w, l(0.000000)
                 and r0.w, r0.w, l(-1)
                 discard r0.w
                 
-                #line 221
+                #line 220
                 mul r0.w, r2.w, cb1[0].w  // litColor<3:NaN:Inf>
                 mov o0.xyz, r0.xyzx  // PSScene_Lights<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov o0.w, r0.w  // PSScene_Lights<3:NaN:Inf>

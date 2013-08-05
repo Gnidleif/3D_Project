@@ -1,4 +1,3 @@
-#pragma once
 #ifndef MESHES_H
 #define MESHES_H
 #include "d3dUtilities.h"
@@ -12,7 +11,7 @@ class VirtualMesh
 public:
 	VirtualMesh();
 	virtual ~VirtualMesh();
-	virtual void Draw(ID3D11DeviceContext* devCon);
+	void Draw(ID3D11DeviceContext* devCon);
 	template<typename VertexDefType>
 	void SetVertexBuffer(ID3D11Device* device, const VertexDefType* vertex, UINT count);
 	void SetIndexBuffer(ID3D11Device* device, const UINT* indice, UINT count);
@@ -65,7 +64,6 @@ class TerrainMesh : public VirtualMesh
 public:
 	TerrainMesh() : VirtualMesh() {}
 	~TerrainMesh() {}
-	void Draw(ID3D11DeviceContext* devCon) { VirtualMesh::Draw(devCon); }
 
 public:
 	std::vector<VertexDef::PosNorTex> GetVertices() const { return this->mVertices; }
@@ -84,7 +82,6 @@ class StaticMesh : public VirtualMesh
 public:
 	StaticMesh() : VirtualMesh() {}
 	~StaticMesh() {}
-	void Draw(ID3D11DeviceContext* devCon) { VirtualMesh::Draw(devCon); }
 
 public:
 	std::vector<VertexDef::PosNorTexTan> GetVertices() const { return this->mVertices; }
@@ -103,7 +100,6 @@ class SkinnedMesh : public VirtualMesh
 public:
 	SkinnedMesh() : VirtualMesh() {}
 	~SkinnedMesh() {}
-	void Draw(ID3D11DeviceContext* devCon) { VirtualMesh::Draw(devCon); }
 
 public:
 	std::vector<VertexDef::PosNorTexTanSkin> GetVertices() const { return this->mVertices; }
@@ -122,7 +118,6 @@ class ParticleMesh : public VirtualMesh
 public:
 	ParticleMesh() : VirtualMesh() {}
 	~ParticleMesh();
-	void Draw(ID3D11DeviceContext* devCon) { VirtualMesh::Draw(devCon); }
 
 public:
 	std::vector<VertexDef::Particle> GetVertices() const { return this->mVertices; }

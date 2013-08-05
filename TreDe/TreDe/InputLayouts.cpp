@@ -231,23 +231,6 @@ void InputLayouts::Initialize(ID3D11Device* device)
 		pd.pIAInputSignature,
 		pd.IAInputSignatureSize,
 		&mPosNorTex);
-
-	// Shadow map input layouts
-	Effects::ShadowFX->mBuild->GetPassByIndex(0)->GetDesc(&pd);
-	device->CreateInputLayout(
-		InputLayoutDesc::PosNorTexTan,
-		4,
-		pd.pIAInputSignature,
-		pd.IAInputSignatureSize,
-		&mPosNorTexTan);
-
-	Effects::ShadowFX->mBuildAlpha->GetPassByIndex(0)->GetDesc(&pd);
-	device->CreateInputLayout(
-		InputLayoutDesc::PosNorTexTan,
-		4,
-		pd.pIAInputSignature,
-		pd.IAInputSignatureSize,
-		&mPosNorTexTan);
 }
 
 void InputLayouts::Shutdown()

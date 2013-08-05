@@ -1,4 +1,3 @@
-#pragma once
 #ifndef SKYBOX_H
 #define SKYBOX_H
 #include "d3dUtilities.h"

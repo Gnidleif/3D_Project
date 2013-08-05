@@ -1,4 +1,3 @@
-#pragma once
 #ifndef SETTINGSCLASS_H
 #define SETTINGSCLASS_H
 #include <string>

@@ -20,7 +20,7 @@ void SkyBox::Initialize(ID3D11Device* device, float radius)
 {
 	this->mCubeMapSRV = Texture->GetTexture(mFileName);
 	std::vector<VertexDef::PosNorTexTan> sphere;
-	Loader->CreateSphere(radius, 20, 20, sphere, mIndices);
+	Loader->CreateSphere(radius, 50.0f, 50.0f, sphere, mIndices);
 
 	std::vector<XMFLOAT3> positions(sphere.size());
 
