@@ -17,6 +17,8 @@ void StaticEntity::Initialize(XMFLOAT3 position, float scale)
 
 void StaticEntity::Draw(ID3D11DeviceContext* devCon, ID3DX11EffectTechnique* activeTech, Camera* camera)
 {
+	Effects::ShadowFX->SetWorld(XMLoadFloat4x4(&mModelInstance.mWorld));
+
 	devCon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	devCon->IASetInputLayout(InputLayouts::mPosNorTexTan);
 
@@ -50,7 +52,6 @@ void StaticEntity::DrawTess(ID3D11DeviceContext* devCon, ID3DX11EffectTechnique*
 
 	D3DX11_TECHNIQUE_DESC techDesc = {};
 	activeTech->GetDesc(&techDesc);
-	Effects::ShadowFX->SetWorld(XMLoadFloat4x4(&mModelInstance.mWorld));
 
 	Effects::TessFX->SetView(camera->GetViewMatrix());
 	Effects::TessFX->SetProj(camera->GetProjMatrix());

@@ -80,7 +80,8 @@ void LightHandler::Draw(ID3D11DeviceContext* devCon, Camera* camera)
 {
 	ID3DX11EffectTechnique* activeTech = Effects::ShadowFX->mShadowTech;
 
-	this->mShadowMap->ResetMap(devCon);
+	this->mShadowMap->BindDSVAndSetRTV(devCon);
+	this->mShadowMap->ResetMap();
 
 	Effects::ShadowFX->SetLightPos(this->mPoints[0].Position);
 	Effects::ShadowFX->SetView(this->CalcView(camera));
