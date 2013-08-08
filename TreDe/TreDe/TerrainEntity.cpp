@@ -18,8 +18,6 @@ void TerrainEntity::Initialize(XMFLOAT3 position, float scale)
 
 void TerrainEntity::Draw(ID3D11DeviceContext* devCon, ID3DX11EffectTechnique* activeTech, Camera* camera)
 {
-	Effects::ShadowFX->SetWorld(XMLoadFloat4x4(&mModelInstance.mWorld));
-	
 	devCon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	devCon->IASetInputLayout(InputLayouts::mPosNorTex);
 

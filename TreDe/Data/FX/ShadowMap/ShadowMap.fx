@@ -1,8 +1,4 @@
 #include "../LightDef.fx"
-// Hardcoded values, vill figure out how to change this later :D
-
-//static const float ShadowX = 1024.0f;
-//static const float ShadowY = 768.0f;
 
 cbuffer cbEveryFrame
 {
@@ -17,18 +13,13 @@ cbuffer cbEveryFrame
 
 Texture2D gShadowMap;
 
-SamplerState samShadow
-{
-	Filter = MIN_MAG_MIP_POINT;
-	AddressU = CLAMP;
-	AddressV = CLAMP;
-};
-
 SamplerComparisonState samComp
 {
-	Filter = COMPARISON_MIN_MAG_MIP_LINEAR;
-	AddressU = CLAMP;
-	AddressV = CLAMP;
+	Filter = COMPARISON_MIN_MAG_LINEAR_MIP_POINT;
+	AddressU = BORDER;
+	AddressV = BORDER;
+	AddressW = BORDER;
+	BorderColor = float4(0.4f, 0.4f, 0.4f, 0.4f);
 
 	ComparisonFunc = LESS_EQUAL;
 };
@@ -37,7 +28,6 @@ struct ShadowVSIn
 {
 	float3 PosL : POSITION;
 };
-
 
 struct ShadowVSOut
 {
@@ -54,15 +44,29 @@ ShadowVSOut ShadowVSScene(ShadowVSIn input)
 	return output;
 }
 
-float4 ShadowPSScene(ShadowVSOut input) : SV_Target
-{
-	return float4(0.0f, 0.0f, 0.0f, 0.0f);
-}
-
 RasterizerState Backface
 {
 	CullMode = Back;
 };
+
+RasterizerState Depth
+{
+	DepthBias = 100000;
+	DepthBiasClamp = 0.0f;
+	SlopeScaledDepthBias = 1.0f;
+};
+
+float2 texOffset(int x, int y)
+{
+	return float2(x * 1.0f/gResX, y * 1.0f/gResY);
+}
+
+float CalcShadowFactor(	SamplerComparisonState compState,
+						Texture2D shadowMap,
+						float4 shadowPosH)
+{
+	// Check how to do this later
+}
 
 technique11 ShadowTech
 {
@@ -70,8 +74,8 @@ technique11 ShadowTech
 	{
 		SetVertexShader(CompileShader(vs_5_0, ShadowVSScene()));
 		SetGeometryShader(NULL);
-		SetPixelShader(CompileShader(ps_5_0, ShadowPSScene()));
+		SetPixelShader(NULL);
 
-		SetRasterizerState(Backface);
+		SetRasterizerState(Depth);
 	}
 };

@@ -75,6 +75,16 @@ struct VSOut
 	float4 TangentW : TANGENT;
 };
 
+struct VSOut_Shadow
+{
+	float4 PosH : SV_Position;
+	float3 PosW : POSITION;
+	float3 Normal : NORMAL;
+	float2 TexC : TEXCOORD0;
+	float4 TangentW : TANGENT;
+	float4 projTexC : TEXCOORD1;
+};
+
 // VS -> PS
 VSOut VSScene(VSIn input)
 {
@@ -125,6 +135,27 @@ VSOut SkinVSScene(SkinVSIn input)
 	output.Normal = mul(normal, (float3x3)gWorldInvTranspose);
 	output.TangentW = float4(mul(tangent, (float3x3) gWorldInvTranspose), input.TangentL.w);
 	output.TexC = input.TexC;
+
+	return output;
+}
+
+VSOut_Shadow VSScene_Shadow(VSIn input)
+{
+	VSOut_Shadow output = (VSOut_Shadow)0;
+
+	float4x4 wvp = mul(gWorld, mul(gView, gProj));
+	float4x4 lightwvp = mul(gShadowWorld, mul(gShadowView, gShadowProj));
+
+	output.PosH = mul(float4(input.PosL, 1.0f), wvp);
+
+	output.PosW = mul(float4(input.PosL, 1.0f), gWorld).xyz;
+	//output.Normal = mul(input.Normal, (float3x3) wvp);
+	//output.Normal = normalize(output.Normal);
+	output.Normal = mul(input.Normal, (float3x3) gWorld);
+	output.TangentW = mul(input.TangentL, gWorld);
+	output.TexC = input.TexC;
+
+	output.projTexC = mul(float4(output.PosW, 1.0f), lightwvp);
 
 	return output;
 }

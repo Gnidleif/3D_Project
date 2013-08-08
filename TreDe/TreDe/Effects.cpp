@@ -48,6 +48,7 @@ TerrainEffect::TerrainEffect(ID3D11Device* device, string filename)
 	this->mSolid = mFX->GetTechniqueByName("Solid");
 	this->mWire = mFX->GetTechniqueByName("Wire");
 	this->mAllLights = mFX->GetTechniqueByName("AllLights");
+	this->mShadow = mFX->GetTechniqueByName("Shadow");
 
 	this->mEyePos = mFX->GetVariableByName("gEyePos")->AsVector();
 

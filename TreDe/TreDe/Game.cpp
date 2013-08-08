@@ -4,8 +4,7 @@ using namespace std;
 
 Game::Game()
 	:
-	mPlayer(new Player("Gnidleif", XMFLOAT3(50.0f, 50.0f, 50.0f))),
-	mLightHandler(new LightHandler())
+	mPlayer(new Player("Gnidleif", XMFLOAT3(50.0f, 50.0f, 50.0f)))
 {
 }
 
@@ -17,23 +16,13 @@ Game::~Game()
 	{
 		SafeDelete(*it);
 	}
-	//SafeDelete(mCharacter);
 	SafeDelete(mSkyBox);
-	SafeDelete(mLightHandler);
-	for(auto& it(mLightDucks.begin()); it != mLightDucks.end(); ++it)
-	{
-		SafeDelete(*it);
-	}
 }
 
 void Game::Initialize(ID3D11Device* device)
 {
-	mLightHandler->Initialize(device);
 	mTerrain = new TerrainEntity("../Data/Textures/heightmap.bmp");
 	mTerrain->Initialize(XMFLOAT3(0.0f, 0.0f, 0.0f), 5.0f);
-
-	//mCharacter = new SkinnedEntity("../Data/Models/Skinned/Character/Character.dae", "../Data/Models/Skinned/Character/");
-	//mCharacter->Initialize(XMFLOAT3(150.0f, 20.0f, 100.0f), 1.0f);
 
 	for(UINT i(0); i != 4; ++i)
 	{
@@ -45,15 +34,6 @@ void Game::Initialize(ID3D11Device* device)
 
 	mSkyBox = new SkyBox("../Data/Textures/SkyBox_Space.dds");
 	mSkyBox->Initialize(device, 5000.0f);
-
-	mLightDucks.push_back(new StaticEntity("../Data/Models/Static/Duck/Duck.obj", "../Data/Models/Static/Duck/"));
-	mLightDucks.push_back(new StaticEntity("../Data/Models/Static/Duck/Duck.obj", "../Data/Models/Static/Duck/"));
-
-	XMFLOAT3 duckPos = mLightHandler->GetPoint0Pos();
-	mLightDucks[0]->Initialize(duckPos, 0.05f);
-
-	duckPos = mLightHandler->GetPoint1Pos();
-	mLightDucks[1]->Initialize(duckPos, 0.05f);
 
 	//
 	Text->AddConstantText("PlayerInfo", "Name: " + mPlayer->GetName(), 20.0f, 20.0f, 20.0f, TextColors::White);
@@ -71,13 +51,7 @@ void Game::Update(float dt)
 		mPlatforms[i]->RotateXYZ(XMFLOAT3(rot, 0.0f, rot));
 	}
 
-	mLightDucks[0]->SetPosition(mLightHandler->GetPoint0Pos());
-	mLightDucks[1]->SetPosition(mLightHandler->GetPoint1Pos());
-
-	//mCharacter->Update(dt);
-
 	mPlayer->Update(dt);
-	mLightHandler->Update(dt);
 }
 
 void Game::SolidDraw(ID3D11DeviceContext* devCon)
@@ -95,13 +69,6 @@ void Game::SolidDraw(ID3D11DeviceContext* devCon)
 	{
 		mPlatforms[i]->Draw(devCon, activeTech, playerCam);
 	}
-	for(UINT i(0); i != mLightDucks.size(); ++i)
-	{
-		mLightDucks[i]->Draw(devCon, activeTech, playerCam);
-	}
-
-	//activeTech = Effects::NormalFX->mSolidSkin;
-	//mCharacter->Draw(devCon, activeTech, playerCam);
 }
 
 void Game::WireDraw(ID3D11DeviceContext* devCon)
@@ -118,10 +85,6 @@ void Game::WireDraw(ID3D11DeviceContext* devCon)
 	{
 		mPlatforms[i]->Draw(devCon, activeTech, playerCam);
 	}
-	for(UINT i(0); i != mLightDucks.size(); ++i)
-	{
-		mLightDucks[i]->Draw(devCon, activeTech, playerCam);
-	}
 
 	//mCharacter->Draw(devCon, activeTech, playerCam);
 }
@@ -133,9 +96,6 @@ void Game::LightDraw(ID3D11DeviceContext* devCon)
 	ID3DX11EffectTechnique* activeTech = Effects::SkyFX->mSolid;
 	mSkyBox->Draw(devCon, activeTech, playerCam);
 
-	mLightHandler->ApplyEffects();
-	mLightHandler->Draw(devCon, playerCam);
-
 	Effects::TerrainFX->SetEyePos(playerCam->GetPosition());
 	Effects::NormalFX->SetEyePos(playerCam->GetPosition());
 
@@ -146,10 +106,6 @@ void Game::LightDraw(ID3D11DeviceContext* devCon)
 	for(UINT i(0); i != mPlatforms.size(); ++i)
 	{
 		mPlatforms[i]->Draw(devCon, activeTech, playerCam);
-	}
-	for(UINT i(0); i != mLightDucks.size(); ++i)
-	{
-		mLightDucks[i]->Draw(devCon, activeTech, playerCam);
 	}
 }
 
@@ -171,10 +127,6 @@ void Game::SolidTessDraw(ID3D11DeviceContext* devCon)
 	{
 		mPlatforms[i]->DrawTess(devCon, activeTech, playerCam);
 	}
-	for(UINT i(0); i != mLightDucks.size(); ++i)
-	{
-		mLightDucks[i]->DrawTess(devCon, activeTech, playerCam);
-	}
 }
 
 void Game::WireTessDraw(ID3D11DeviceContext* devCon)
@@ -193,10 +145,6 @@ void Game::WireTessDraw(ID3D11DeviceContext* devCon)
 	{
 		mPlatforms[i]->DrawTess(devCon, activeTech, playerCam);
 	}
-	for(UINT i(0); i != mLightDucks.size(); ++i)
-	{
-		mLightDucks[i]->DrawTess(devCon, activeTech, playerCam);
-	}
 }
 
 void Game::LightTessDraw(ID3D11DeviceContext* devCon)
@@ -207,8 +155,6 @@ void Game::LightTessDraw(ID3D11DeviceContext* devCon)
 	ID3DX11EffectTechnique* activeTech = Effects::SkyFX->mSolid;
 	mSkyBox->Draw(devCon, activeTech, playerCam);
 
-	mLightHandler->ApplyTessEffects();
-
 	activeTech = Effects::TerrTessFX->mAllLights;
 	mTerrain->DrawTess(devCon, activeTech, playerCam);
 
@@ -217,9 +163,27 @@ void Game::LightTessDraw(ID3D11DeviceContext* devCon)
 	{
 		mPlatforms[i]->DrawTess(devCon, activeTech, playerCam);
 	}
-	for(UINT i(0); i != mLightDucks.size(); ++i)
+}
+
+// Shadow map
+
+void Game::ShadowMapDraw(ID3D11DeviceContext* devCon)
+{
+	Camera* playerCam = mPlayer->GetCamera();
+
+	ID3DX11EffectTechnique* activeTech = Effects::SkyFX->mSolid;
+	mSkyBox->Draw(devCon, activeTech, playerCam);
+
+	Effects::TerrainFX->SetEyePos(playerCam->GetPosition());
+	Effects::NormalFX->SetEyePos(playerCam->GetPosition());
+
+	activeTech = Effects::TerrainFX->mShadow;
+	mTerrain->Draw(devCon, activeTech, playerCam);
+
+	activeTech = Effects::NormalFX->mAllLightsAlpha;
+	for(UINT i(0); i != mPlatforms.size(); ++i)
 	{
-		mLightDucks[i]->DrawTess(devCon, activeTech, playerCam);
+		mPlatforms[i]->Draw(devCon, activeTech, playerCam);
 	}
 }
 

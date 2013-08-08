@@ -4,6 +4,7 @@
 #include "LightDef.h"
 #include "ShadowMap.h"
 #include "Camera.h"
+#include "TerrainEntity.h"
 
 // Very hardcoded class used to handle them lights and stuff!
 
@@ -14,13 +15,9 @@ public:
 	~LightHandler();
 	void Initialize(ID3D11Device* device);
 	void Update(float dt);
-	void Draw(ID3D11DeviceContext* devCon, Camera* camera);
+	void Draw(TerrainEntity* terrain, ID3D11DeviceContext* devCon, Camera* camera);
 	void ApplyEffects();
 	void ApplyTessEffects();
-
-public:
-	XMFLOAT3 GetPoint0Pos() const { return this->mPoints[0].Position; }
-	XMFLOAT3 GetPoint1Pos() const { return this->mPoints[1].Position; }
 
 private:
 	XMMATRIX CalcView(Camera* camera);

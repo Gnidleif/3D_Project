@@ -7,6 +7,7 @@
 #include "InputLayouts.h"
 #include "LoaderClass.h"
 #include "ModelClass.h"
+#include "LightHandler.h"
 
 #include "Game.h"
 #include "SkyBox.h"
@@ -22,7 +23,8 @@ enum DrawMode
 	Wire,
 	LightTess,
 	SolidTess,
-	WireTess
+	WireTess,
+	Shadow
 };
 
 const float mSwitchCD = 1.0f;
@@ -39,12 +41,15 @@ public:
 private:
 	void Input();
 	void SwitchDraw(UINT drawMode);
+	void ShadowDraw();
+	void ResetRTV();
 
 private:
 	float mCurrCD;
 	UINT mCurrDraw;
 	BYTE* mInput;
 	Game* mGame;
+	LightHandler* mLightHandler;
 };
 
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE prevInst, LPSTR cmdLine, int cmdShow)
@@ -75,7 +80,8 @@ Main::Main(HINSTANCE hInst)
 	mGame(new Game()),
 	//mInput(nullptr),
 	mCurrDraw(Light),
-	mCurrCD(0.0f)
+	mCurrCD(0.0f),
+	mLightHandler(new LightHandler())
 {
 	mMainWndCaption = "3D2 AwesomesauceMegaSuperTruperBanana Project";
 }
@@ -91,6 +97,7 @@ Main::~Main()
 	Model->Shutdown();
 
 	SafeDelete(mGame);
+	SafeDelete(mLightHandler);
 }
 
 bool Main::Initialize()
@@ -115,6 +122,7 @@ bool Main::Initialize()
 	InputLayouts::Initialize(mDirect3D->GetDevice());
 	Loader->Initialize(mDirect3D->GetDevice());
 	Model->Initialize(mDirect3D->GetDevice());
+	mLightHandler->Initialize(mDirect3D->GetDevice());
 
 	mGame->Initialize(mDirect3D->GetDevice());
 
@@ -129,40 +137,49 @@ void Main::Update(float dt)
 	mCurrCD += dt;
 
 	this->Input();
-
+	mLightHandler->Update(dt);
 	Text->Update(dt);
 	mGame->Update(dt);
 }
 
 void Main::Draw()
 {
-	ID3D11RenderTargetView* renderTargets[1] = {mDirect3D->GetRTView()};
-	mDirect3D->GetDevCon()->OMSetRenderTargets(1, renderTargets, mDirect3D->GetDSView());
-
-	mDirect3D->GetDevCon()->ClearRenderTargetView(mDirect3D->GetRTView(), reinterpret_cast<const float*>(&Colors::Black));
-	mDirect3D->GetDevCon()->ClearDepthStencilView(mDirect3D->GetDSView(), D3D11_CLEAR_DEPTH|D3D11_CLEAR_STENCIL, 1.0f, 0);
-
-	mDirect3D->GetDevCon()->RSSetViewports(1, &mDirect3D->GetScreenViewport());
-
 	switch(mCurrDraw)
 	{
 	case Solid:
+		this->ResetRTV();
+		mLightHandler->ApplyEffects();
 		mGame->SolidDraw(mDirect3D->GetDevCon());
 		break;
 	case Light:
+		this->ResetRTV();
+		mLightHandler->ApplyEffects();
 		mGame->LightDraw(mDirect3D->GetDevCon());
 		break;
 	case Wire:
+		this->ResetRTV();
+		mLightHandler->ApplyEffects();
 		mGame->WireDraw(mDirect3D->GetDevCon());
 		break;
 	case LightTess:
+		this->ResetRTV();
+		mLightHandler->ApplyTessEffects();
 		mGame->LightTessDraw(mDirect3D->GetDevCon());
 		break;
 	case SolidTess:
+		this->ResetRTV();
+		mLightHandler->ApplyTessEffects();
 		mGame->SolidTessDraw(mDirect3D->GetDevCon());
 		break;
 	case WireTess:
+		this->ResetRTV();
+		mLightHandler->ApplyTessEffects();
 		mGame->WireTessDraw(mDirect3D->GetDevCon());
+		break;
+	case Shadow:
+		this->ShadowDraw();
+		mLightHandler->ApplyEffects();
+		mGame->ShadowMapDraw(mDirect3D->GetDevCon());
 		break;
 	}
 
@@ -242,6 +259,11 @@ void Main::Input()
 			Text->AddTimedText("DrawType", "Wireframe with tessellation", 20.0f, 200.0f, 20.0f, TextColors::White, 2.0f);
 			this->SwitchDraw(WireTess);
 		}
+		else if(mInput[DIK_NUMPAD6] && 0x80 && mCurrCD > mSwitchCD)
+		{
+			Text->AddTimedText("DrawType", "Shadowmapping", 20.0f, 200.0f, 20.0f, TextColors::White, 2.0f);
+			this->SwitchDraw(Shadow);
+		}
 		else if(mInput[DIK_ESCAPE] && 0x80)
 		{
 			SendMessage(mhMainWnd, WM_DESTROY, 0, 0);
@@ -261,4 +283,23 @@ void Main::SwitchDraw(UINT drawMode)
 {
 	this->mCurrCD = 0.0f;
 	this->mCurrDraw = drawMode;
+}
+
+void Main::ShadowDraw()
+{
+	mLightHandler->Draw(mGame->GetTerrain(), mDirect3D->GetDevCon(), mGame->GetPlayerCam());
+
+	mDirect3D->GetDevCon()->RSSetState(0);
+	this->ResetRTV();
+}
+
+void Main::ResetRTV()
+{
+	ID3D11RenderTargetView* renderTargets[1] = {mDirect3D->GetRTView()};
+	mDirect3D->GetDevCon()->OMSetRenderTargets(1, renderTargets, mDirect3D->GetDSView());
+
+	mDirect3D->GetDevCon()->ClearRenderTargetView(mDirect3D->GetRTView(), reinterpret_cast<const float*>(&Colors::Black));
+	mDirect3D->GetDevCon()->ClearDepthStencilView(mDirect3D->GetDSView(), D3D11_CLEAR_DEPTH|D3D11_CLEAR_STENCIL, 1.0f, 0);
+
+	mDirect3D->GetDevCon()->RSSetViewports(1, &mDirect3D->GetScreenViewport());
 }

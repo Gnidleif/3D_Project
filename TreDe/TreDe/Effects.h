@@ -68,6 +68,7 @@ public:
 	ID3DX11EffectTechnique* mSolid;
 	ID3DX11EffectTechnique* mWire;
 	ID3DX11EffectTechnique* mAllLights;
+	ID3DX11EffectTechnique* mShadow;
 
 private:
 	ID3DX11EffectVectorVariable* mEyePos;

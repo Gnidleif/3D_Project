@@ -1,5 +1,6 @@
 #include "LightHandler.h"
 #include "Effects.h"
+#include "InputLayouts.h"
 
 LightHandler::LightHandler(void)
 	: 
@@ -76,17 +77,22 @@ void LightHandler::Update(float dt)
 	mPoints[0].Position = XMFLOAT3(x, y, z);
 }
 
-void LightHandler::Draw(ID3D11DeviceContext* devCon, Camera* camera)
+void LightHandler::Draw(TerrainEntity* terrain, ID3D11DeviceContext* devCon, Camera* camera)
 {
-	ID3DX11EffectTechnique* activeTech = Effects::ShadowFX->mShadowTech;
-
+	devCon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	devCon->IASetInputLayout(InputLayouts::mPos);
+	
 	this->mShadowMap->BindDSVAndSetRTV(devCon);
 	this->mShadowMap->ResetMap();
 
 	Effects::ShadowFX->SetLightPos(this->mPoints[0].Position);
+	Effects::ShadowFX->SetWorld(XMLoadFloat4x4(&terrain->GetInstance()->mWorld));
 	Effects::ShadowFX->SetView(this->CalcView(camera));
 	Effects::ShadowFX->SetProj(this->CalcProj(camera));
 	Effects::ShadowFX->SetShadowMap(mShadowMap->GetDepthSRV());
+
+	Effects::ShadowFX->mShadowTech->GetPassByIndex(0)->Apply(0, devCon);
+	terrain->GetInstance()->mModel->GetMesh()->Draw(devCon);
 }
 
 void LightHandler::ApplyEffects()

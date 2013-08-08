@@ -26,10 +26,17 @@ void ShadowMap::Initialize(ID3D11Device* device)
 
 void ShadowMap::BindDSVAndSetRTV(ID3D11DeviceContext* devCon)
 {
+	// Old
+	//devCon->RSSetViewports(1, &mViewport);
+
+	//ID3D11RenderTargetView* renderTargets[1] = {0};
+	//devCon ->OMSetRenderTargets(1, renderTargets, mDepthDSV);
+	//devCon->ClearDepthStencilView(mDepthDSV, D3D11_CLEAR_DEPTH, 1.0f, 0);
+
+	// Bultens
+	devCon->OMSetRenderTargets(0, 0, mDepthDSV);
 	devCon->RSSetViewports(1, &mViewport);
 
-	ID3D11RenderTargetView* renderTargets[1] = {0};
-	devCon ->OMSetRenderTargets(1, renderTargets, mDepthDSV);
 	devCon->ClearDepthStencilView(mDepthDSV, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
@@ -44,10 +51,10 @@ void ShadowMap::ResetMap()
 		SafeRelease(mDepthDSV);
 		mWidth = width;
 		mHeight = height;
-		Effects::ShadowFX->SetResX(mWidth);
-		Effects::ShadowFX->SetResY(mHeight);
 		CreateMap();
 	}
+	Effects::ShadowFX->SetResX(mWidth);
+	Effects::ShadowFX->SetResY(mHeight);
 }
 
 void ShadowMap::CreateMap()

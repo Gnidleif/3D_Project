@@ -208,43 +208,6 @@ void ComputeSpotLight(
 // Essentially the factor is a scalar in the range 0 to 1.
 // Though, with PCF, the factor is between 0 and 1 (the point is partially in shadow).
 //====================================================================================
-static const float SMAP_SIZE = 2048.0f;
-static const float SMAP_DX = 1.0f / SMAP_SIZE;
-
-float CalcShadowFactor(	SamplerComparisonState samShadow,
-						Texture2D shadowMap,
-						float4 shadowPosH)
-{
-	// Complete projection by dividing with w
-	shadowPosH.xyz /= shadowPosH.w;
-
-	// Depth in NDC space
-	float depth = shadowPosH.z;
-
-	// Texel size
-	const float dx = SMAP_DX;
-
-	float percentLit = 0.0f;
-	
-	const float2 offsets[9] = 
-	{
-		float2(-dx,  -dx), float2(0.0f,  -dx), float2(dx,  -dx),
-		float2(-dx, 0.0f), float2(0.0f, 0.0f), float2(dx, 0.0f),
-		float2(-dx,  +dx), float2(0.0f,  +dx), float2(dx,  +dx)
-	};
-
-	// Each SampleCmpLevelZero does a 4-tap PCF.
-	// We call SampleCmpLevelZero in a 3x3 box filter pattern.
-	[unroll]
-	for (int i = 0; i < 9; ++i)
-	{
-		percentLit += shadowMap.SampleCmpLevelZero(samShadow,
-						shadowPosH.xy + offsets[i], depth).r;
-	}
-
-	// Average the samples
-	return percentLit /= 9.0f;
-}
 
 //===================================================================================
 // Transforms a normal sample to world space

@@ -26,11 +26,13 @@ public:
 	void SolidTessDraw(ID3D11DeviceContext* devCon);
 	void WireTessDraw(ID3D11DeviceContext* devCon);
 	void LightTessDraw(ID3D11DeviceContext* devCon);
+	void ShadowMapDraw(ID3D11DeviceContext* devCon);
 
 	void ControlPlayer(DirectInput* di);
 
 public:
-	Camera* GetPlayerCam() { return this->mPlayer->GetCamera(); }
+	Camera* GetPlayerCam() const { return this->mPlayer->GetCamera(); }
+	TerrainEntity* GetTerrain() const { return this->mTerrain; }
 
 private:
 	void SetTessEffects();
@@ -41,7 +43,5 @@ private:
 	std::vector<StaticEntity*> mPlatforms;
 	//SkinnedEntity* mCharacter;
 	SkyBox* mSkyBox;
-	LightHandler* mLightHandler;
-	std::vector<StaticEntity*> mLightDucks;
 };
 #endif
