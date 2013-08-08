@@ -1,8 +1,0 @@
-newmtl lambert3SG
-illum 4
-Kd 0.80 0.80 0.80
-Ka 0.50 0.50 0.50
-Tf 1.00 1.00 1.00
-map_Kd Platform4_COLOR_LOW.png
-map_bump Platform4_NRM_LOW.png
-Ni 1.00
