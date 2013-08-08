@@ -2210,11 +2210,11 @@ fxgroup
                 mov r1.xyz, r1.xyzx  // unitNormalW<2:NaN:Inf,0:NaN:Inf,1:NaN:Inf>
                 mov r4.xyzw, v4.xyzw  // tangentW<0,1,2,3>
                 
-                #line 218 "../LightDef.fx"
+                #line 275 "../LightDef.fx"
                 mul r3.xyz, r3.xyzx, l(2.000000, 2.000000, 2.000000, 0.000000)
                 add r3.xyz, r3.xyzx, l(-1.000000, -1.000000, -1.000000, 0.000000)  // normalT<0:Inf,1:Inf,2:Inf>
                 
-                #line 221
+                #line 278
                 mov r1.xyz, r1.xyzx  // N<2:NaN:Inf,0:NaN:Inf,1:NaN:Inf>
                 dp3 r0.w, r4.zxyz, r1.xyzx
                 mul r5.xyz, r1.yzxy, r0.wwww
@@ -2230,7 +2230,7 @@ fxgroup
                 add r1.xyz, r1.xyzx, r6.xyzx
                 mul r1.xyz, r1.xyzx, r4.wwww  // B<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 228
+                #line 285
                 mul r4.xyz, r3.xxxx, r4.xyzx
                 mul r1.xyz, r1.xyzx, r3.yyyy
                 add r1.xyz, r1.xyzx, r4.xyzx
@@ -3033,11 +3033,11 @@ fxgroup
                 mov r1.xyz, r1.xyzx  // unitNormalW<2:NaN:Inf,0:NaN:Inf,1:NaN:Inf>
                 mov r4.xyzw, v4.xyzw  // tangentW<0,1,2,3>
                 
-                #line 218 "../LightDef.fx"
+                #line 275 "../LightDef.fx"
                 mul r3.xyz, r3.xyzx, l(2.000000, 2.000000, 2.000000, 0.000000)
                 add r3.xyz, r3.xyzx, l(-1.000000, -1.000000, -1.000000, 0.000000)  // normalT<0:Inf,1:Inf,2:Inf>
                 
-                #line 221
+                #line 278
                 mov r1.xyz, r1.xyzx  // N<2:NaN:Inf,0:NaN:Inf,1:NaN:Inf>
                 dp3 r0.w, r4.zxyz, r1.xyzx
                 mul r5.xyz, r1.yzxy, r0.wwww
@@ -3053,7 +3053,7 @@ fxgroup
                 add r1.xyz, r1.xyzx, r6.xyzx
                 mul r1.xyz, r1.xyzx, r4.wwww  // B<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 228
+                #line 285
                 mul r4.xyz, r3.xxxx, r4.xyzx
                 mul r1.xyz, r1.xyzx, r3.yyyy
                 add r1.xyz, r1.xyzx, r4.xyzx

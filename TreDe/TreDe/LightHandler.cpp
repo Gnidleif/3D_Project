@@ -26,15 +26,14 @@ LightHandler::LightHandler(void)
 	mPoints[0].Diffuse		= XMFLOAT4(0.7f, 0.7f, 0.7f, 1.0f);
 	mPoints[0].Specular		= XMFLOAT4(0.7f, 0.7f, 0.7f, 1.0f);
 	mPoints[0].Attenuation	= XMFLOAT3(0.0f, 0.1f, 0.0f);
-	mPoints[0].Range		= 900.0f;
-	mPoints[0].Position = XMFLOAT3(1500.0f, 50.0f, 1500.0f);
+	mPoints[0].Range		= 750.0f;
 
 	mPoints[1].Ambient		= XMFLOAT4(0.3f, 0.3f, 0.3f, 1.0f);
 	mPoints[1].Diffuse		= XMFLOAT4(0.7f, 0.7f, 0.7f, 1.0f);
 	mPoints[1].Specular		= XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
 	mPoints[1].Attenuation  = XMFLOAT3(1.0f, 1.0f, 1.0f);
 	mPoints[1].Range		= 750.0f;
-	mPoints[1].Position		= XMFLOAT3(400.0f, 600.0f, 400.0f);
+	mPoints[1].Position		= XMFLOAT3(400.0f, 600.0f, 500.0f);
 
 	// Spotlights initialized
 
@@ -70,14 +69,14 @@ void LightHandler::Update(float dt)
 {
 	static float time = 0.0f;
 	time += dt;
-	float x = 250.0f*cosf(1.0f*time) + 750.0f;
-	float y = 500.0f*sinf(1.0f*time) + 750.0f;
-	float z = 750.0f;
+	float x = 250.0f*cosf(0.5f*time) + 1000.0f;
+	float z = 750.0f*sinf(0.5f*time) + 1000.0f;
+	float y = 500.0f;
 
 	mPoints[0].Position = XMFLOAT3(x, y, z);
 }
 
-void LightHandler::Draw(TerrainEntity* terrain, ID3D11DeviceContext* devCon, Camera* camera)
+void LightHandler::Draw(std::vector<StaticEntity*> statics, TerrainEntity* terrain, ID3D11DeviceContext* devCon, Camera* camera)
 {
 	devCon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	devCon->IASetInputLayout(InputLayouts::mPos);
@@ -85,14 +84,39 @@ void LightHandler::Draw(TerrainEntity* terrain, ID3D11DeviceContext* devCon, Cam
 	this->mShadowMap->BindDSVAndSetRTV(devCon);
 	this->mShadowMap->ResetMap();
 
-	Effects::ShadowFX->SetLightPos(this->mPoints[0].Position);
-	Effects::ShadowFX->SetWorld(XMLoadFloat4x4(&terrain->GetInstance()->mWorld));
-	Effects::ShadowFX->SetView(this->CalcView(camera));
-	Effects::ShadowFX->SetProj(this->CalcProj(camera));
-	Effects::ShadowFX->SetShadowMap(mShadowMap->GetDepthSRV());
+	Effects::TerrainFX->SetShadowMap(this->mShadowMap->GetDepthSRV());
+	Effects::NormalFX->SetShadowMap(this->mShadowMap->GetDepthSRV());
 
-	Effects::ShadowFX->mShadowTech->GetPassByIndex(0)->Apply(0, devCon);
-	terrain->GetInstance()->mModel->GetMesh()->Draw(devCon);
+	XMMATRIX lightVP = XMMatrixMultiply(this->CalcView(camera), this->CalcProj(camera));
+
+	Effects::TerrainFX->SetLightVP(lightVP);
+	Effects::NormalFX->SetLightVP(lightVP);
+	Effects::ShadowFX->SetLightVP(lightVP);
+
+	D3DX11_TECHNIQUE_DESC techDesc = {};
+	Effects::ShadowFX->mShadowTech->GetDesc(&techDesc);
+
+	for(UINT i(0); i != techDesc.Passes; ++i)
+	{
+		Effects::ShadowFX->SetWorld(XMLoadFloat4x4(&terrain->GetInstance()->mWorld));
+
+		Effects::ShadowFX->mShadowTech->GetPassByIndex(i)->Apply(0, devCon);
+		terrain->GetInstance()->mModel->GetMesh()->Draw(devCon);
+	}
+
+	for(UINT i(0); i != techDesc.Passes; ++i)
+	{
+		for(UINT j(0); j != statics.size(); ++j)
+		{
+			Effects::ShadowFX->SetWorld(XMLoadFloat4x4(&statics[j]->GetInstance()->mWorld));
+
+			for(UINT k(0); k != statics[j]->GetInstance()->mModel->GetMeshCount(); ++k)
+			{
+				Effects::ShadowFX->mShadowTech->GetPassByIndex(i)->Apply(0, devCon);
+				statics[j]->GetInstance()->mModel->GetMesh(k)->Draw(devCon);
+			}
+		}
+	}
 }
 
 void LightHandler::ApplyEffects()
@@ -119,7 +143,7 @@ void LightHandler::ApplyTessEffects()
 
 XMMATRIX LightHandler::CalcView(Camera* camera)
 {
-	XMVECTOR posVec = XMLoadFloat3(&mSpots[0].Position);
+	XMVECTOR posVec = XMLoadFloat3(&mPoints[0].Position);
 	XMVECTOR up = XMLoadFloat3(&XMFLOAT3(0.0f, 1.0f, 0.0f));
 	XMVECTOR look = XMLoadFloat3(&XMFLOAT3(0.0f, 0.0f, 1.0f));
 	return XMMatrixLookAtLH(posVec, look, up);

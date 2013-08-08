@@ -49,6 +49,7 @@ public:
 	void SetView(const XMMATRIX& matrix) { this->mView->SetMatrix(reinterpret_cast<const float*>(&matrix)); }
 	void SetProj(const XMMATRIX& matrix) { this->mProj->SetMatrix(reinterpret_cast<const float*>(&matrix)); }
 	void SetWorldInvTranspose(const XMMATRIX& matrix) { this->mWorldInvTranspose->SetMatrix(reinterpret_cast<const float*>(&matrix)); }
+	void SetLightVP(const XMMATRIX& matrix) { this->mLightVP->SetMatrix(reinterpret_cast<const float*>(&matrix)); }
 
 	// Set textures
 	void SetBlendMap(ID3D11ShaderResourceView* bm) { this->mBlendMap->SetResource(bm); }
@@ -56,6 +57,7 @@ public:
 	void SetTex1(ID3D11ShaderResourceView* t1) { this->mTex1->SetResource(t1); }
 	void SetTex2(ID3D11ShaderResourceView* t2) { this->mTex2->SetResource(t2); }
 	void SetTex3(ID3D11ShaderResourceView* t3) { this->mTex3->SetResource(t3); }
+	void SetShadowMap(ID3D11ShaderResourceView* sm) { this->mShadowMap->SetResource(sm); }
 
 	// Set lights
 	void SetDirLights(const DirectionalLight* lights, int amount) { this->mDirLights->SetRawValue(lights, 0, amount*sizeof(DirectionalLight)); }
@@ -77,12 +79,14 @@ private:
 	ID3DX11EffectMatrixVariable* mView;
 	ID3DX11EffectMatrixVariable* mProj;
 	ID3DX11EffectMatrixVariable* mWorldInvTranspose;
+	ID3DX11EffectMatrixVariable* mLightVP;
 
 	ID3DX11EffectShaderResourceVariable* mBlendMap;
 	ID3DX11EffectShaderResourceVariable* mTex0;
 	ID3DX11EffectShaderResourceVariable* mTex1;
 	ID3DX11EffectShaderResourceVariable* mTex2;
 	ID3DX11EffectShaderResourceVariable* mTex3;
+	ID3DX11EffectShaderResourceVariable* mShadowMap;
 
 	ID3DX11EffectVariable* mDirLights;
 	ID3DX11EffectVariable* mPointLights;
@@ -104,11 +108,13 @@ public:
 	void SetView(const XMMATRIX& matrix) { this->mView->SetMatrix(reinterpret_cast<const float*>(&matrix)); }
 	void SetProj(const XMMATRIX& matrix) { this->mProj->SetMatrix(reinterpret_cast<const float*>(&matrix)); }
 	void SetWorldInvTranspose(const XMMATRIX& matrix) { this->mWorldInvTranspose->SetMatrix(reinterpret_cast<const float*>(&matrix)); }
+	void SetLightVP(const XMMATRIX& matrix) { this->mLightVP->SetMatrix(reinterpret_cast<const float*>(&matrix)); }
 
 	void SetBoneTransforms(XMFLOAT4X4* matrix, int count) { mBoneTransforms->SetMatrixArray(reinterpret_cast<const float*>(matrix), 0, count); }
 
 	void SetDiffuseMap(ID3D11ShaderResourceView* diffMap) { this->mDiffuseMap->SetResource(diffMap); }
 	void SetNormalMap(ID3D11ShaderResourceView* normMap) { this->mNormalMap->SetResource(normMap); }
+	void SetShadowMap(ID3D11ShaderResourceView* shadMap) { this->mShadowMap->SetResource(shadMap); }
 
 	// Set lights
 	void SetDirLights(const DirectionalLight* lights, int amount) { this->mDirLights->SetRawValue(lights, 0, amount*sizeof(DirectionalLight)); }
@@ -124,6 +130,7 @@ public: // Techniques
 	ID3DX11EffectTechnique* mWire;
 	ID3DX11EffectTechnique* mAllLights;
 	ID3DX11EffectTechnique* mAllLightsAlpha;
+	ID3DX11EffectTechnique* mShadowAlpha;
 
 private:
 	ID3DX11EffectVectorVariable* mEyePos;
@@ -132,12 +139,13 @@ private:
 	ID3DX11EffectMatrixVariable* mView;
 	ID3DX11EffectMatrixVariable* mProj;
 	ID3DX11EffectMatrixVariable* mWorldInvTranspose;
+	ID3DX11EffectMatrixVariable* mLightVP;
 
 	ID3DX11EffectMatrixVariable* mBoneTransforms;
 
 	ID3DX11EffectShaderResourceVariable* mDiffuseMap;
 	ID3DX11EffectShaderResourceVariable* mNormalMap;
-
+	ID3DX11EffectShaderResourceVariable* mShadowMap;
 
 	ID3DX11EffectVariable* mDirLights;
 	ID3DX11EffectVariable* mPointLights;
@@ -271,31 +279,15 @@ public:
 	~ShadowMapEffect() {}
 
 public:
-	void SetLightPos(const XMFLOAT3& lightPos) { this->mLightPos->SetRawValue(&lightPos, 0, sizeof(XMFLOAT3)); }
-
 	void SetWorld(const XMMATRIX& matrix) { this->mWorld->SetMatrix(reinterpret_cast<const float*>(&matrix)); }
-	void SetView(const XMMATRIX& matrix) { this->mView->SetMatrix(reinterpret_cast<const float*>(&matrix)); }
-	void SetProj(const XMMATRIX& matrix) { this->mProj->SetMatrix(reinterpret_cast<const float*>(&matrix)); }
-
-	void SetShadowMap(ID3D11ShaderResourceView* sm) { this->mShadowMap->SetResource(sm); }
-
-	void SetResX(unsigned int data) { this->mResX->SetInt(data); }
-	void SetResY(unsigned int data) { this->mResY->SetInt(data); }
+	void SetLightVP(const XMMATRIX& matrix) { this->mLightVP->SetMatrix(reinterpret_cast<const float*>(&matrix)); }
 
 public:
 	ID3DX11EffectTechnique* mShadowTech;
 
 private:
-	ID3DX11EffectVectorVariable* mLightPos;
-
 	ID3DX11EffectMatrixVariable* mWorld;
-	ID3DX11EffectMatrixVariable* mView;
-	ID3DX11EffectMatrixVariable* mProj;
-
-	ID3DX11EffectShaderResourceVariable* mShadowMap;
-
-	ID3DX11EffectScalarVariable* mResX;
-	ID3DX11EffectScalarVariable* mResY;
+	ID3DX11EffectMatrixVariable* mLightVP;
 };
 
 // Class gathering static objects of all the other effectclasses

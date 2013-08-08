@@ -24,17 +24,17 @@ void Game::Initialize(ID3D11Device* device)
 	mTerrain = new TerrainEntity("../Data/Textures/heightmap.bmp");
 	mTerrain->Initialize(XMFLOAT3(0.0f, 0.0f, 0.0f), 5.0f);
 
-	for(UINT i(0); i != 4; ++i)
+	mSkyBox = new SkyBox("../Data/Textures/SkyBox_Space.dds");
+	mSkyBox->Initialize(device, 5000.0f);
+	
+	for(UINT i(0); i != 3; ++i)
 	{
 		stringstream ss;
 		ss << i + 1;
 		mPlatforms.push_back(new StaticEntity("../Data/Models/Static/Platform" + ss.str() + "/Platform" + ss.str() + ".obj", "../Data/Models/Static/Platform" + ss.str() + "/"));
 		mPlatforms[i]->Initialize(XMFLOAT3(400.0f * (float)i, 300.0f, 400.0f), 0.5f);
 	}
-
-	mSkyBox = new SkyBox("../Data/Textures/SkyBox_Space.dds");
-	mSkyBox->Initialize(device, 5000.0f);
-
+	
 	//
 	Text->AddConstantText("PlayerInfo", "Name: " + mPlayer->GetName(), 20.0f, 20.0f, 20.0f, TextColors::White);
 }
@@ -165,8 +165,7 @@ void Game::LightTessDraw(ID3D11DeviceContext* devCon)
 	}
 }
 
-// Shadow map
-
+// Shadow map drawing
 void Game::ShadowMapDraw(ID3D11DeviceContext* devCon)
 {
 	Camera* playerCam = mPlayer->GetCamera();
@@ -180,7 +179,7 @@ void Game::ShadowMapDraw(ID3D11DeviceContext* devCon)
 	activeTech = Effects::TerrainFX->mShadow;
 	mTerrain->Draw(devCon, activeTech, playerCam);
 
-	activeTech = Effects::NormalFX->mAllLightsAlpha;
+	activeTech = Effects::NormalFX->mShadowAlpha;
 	for(UINT i(0); i != mPlatforms.size(); ++i)
 	{
 		mPlatforms[i]->Draw(devCon, activeTech, playerCam);

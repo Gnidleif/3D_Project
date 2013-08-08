@@ -287,7 +287,7 @@ void Main::SwitchDraw(UINT drawMode)
 
 void Main::ShadowDraw()
 {
-	mLightHandler->Draw(mGame->GetTerrain(), mDirect3D->GetDevCon(), mGame->GetPlayerCam());
+	mLightHandler->Draw(mGame->GetPlatforms(), mGame->GetTerrain(), mDirect3D->GetDevCon(), mGame->GetPlayerCam());
 
 	mDirect3D->GetDevCon()->RSSetState(0);
 	this->ResetRTV();

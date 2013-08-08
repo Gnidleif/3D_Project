@@ -56,12 +56,14 @@ TerrainEffect::TerrainEffect(ID3D11Device* device, string filename)
 	this->mView = mFX->GetVariableByName("gView")->AsMatrix();
 	this->mProj = mFX->GetVariableByName("gProj")->AsMatrix();
 	this->mWorldInvTranspose = mFX->GetVariableByName("gWorldInvTranspose")->AsMatrix();
+	this->mLightVP = mFX->GetVariableByName("gLightVP")->AsMatrix();
 
 	this->mBlendMap = mFX->GetVariableByName("gBlendMap")->AsShaderResource();
 	this->mTex0 = mFX->GetVariableByName("gTex0")->AsShaderResource();
 	this->mTex1 = mFX->GetVariableByName("gTex1")->AsShaderResource();
 	this->mTex2 = mFX->GetVariableByName("gTex2")->AsShaderResource();
 	this->mTex3 = mFX->GetVariableByName("gTex3")->AsShaderResource();
+	this->mShadowMap = mFX->GetVariableByName("gShadowMap")->AsShaderResource();
 
 	this->mDirLights = mFX->GetVariableByName("gDirLights");
 	this->mPointLights = mFX->GetVariableByName("gPointLights");
@@ -82,6 +84,7 @@ NormalEffect::NormalEffect(ID3D11Device* device, string filename)
 	this->mWire = mFX->GetTechniqueByName("Wire");
 	this->mAllLights = mFX->GetTechniqueByName("AllLights");
 	this->mAllLightsAlpha = mFX->GetTechniqueByName("AllLightsAlpha");
+	this->mShadowAlpha = mFX->GetTechniqueByName("ShadowAlpha");
 
 	this->mEyePos = mFX->GetVariableByName("gEyePos")->AsVector();
 
@@ -90,11 +93,13 @@ NormalEffect::NormalEffect(ID3D11Device* device, string filename)
 	this->mView = mFX->GetVariableByName("gView")->AsMatrix();
 	this->mProj = mFX->GetVariableByName("gProj")->AsMatrix();
 	this->mWorldInvTranspose = mFX->GetVariableByName("gWorldInvTranspose")->AsMatrix();
+	this->mLightVP = mFX->GetVariableByName("gLightVP")->AsMatrix();
 
 	this->mBoneTransforms = mFX->GetVariableByName("gBoneTransforms")->AsMatrix();
 
 	this->mDiffuseMap = mFX->GetVariableByName("gDiffMap")->AsShaderResource();
 	this->mNormalMap = mFX->GetVariableByName("gNormMap")->AsShaderResource();
+	this->mShadowMap = mFX->GetVariableByName("gShadowMap")->AsShaderResource();
 
 	this->mDirLights = mFX->GetVariableByName("gDirLights");
 	this->mPointLights = mFX->GetVariableByName("gPointLights");
@@ -178,16 +183,8 @@ ShadowMapEffect::ShadowMapEffect(ID3D11Device* device, std::string filename)
 {
 	this->mShadowTech = mFX->GetTechniqueByName("ShadowTech");
 	
-	this->mLightPos = mFX->GetVariableByName("gLightPos")->AsVector();
-
-	this->mWorld = mFX->GetVariableByName("gShadowWorld")->AsMatrix();
-	this->mView = mFX->GetVariableByName("gShadowView")->AsMatrix();
-	this->mProj = mFX->GetVariableByName("gShadowProj")->AsMatrix();
-
-	this->mShadowMap = mFX->GetVariableByName("gShadowMap")->AsShaderResource();
-
-	this->mResX = mFX->GetVariableByName("gResX")->AsScalar();
-	this->mResY = mFX->GetVariableByName("gResY")->AsScalar();
+	this->mWorld = mFX->GetVariableByName("gWorld")->AsMatrix();
+	this->mLightVP = mFX->GetVariableByName("gLightVP")->AsMatrix();
 }
 
 // Effects functions

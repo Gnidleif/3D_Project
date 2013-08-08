@@ -1,5 +1,7 @@
 #include "ShadowMap.h"
 #include "Effects.h"
+#include <iostream>
+using namespace std;
 
 ShadowMap::ShadowMap()
 	: 
@@ -26,17 +28,10 @@ void ShadowMap::Initialize(ID3D11Device* device)
 
 void ShadowMap::BindDSVAndSetRTV(ID3D11DeviceContext* devCon)
 {
-	// Old
-	//devCon->RSSetViewports(1, &mViewport);
-
-	//ID3D11RenderTargetView* renderTargets[1] = {0};
-	//devCon ->OMSetRenderTargets(1, renderTargets, mDepthDSV);
-	//devCon->ClearDepthStencilView(mDepthDSV, D3D11_CLEAR_DEPTH, 1.0f, 0);
-
-	// Bultens
-	devCon->OMSetRenderTargets(0, 0, mDepthDSV);
 	devCon->RSSetViewports(1, &mViewport);
 
+	ID3D11RenderTargetView* renderTargets[1] = {0};
+	devCon ->OMSetRenderTargets(1, renderTargets, mDepthDSV);
 	devCon->ClearDepthStencilView(mDepthDSV, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
@@ -52,9 +47,9 @@ void ShadowMap::ResetMap()
 		mWidth = width;
 		mHeight = height;
 		CreateMap();
+		
+		cout << "Shadow map size: " << mWidth << ", " << mHeight << "..." << endl;
 	}
-	Effects::ShadowFX->SetResX(mWidth);
-	Effects::ShadowFX->SetResY(mHeight);
 }
 
 void ShadowMap::CreateMap()
@@ -74,7 +69,7 @@ void ShadowMap::CreateMap()
 	texDesc.Height = this->mHeight;
 	texDesc.MipLevels = 1;
 	texDesc.ArraySize = 1;
-	texDesc.Format = DXGI_FORMAT_R32_TYPELESS;
+	texDesc.Format = DXGI_FORMAT_R24G8_TYPELESS;
 	texDesc.SampleDesc.Count = 1;
 	texDesc.Usage = D3D11_USAGE_DEFAULT;
 	texDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
@@ -87,7 +82,7 @@ void ShadowMap::CreateMap()
 
 	D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
 
-	dsvDesc.Format = DXGI_FORMAT_D32_FLOAT;
+	dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	dsvDesc.Texture2D.MipSlice = 0;
 
@@ -95,7 +90,7 @@ void ShadowMap::CreateMap()
 		MessageBox(0, "Error creating DepthMap DSV", "Error" , 0);
 
 	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
-	srvDesc.Format = DXGI_FORMAT_R32_FLOAT;
+	srvDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
 	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 	srvDesc.Texture2D.MipLevels = texDesc.MipLevels;
 	srvDesc.Texture2D.MostDetailedMip = 0;

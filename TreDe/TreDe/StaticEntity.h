@@ -15,13 +15,13 @@ public:
 	void DrawTess(ID3D11DeviceContext* devCon, ID3DX11EffectTechnique* activeTech, Camera* camera);
 
 public:
-	XMMATRIX GetWorld() const { return XMLoadFloat4x4(&this->mModelInstance.mWorld); }
+	StaticModel::Instance* GetInstance() { return this->mModelInstance; }
 
 private:
 	void CalcWorld();
 
 private:
-	StaticModel::Instance mModelInstance;
+	StaticModel::Instance* mModelInstance;
 };
 #endif
 

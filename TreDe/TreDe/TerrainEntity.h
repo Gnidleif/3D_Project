@@ -15,12 +15,12 @@ public:
 	void DrawTess(ID3D11DeviceContext* devCon, ID3DX11EffectTechnique* activeTech, Camera* camera);
 
 public:
-	TerrainModel::Instance* GetInstance() { return &this->mModelInstance; }
+	TerrainModel::Instance* GetInstance() { return this->mModelInstance; }
 
 private:
 	void CalcWorld();
 
 private:
-	TerrainModel::Instance mModelInstance;
+	TerrainModel::Instance* mModelInstance;
 };
 #endif

@@ -5,6 +5,7 @@
 #include "ShadowMap.h"
 #include "Camera.h"
 #include "TerrainEntity.h"
+#include "StaticEntity.h"
 
 // Very hardcoded class used to handle them lights and stuff!
 
@@ -15,7 +16,7 @@ public:
 	~LightHandler();
 	void Initialize(ID3D11Device* device);
 	void Update(float dt);
-	void Draw(TerrainEntity* terrain, ID3D11DeviceContext* devCon, Camera* camera);
+	void Draw(std::vector<StaticEntity*> statics, TerrainEntity* terrain, ID3D11DeviceContext* devCon, Camera* camera);
 	void ApplyEffects();
 	void ApplyTessEffects();
 

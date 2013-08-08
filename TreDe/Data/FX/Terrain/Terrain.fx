@@ -1,4 +1,4 @@
-#include "../ShadowMap/ShadowMap.fx"
+#include "../LightDef.fx"
 
 cbuffer cbPerFrame
 {
@@ -15,6 +15,7 @@ cbuffer cbPerObject
 	float4x4 gView;
 	float4x4 gProj;
 	float4x4 gWorldInvTranspose;
+	float4x4 gLightVP;
 };
 
 cbuffer cbFixed
@@ -28,6 +29,7 @@ Texture2D gTex0;
 Texture2D gTex1;
 Texture2D gTex2;
 Texture2D gTex3;
+Texture2D gShadowMap;
 
 SamplerState samLinear
 {
@@ -36,6 +38,19 @@ SamplerState samLinear
 	AddressV = WRAP;
 };
 
+SamplerState samClampLinear
+{
+	Filter = MIN_MAG_MIP_LINEAR;
+	AddressU = CLAMP;
+	AddressV = CLAMP;
+};
+
+DepthStencilState NoDepthWrites
+{
+    DepthEnable = TRUE;
+    DepthWriteMask = ALL;
+	DepthFunc = LESS_EQUAL;
+};
 
 // Input Vertex shader
 struct VSIn
@@ -80,14 +95,14 @@ struct VSOut_Shadow
 	float3 Normal : NORMAL;
 	float2 Tiled : TEXCOORD0;
 	float2 Stretched : TEXCOORD1;
-	float4 projTexC : TEXCOORD2;
+	float4 ProjTex : TEXCOORD2;
 };
 
 VSOut_Shadow VSScene_Shadow(VSIn input)
 {
 	VSOut_Shadow output = (VSOut_Shadow)0;
 	float4x4 wvp = mul(gWorld, mul(gView, gProj));
-	float4x4 lightwvp = mul(gShadowWorld, mul(gShadowView, gShadowProj));
+	float4x4 lightwvp = mul(gWorld, gLightVP);
 
 	output.PosH = mul(float4(input.PosL, 1.0f), wvp);
 
@@ -97,7 +112,7 @@ VSOut_Shadow VSScene_Shadow(VSIn input)
 	output.Tiled = texScale * input.TexC;
 	output.Stretched = input.TexC;
 
-	output.projTexC = mul(float4(input.PosL, 1.0f), lightwvp);
+	output.ProjTex = mul(float4(input.PosL, 1.0f), lightwvp);
 
 	return output;
 };
@@ -131,6 +146,7 @@ float4 PSScene_Shadow(VSOut_Shadow input,
 	float4 litColor = texColor;
 	if(dirLightAmount > 0 || pointLightAmount > 0 || spotLightAmount > 0)
 	{
+
 		// This might be wrong, check later
 		float3 toEye = normalize(gEyePos - input.PosW);
 
@@ -138,47 +154,45 @@ float4 PSScene_Shadow(VSOut_Shadow input,
 		float4 diffuse = float4(0.0f, 0.0f, 0.0f, 0.0f);
 		float4 specular = float4(0.0f, 0.0f, 0.0f, 0.0f);
 
-		float3 shadow = float3(1.0f, 1.0f, 1.0f);
-
 		[unroll]
 		for(int i = 0; i < dirLightAmount; ++i)
 		{
 			float4 A, D, S;
-			ComputeDirectionalLight(gMaterial, gDirLights[i], input.Normal, -toEye, A, D, S);
+			ComputeDirectionalLight(gMaterial, gDirLights[i], input.Normal, toEye, A, D, S);
 
 			ambient += A;
-			diffuse += shadow[i]*D;
-			specular += shadow[i]*S;
+			diffuse += D;
+			specular += S;
 		}
 
 		[unroll]
 		for(int j = 0; j < pointLightAmount; ++j)
 		{
 			float4 A, D, S;
-			ComputePointLight(gMaterial, gPointLights[j], input.PosW, input.Normal, -toEye, A, D, S);
+			ComputePointLight(gMaterial, gPointLights[j], input.PosW, input.Normal, toEye, A, D, S);
 
 			ambient += A;
-			diffuse += shadow[0]*D;
-			specular += shadow[0]*S;
+			diffuse += D;
+			specular += S;
 		}
 
 		[unroll]
 		for(int k = 0; k < spotLightAmount; ++k)
 		{
 			float4 A, D, S;
-			ComputeSpotLight(gMaterial, gSpotLights[k], input.PosW, input.Normal, -toEye, A, D, S);
+			ComputeSpotLight(gMaterial, gSpotLights[k], input.PosW, input.Normal, toEye, A, D, S);
 
 			ambient += A;
-			diffuse += shadow[k]*D;
-			specular += shadow[k]*S;
+			diffuse += D;
+			specular += S;
 		}
+		float shadow = CalcShadow(samClampLinear, gShadowMap, input.ProjTex);
 
-		litColor = texColor * (ambient + diffuse) + specular;
+		litColor = (texColor * (ambient + diffuse) + specular) * shadow;
+		litColor += texColor * lightAddScale;
 	}
 
-	// Materials later
 	litColor.a = gMaterial.Diffuse.a * texColor.a;
-	litColor += texColor * lightAddScale;
 
 	return litColor;
 }
@@ -279,11 +293,11 @@ float4 PSScene_Lights(VSOut input,
 		}
 
 		litColor = texColor * (ambient + diffuse) + specular;
+		litColor += texColor * lightAddScale;
 	}
 
 	// Materials later
 	litColor.a = gMaterial.Diffuse.a * texColor.a;
-	litColor += texColor * lightAddScale;
 
 	return litColor;
 }

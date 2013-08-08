@@ -209,6 +209,63 @@ void ComputeSpotLight(
 // Though, with PCF, the factor is between 0 and 1 (the point is partially in shadow).
 //====================================================================================
 
+static const float SMAP_SIZE = 2048.0f;
+static const float SMAP_DX = 1.0f / SMAP_SIZE;
+
+float CalcShadowFactor(SamplerComparisonState samShadow, Texture2D shadowMap,
+						float4 shadowPosH)
+{
+	shadowPosH.xyz /= shadowPosH.w;
+
+	float depth = shadowPosH.z;
+
+	const float dx = SMAP_DX;
+
+	float percentLit = 0.0f;
+	const float2 offsets[9] = 
+	{
+		float2(-dx, -dx),	float2(0.0f, -dx),	float2(dx, -dx),
+		float2(-dx, 0.0f),	float2(0.0f, 0.0f),	float2(dx, 0.0f),
+		float2(-dx, +dx),	float2(0.0f, +dx),	float2(dx, +dx)
+	};
+
+	//3x3 box filter pattern. each sample does a 4-tap PCF
+	[unroll]
+	for(int i = 0; i < 9; ++i)
+	{
+		percentLit += shadowMap.SampleCmpLevelZero(samShadow,
+			shadowPosH.xy + offsets[i], depth).r;
+	}
+	//average the samples
+	return percentLit /= 0.9f;
+}
+
+static const float SMAP_SIZEX = 1024.0f;
+static const float SMAP_SIZEY = 768.0f;
+static const float SHADOW_EPSILON = 0.00001f;
+
+float CalcShadow(SamplerState samState, Texture2D shadowMap, float4 ProjTex)
+{
+	ProjTex.xy /= ProjTex.w;
+
+	float2 smTex = float2(0.5f * ProjTex.x, -0.5f * ProjTex.y) + 0.5f;
+	float depth = ProjTex.z / ProjTex.w;
+
+	float dx = 1.0f / SMAP_SIZEX;
+	float dy = 1.0f / SMAP_SIZEY;
+
+	float s0 = (shadowMap.Sample(samState, smTex).r + SHADOW_EPSILON < depth) ? 0.0f : 1.0f;
+	float s1 = (shadowMap.Sample(samState, smTex + float2(dx, 0.0f)).r + SHADOW_EPSILON < depth) ? 0.0f : 1.0f;
+	float s2 = (shadowMap.Sample(samState, smTex + float2(0.0f, dy)).r + SHADOW_EPSILON < depth) ? 0.0f : 1.0f;
+	float s3 = (shadowMap.Sample(samState, smTex + float2(dx, dy)).r + SHADOW_EPSILON < depth) ? 0.0f : 1.0f;
+
+	float2 texelPos = float2(smTex.x * SMAP_SIZEX, smTex.y * SMAP_SIZEY); //Transform to texel space
+
+	float2 lerps = frac(texelPos);
+
+	return lerp(lerp(s0, s1, lerps.x), lerp(s2, s3, lerps.x), lerps.y);
+}
+
 //===================================================================================
 // Transforms a normal sample to world space
 //===================================================================================
