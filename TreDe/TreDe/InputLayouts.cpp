@@ -241,6 +241,23 @@ void InputLayouts::Initialize(ID3D11Device* device)
 		pd.pIAInputSignature,
 		pd.IAInputSignatureSize,
 		&mPos);
+
+	// Particesystem
+	Effects::SunFX->GetTechnique()->GetPassByIndex(0)->GetDesc(&pd);
+	device->CreateInputLayout(
+		InputLayoutDesc::Particle,
+		5,
+		pd.pIAInputSignature,
+		pd.IAInputSignatureSize,
+		&mParticle);
+
+	Effects::SunFX->GetTechnique()->GetPassByIndex(1)->GetDesc(&pd);
+	device->CreateInputLayout(
+		InputLayoutDesc::Particle,
+		5,
+		pd.pIAInputSignature,
+		pd.IAInputSignatureSize,
+		&mParticle);
 }
 
 void InputLayouts::Shutdown()

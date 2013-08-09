@@ -135,6 +135,9 @@
     <ClInclude Include="ShadowMap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ParticleSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameTimer.cpp">
@@ -233,6 +236,9 @@
     <ClCompile Include="ShadowMap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ParticleSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\Data\FX\Sky\Sky.fx">
@@ -251,6 +257,9 @@
       <Filter>FX</Filter>
     </CustomBuild>
     <CustomBuild Include="..\Data\FX\ShadowMap\ShadowMap.fx">
+      <Filter>FX</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\Data\FX\Particle\Sun.fx">
       <Filter>FX</Filter>
     </CustomBuild>
   </ItemGroup>

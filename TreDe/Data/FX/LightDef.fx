@@ -254,7 +254,7 @@ float CalcShadow(SamplerState samState, Texture2D shadowMap, float4 ProjTex)
 	float dx = 1.0f / SMAP_SIZEX;
 	float dy = 1.0f / SMAP_SIZEY;
 
-	float s0 = (shadowMap.Sample(samState, smTex).r + SHADOW_EPSILON < depth) ? 0.0f : 1.0f;
+	float s0 = (shadowMap.Sample(samState, smTex + float2(0.0f, 0.0f)).r + SHADOW_EPSILON < depth) ? 0.0f : 1.0f;
 	float s1 = (shadowMap.Sample(samState, smTex + float2(dx, 0.0f)).r + SHADOW_EPSILON < depth) ? 0.0f : 1.0f;
 	float s2 = (shadowMap.Sample(samState, smTex + float2(0.0f, dy)).r + SHADOW_EPSILON < depth) ? 0.0f : 1.0f;
 	float s3 = (shadowMap.Sample(samState, smTex + float2(dx, dy)).r + SHADOW_EPSILON < depth) ? 0.0f : 1.0f;

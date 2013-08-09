@@ -26,7 +26,7 @@ cbuffer cbSkin
 
 cbuffer cbFixed
 {
-	float lightAddScale = 0.5f;
+	float lightAddScale = 0.3f;
 };
 
 Texture2D gDiffMap;

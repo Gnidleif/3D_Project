@@ -8,6 +8,7 @@
 #include "LoaderClass.h"
 #include "ModelClass.h"
 #include "LightHandler.h"
+#include "ParticleSystem.h"
 
 #include "Game.h"
 #include "SkyBox.h"
@@ -50,13 +51,14 @@ private:
 	BYTE* mInput;
 	Game* mGame;
 	LightHandler* mLightHandler;
+	ParticleSystem* mSun;
 };
 
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE prevInst, LPSTR cmdLine, int cmdShow)
 {
 #if defined (_DEBUG) | (DEBUG)
 	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
-	//_CrtSetBreakAlloc(322);
+	//_CrtSetBreakAlloc(175);
 	if(AllocConsole())
 	{
 		freopen("CONOUT$", "wt", stdout);
@@ -81,7 +83,8 @@ Main::Main(HINSTANCE hInst)
 	//mInput(nullptr),
 	mCurrDraw(Light),
 	mCurrCD(0.0f),
-	mLightHandler(new LightHandler())
+	mLightHandler(new LightHandler()),
+	mSun(new ParticleSystem())
 {
 	mMainWndCaption = "3D2 AwesomesauceMegaSuperTruperBanana Project";
 }
@@ -98,6 +101,7 @@ Main::~Main()
 
 	SafeDelete(mGame);
 	SafeDelete(mLightHandler);
+	SafeDelete(mSun);
 }
 
 bool Main::Initialize()
@@ -123,6 +127,12 @@ bool Main::Initialize()
 	Loader->Initialize(mDirect3D->GetDevice());
 	Model->Initialize(mDirect3D->GetDevice());
 	mLightHandler->Initialize(mDirect3D->GetDevice());
+	mSun->Initialize(
+		mDirect3D->GetDevice(), 
+		mDirect3D->GetDevCon(),
+		Effects::SunFX,
+		"../Data/Textures/sun.dds",
+		100);
 
 	mGame->Initialize(mDirect3D->GetDevice());
 
@@ -140,6 +150,8 @@ void Main::Update(float dt)
 	mLightHandler->Update(dt);
 	Text->Update(dt);
 	mGame->Update(dt);
+	mSun->Update(dt, D3D11App::mTimer.getTimeElapsedS());
+	mSun->SetEmitPos(mLightHandler->GetPoint0Pos());
 }
 
 void Main::Draw()
@@ -182,6 +194,7 @@ void Main::Draw()
 		mGame->ShadowMapDraw(mDirect3D->GetDevCon());
 		break;
 	}
+	mSun->Draw(mGame->GetPlayerCam());
 
 	// If the text isn't drawn last, objects in the world might hide it
 	Text->Draw();
@@ -189,9 +202,10 @@ void Main::Draw()
 	ID3D11ShaderResourceView* nullSRV[16] = { 0 };
 	mDirect3D->GetDevCon()->PSGetShaderResources(0, 16, nullSRV);
 
-	float blendFactor[] = {0.0f, 0.0f, 0.0f, 0.0f};
 	mDirect3D->GetDevCon()->RSSetState(0);
 	mDirect3D->GetDevCon()->OMSetDepthStencilState(0, 0);
+
+	float blendFactor[] = {0.0f, 0.0f, 0.0f, 0.0f};
 	mDirect3D->GetDevCon()->OMSetBlendState(0, blendFactor, 0xffffffff);
 
 	mDirect3D->GetSwapChain()->Present(0, 0);

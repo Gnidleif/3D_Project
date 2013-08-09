@@ -69,8 +69,8 @@ void LightHandler::Update(float dt)
 {
 	static float time = 0.0f;
 	time += dt;
-	float x = 250.0f*cosf(0.5f*time) + 1000.0f;
-	float z = 750.0f*sinf(0.5f*time) + 1000.0f;
+	float x = 250.0f*cosf(0.3f*time) + 1000.0f;
+	float z = 750.0f*sinf(0.3f*time) + 1000.0f;
 	float y = 500.0f;
 
 	mPoints[0].Position = XMFLOAT3(x, y, z);

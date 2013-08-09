@@ -187,6 +187,29 @@ ShadowMapEffect::ShadowMapEffect(ID3D11Device* device, std::string filename)
 	this->mLightVP = mFX->GetVariableByName("gLightVP")->AsMatrix();
 }
 
+// Particle effect constructor
+ParticleEffect::ParticleEffect(ID3D11Device* device, std::string filename)
+	: VirtualEffect(device, filename)
+{
+	this->mViewProj = mFX->GetVariableByName("gViewProj")->AsMatrix();
+	
+	this->mEyePos = mFX->GetVariableByName("gEyePos")->AsVector();
+	this->mEmitPos = mFX->GetVariableByName("gEmitPos")->AsVector();
+	this->mEmitDir = mFX->GetVariableByName("gEmitDir")->AsVector();
+
+	this->mGameTime = mFX->GetVariableByName("gGameTime")->AsScalar();
+	this->mTimeStep = mFX->GetVariableByName("gTimeStep")->AsScalar();
+
+	this->mTexArray = mFX->GetVariableByName("gTexArray")->AsShaderResource();
+	this->mRandomTex = mFX->GetVariableByName("gRandomTex")->AsShaderResource();
+}
+
+SunEffect::SunEffect(ID3D11Device* device, std::string filename)
+	: ParticleEffect(device, filename)
+{
+	this->mDraw = mFX->GetTechniqueByName("Draw");
+}
+
 // Effects functions
 SkyEffect* Effects::SkyFX = nullptr;
 TerrainEffect* Effects::TerrainFX = nullptr;
@@ -194,6 +217,7 @@ NormalEffect* Effects::NormalFX = nullptr;
 TessellationEffect* Effects::TessFX = nullptr;
 TerrainTessellationEffect* Effects::TerrTessFX = nullptr;
 ShadowMapEffect* Effects::ShadowFX = nullptr;
+SunEffect* Effects::SunFX = nullptr;
 
 void Effects::Initialize(ID3D11Device* device)
 {
@@ -203,6 +227,7 @@ void Effects::Initialize(ID3D11Device* device)
 	TessFX = new TessellationEffect(device, "../Data/FX/Tessellation/Tessellation.fxo");
 	TerrTessFX = new TerrainTessellationEffect(device, "../Data/FX/TerrainTessellation/TerrainTessellation.fxo");
 	ShadowFX = new ShadowMapEffect(device, "../Data/FX/ShadowMap/ShadowMap.fxo");
+	SunFX = new SunEffect(device, "../Data/FX/Particle/Sun.fxo");
 }
 
 void Effects::Shutdown()
@@ -213,4 +238,5 @@ void Effects::Shutdown()
 	SafeDelete(TessFX);
 	SafeDelete(TerrTessFX);
 	SafeDelete(ShadowFX);
+	SafeDelete(SunFX);
 }

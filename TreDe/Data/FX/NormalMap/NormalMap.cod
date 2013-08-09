@@ -28,7 +28,7 @@ cbuffer cbSkin
 
 cbuffer cbFixed
 {
-    float   lightAddScale = 0.5;        // Offset:    0, size:    4
+    float   lightAddScale = 0.300000012;// Offset:    0, size:    4
 }
 
 //
@@ -1495,7 +1495,7 @@ fxgroup
                 // {
                 //
                 //   float lightAddScale;               // Offset:    0 Size:     4
-                //      = 0x3f000000 
+                //      = 0x3e99999a 
                 //
                 // }
                 //
@@ -1861,7 +1861,7 @@ fxgroup
                 // {
                 //
                 //   float lightAddScale;               // Offset:    0 Size:     4
-                //      = 0x3f000000 
+                //      = 0x3e99999a 
                 //
                 // }
                 //
@@ -2378,7 +2378,7 @@ fxgroup
                 // {
                 //
                 //   float lightAddScale;               // Offset:    0 Size:     4
-                //      = 0x3f000000 
+                //      = 0x3e99999a 
                 //
                 // }
                 //
@@ -2653,7 +2653,8 @@ fxgroup
                 div r0.w, r4.z, r4.w  // depth<0:NaN:Inf>
                 
                 #line 257
-                sample_indexable(texture2d)(float,float,float,float) r1.w, r4.xyxx, t2.yzwx, s0
+                add r4.zw, r4.xxxy, l(0.000000, 0.000000, 0.000000, 0.000000)
+                sample_indexable(texture2d)(float,float,float,float) r1.w, r4.zwzz, t2.yzwx, s0
                 add r1.w, r1.w, l(0.000010)
                 lt r1.w, r1.w, r0.w
                 movc r1.w, r1.w, l(0), l(1.000000)  // s0<0:[-0f,1f]>
@@ -2705,7 +2706,7 @@ fxgroup
                 mov o0.xyz, r0.xyzx  // PSScene_Shadow<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov o0.w, r0.w  // PSScene_Shadow<3:NaN:Inf>
                 ret 
-                // Approximately 200 instruction slots used
+                // Approximately 201 instruction slots used
                             
             };
             RasterizerState = Solidframe;

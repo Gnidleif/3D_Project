@@ -20,6 +20,9 @@ public:
 	void ApplyEffects();
 	void ApplyTessEffects();
 
+public:
+	XMFLOAT3 GetPoint0Pos() const { return this->mPoints[0].Position; }
+
 private:
 	XMMATRIX CalcView(Camera* camera);
 	XMMATRIX CalcProj(Camera* camera);

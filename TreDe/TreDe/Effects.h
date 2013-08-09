@@ -290,6 +290,52 @@ private:
 	ID3DX11EffectMatrixVariable* mLightVP;
 };
 
+class ParticleEffect : public VirtualEffect
+{
+public:
+	ParticleEffect(ID3D11Device* device, std::string filename);
+	~ParticleEffect() {}
+	// Yeah that's right, only one technique per particleeffect!
+	virtual ID3DX11EffectTechnique* GetTechnique() const = 0;
+
+public:
+	void SetViewProj(const XMMATRIX& matrix) { this->mViewProj->SetMatrix(reinterpret_cast<const float*>(&matrix)); }
+
+	void SetEyePos(const XMFLOAT3& vector) { this->mEyePos->SetRawValue(&vector, 0, sizeof(XMFLOAT3)); }
+	void SetEmitPos(const XMFLOAT3& vector) { this->mEmitPos->SetRawValue(&vector, 0, sizeof(XMFLOAT3)); }
+	void SetEmitDir(const XMFLOAT3& vector) { this->mEmitDir->SetRawValue(&vector, 0, sizeof(XMFLOAT3)); }
+
+	void SetGameTime(float data) { this->mGameTime->SetFloat(data); }
+	void SetTimeStep(float data) { this->mTimeStep->SetFloat(data); }
+
+	void SetTexArray(ID3D11ShaderResourceView* tex) { this->mTexArray->SetResource(tex); }
+	void SetRandomTex(ID3D11ShaderResourceView* tex) { this->mRandomTex->SetResource(tex); }
+
+protected:
+	ID3DX11EffectMatrixVariable* mViewProj;
+
+	ID3DX11EffectVectorVariable* mEyePos;
+	ID3DX11EffectVectorVariable* mEmitPos;
+	ID3DX11EffectVectorVariable* mEmitDir;
+
+	ID3DX11EffectScalarVariable* mGameTime;
+	ID3DX11EffectScalarVariable* mTimeStep;
+
+	ID3DX11EffectShaderResourceVariable* mTexArray;
+	ID3DX11EffectShaderResourceVariable* mRandomTex;
+};
+
+class SunEffect : public ParticleEffect
+{
+public:
+	SunEffect(ID3D11Device* device, std::string filename);
+	~SunEffect() {}
+	ID3DX11EffectTechnique* GetTechnique() const { return this->mDraw; }
+
+private:
+	ID3DX11EffectTechnique* mDraw;
+};
+
 // Class gathering static objects of all the other effectclasses
 class Effects
 {
@@ -303,5 +349,6 @@ public:
 	static TessellationEffect* TessFX;
 	static TerrainTessellationEffect* TerrTessFX;
 	static ShadowMapEffect* ShadowFX;
+	static SunEffect* SunFX;
 };
 #endif
