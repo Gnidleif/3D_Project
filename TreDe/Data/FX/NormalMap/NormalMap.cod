@@ -2449,11 +2449,11 @@ fxgroup
                 mov r1.xyz, r1.xyzx  // unitNormalW<2:NaN:Inf,0:NaN:Inf,1:NaN:Inf>
                 mov r4.xyzw, v4.xyzw  // tangentW<0,1,2,3>
                 
-                #line 275 "../LightDef.fx"
+                #line 289 "../LightDef.fx"
                 mul r3.xyz, r3.xyzx, l(2.000000, 2.000000, 2.000000, 0.000000)
                 add r3.xyz, r3.xyzx, l(-1.000000, -1.000000, -1.000000, 0.000000)  // normalT<0:Inf,1:Inf,2:Inf>
                 
-                #line 278
+                #line 292
                 mov r1.xyz, r1.xyzx  // N<2:NaN:Inf,0:NaN:Inf,1:NaN:Inf>
                 dp3 r0.w, r4.zxyz, r1.xyzx
                 mul r5.xyz, r1.yzxy, r0.wwww
@@ -2469,7 +2469,7 @@ fxgroup
                 add r1.xyz, r1.xyzx, r6.xyzx
                 mul r1.xyz, r1.xyzx, r4.wwww  // B<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 285
+                #line 299
                 mul r4.xyz, r3.xxxx, r4.xyzx
                 mul r1.xyz, r1.xyzx, r3.yyyy
                 add r1.xyz, r1.xyzx, r4.xyzx
@@ -2652,27 +2652,29 @@ fxgroup
                 add r4.xy, r4.xyxx, l(0.500000, 0.500000, 0.000000, 0.000000)  // smTex<0:NaN:Inf,1:NaN:Inf>
                 div r0.w, r4.z, r4.w  // depth<0:NaN:Inf>
                 
-                #line 257
+                #line 268
                 add r4.zw, r4.xxxy, l(0.000000, 0.000000, 0.000000, 0.000000)
                 sample_indexable(texture2d)(float,float,float,float) r1.w, r4.zwzz, t2.yzwx, s0
                 add r1.w, r1.w, l(0.000010)
                 lt r1.w, r1.w, r0.w
-                movc r1.w, r1.w, l(0), l(1.000000)  // s0<0:[-0f,1f]>
+                movc r1.w, r1.w, l(0), l(1.000000)  // s<0:[-0f,1f]>
                 add r4.zw, r4.xxxy, l(0.000000, 0.000000, 0.000977, 0.000000)
                 sample_indexable(texture2d)(float,float,float,float) r3.w, r4.zwzz, t2.yzwx, s0
                 add r3.w, r3.w, l(0.000010)
                 lt r3.w, r3.w, r0.w
-                movc r3.w, r3.w, l(0), l(1.000000)  // s1<0:[-0f,1f]>
+                movc r3.w, r3.w, l(0), l(1.000000)  // s<1:[-0f,1f]>
                 add r4.zw, r4.xxxy, l(0.000000, 0.000000, 0.000000, 0.001302)
                 sample_indexable(texture2d)(float,float,float,float) r4.z, r4.zwzz, t2.yzxw, s0
                 add r4.z, r4.z, l(0.000010)
                 lt r4.z, r4.z, r0.w
-                movc r4.z, r4.z, l(0), l(1.000000)  // s2<0:[-0f,1f]>
+                movc r4.z, r4.z, l(0), l(1.000000)  // s<2:[-0f,1f]>
                 add r5.xy, r4.xyxx, l(0.000977, 0.001302, 0.000000, 0.000000)
                 sample_indexable(texture2d)(float,float,float,float) r4.w, r5.xyxx, t2.yzwx, s0
                 add r4.w, r4.w, l(0.000010)
                 lt r0.w, r4.w, r0.w
-                movc r0.w, r0.w, l(0), l(1.000000)  // s3<0:[-0f,1f]>
+                movc r0.w, r0.w, l(0), l(1.000000)  // s<3:[-0f,1f]>
+                
+                #line 276
                 mul r4.xy, r4.xyxx, l(1024.000000, 768.000000, 0.000000, 0.000000)  // texelPos<0:NaN:Inf,1:NaN:Inf>
                 frc r4.xy, r4.xyxx  // lerps<0:NaN,1:NaN>
                 mov r4.w, -r1.w

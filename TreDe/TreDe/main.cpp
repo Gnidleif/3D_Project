@@ -156,6 +156,7 @@ void Main::Update(float dt)
 
 void Main::Draw()
 {
+	mSun->Draw(mGame->GetPlayerCam());
 	switch(mCurrDraw)
 	{
 	case Solid:
@@ -194,7 +195,6 @@ void Main::Draw()
 		mGame->ShadowMapDraw(mDirect3D->GetDevCon());
 		break;
 	}
-	mSun->Draw(mGame->GetPlayerCam());
 
 	// If the text isn't drawn last, objects in the world might hide it
 	Text->Draw();
