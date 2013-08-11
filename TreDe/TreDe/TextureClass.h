@@ -11,11 +11,13 @@ class TextureClass
 {
 public:
 	static TextureClass* GetInstance();
-	void Initialize(ID3D11Device* device);
+	void Initialize(ID3D11Device* device, ID3D11DeviceContext* devCon);
 	void Shutdown();
 
 public:
 	ID3D11ShaderResourceView* GetTexture(std::string key);
+	ID3D11ShaderResourceView* GetTexArray(std::string key);
+	ID3D11ShaderResourceView* GetRandomTex();
 
 private:
 	TextureClass();
@@ -26,6 +28,7 @@ private:
 private:
 	static TextureClass* mInstance;
 	ID3D11Device* mDevice;
+	ID3D11DeviceContext* mDevCon;
 	std::map<std::string, ID3D11ShaderResourceView*> mTextureSRV;
 };
 #endif

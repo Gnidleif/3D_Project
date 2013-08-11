@@ -190,7 +190,7 @@ GeometryShader GS_StreamOut =
         #line 102
             mov r0.yzw, cb0[5].xxyz  // p<0,1,2>
             mul r1.xyz, r1.xyzx, l(10.000000, 10.000000, 10.000000, 0.000000)  // p<3:NaN:Inf,4:NaN:Inf,5:NaN:Inf>
-            mov r2.xy, l(50.000000,50.000000,0,0)  // p<6: 50f,7: 50f>
+            mov r2.xy, l(100.000000,100.000000,0,0)  // p<6: 100f,7: 100f>
             mov r1.w, l(0)  // p<8: 0f>
             mov r2.z, l(1)  // p<9: 1u>
             mov o0.xyz, r0.yzwy  // stream<0,0,0>
@@ -204,22 +204,19 @@ GeometryShader GS_StreamOut =
             mov r0.x, l(0)  // input<8: 0f>
           endif 
         
-        #line 112
-          ge r0.y, l(0.300000), r0.x
-          if_nz r0.y
-            mov o0.xyz, v[0][0].xyzx  // stream<0,0,0>
-            mov o1.xyz, v[0][1].xyzx  // stream<0,0,0>
-            mov o2.xy, v[0][2].xyxx  // stream<0,0>
-            mov o2.z, r0.x  // stream<0>
-            mov o3.x, v[0][3].x  // stream<0>
-            emit_stream m0
-          endif 
+        #line 113
+          mov o0.xyz, v[0][0].xyzx  // stream<0,0,0>
+          mov o1.xyz, v[0][1].xyzx  // stream<0,0,0>
+          mov o2.xy, v[0][2].xyxx  // stream<0,0>
+          mov o2.z, r0.x  // stream<0>
+          mov o3.x, v[0][3].x  // stream<0>
+          emit_stream m0
         
         #line 91
         else 
         
         #line 117
-          ge r0.y, l(0.300000), r0.x
+          ge r0.y, l(0.100000), r0.x
           if_nz r0.y
             mov o0.xyz, v[0][0].xyzx  // stream<0,0,0>
             mov o1.xyz, v[0][1].xyzx  // stream<0,0,0>
@@ -234,7 +231,7 @@ GeometryShader GS_StreamOut =
         
         #line 87
         ret 
-        // Approximately 48 instruction slots used
+        // Approximately 45 instruction slots used
             
     }
 /* Stream out decl: "POSITION.xyz; VELOCITY.xyz; SIZE.xy; AGE.x; TYPE.x" */;

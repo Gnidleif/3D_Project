@@ -102,19 +102,19 @@ void StreamOutGSScene(point Particle input[1], inout PointStream<Particle> strea
 			p.InitPosW = gEmitPos.xyz;
 			// Change these things to change the stuff that happens
 			p.InitVelW = 10.0f * vRandom.xyz;
-			p.SizeW = float2(50.0f, 50.0f);
+			p.SizeW = float2(100.0f, 100.0f);
 			p.Age = 0.0f;
 			p.Type = PT_FLARE;
 			//
 			stream.Append(p);
 			input[0].Age = 0.0f;
 		}
-		if(input[0].Age <= 0.3f)
-			stream.Append(input[0]);
+
+		stream.Append(input[0]);
 	}
 	else
 	{
-		if(input[0].Age <= 0.3f)
+		if(input[0].Age <= 0.1f)
 			stream.Append(input[0]);
 	}
 }

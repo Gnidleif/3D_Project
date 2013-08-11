@@ -1,4 +1,4 @@
-#include "../LightDef.fx"
+#include "../ShadowMap/ShadowMap.fx"
 
 cbuffer cbPerFrame
 {
@@ -186,7 +186,7 @@ float4 PSScene_Shadow(VSOut_Shadow input,
 			diffuse += D;
 			specular += S;
 		}
-		float shadow = CalcShadow(samClampLinear, gShadowMap, input.ProjTex);
+		float shadow = CalcShadowFactor(samClampLinear, gShadowMap, input.ProjTex, gScreenX, gScreenY);
 
 		litColor = (texColor * (ambient + diffuse) + specular) * shadow;
 		litColor += texColor * lightAddScale;

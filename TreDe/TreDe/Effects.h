@@ -282,12 +282,18 @@ public:
 	void SetWorld(const XMMATRIX& matrix) { this->mWorld->SetMatrix(reinterpret_cast<const float*>(&matrix)); }
 	void SetLightVP(const XMMATRIX& matrix) { this->mLightVP->SetMatrix(reinterpret_cast<const float*>(&matrix)); }
 
+	void SetScreenX(float data) { this->mScreenX->SetFloat(data); }
+	void SetScreenY(float data) { this->mScreenY->SetFloat(data); }
+
 public:
 	ID3DX11EffectTechnique* mShadowTech;
 
 private:
 	ID3DX11EffectMatrixVariable* mWorld;
 	ID3DX11EffectMatrixVariable* mLightVP;
+
+	ID3DX11EffectScalarVariable* mScreenX;
+	ID3DX11EffectScalarVariable* mScreenY;
 };
 
 class ParticleEffect : public VirtualEffect

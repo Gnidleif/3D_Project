@@ -1,23 +1,31 @@
+#include "../LightDef.fx"
+
 cbuffer cbEveryFrame
 {
-	float4x4 gWorld;
-	float4x4 gLightVP;
+	float4x4 sWorld;
+	float4x4 sLightVP;
 };
 
-struct VSIn
+cbuffer cbResolution
+{
+	float gScreenX;
+	float gScreenY;
+};
+
+struct sVSIn
 {
 	float3 PosL : POSITION;
 };
 
-struct VSOut
+struct sVSOut
 {
 	float4 PosH : SV_POSITION;
 };
 
-VSOut VSScene(VSIn input)
+sVSOut sVSScene(sVSIn input)
 {
-	VSOut output = (VSOut)0;
-	float4x4 wvp = mul(gWorld, gLightVP);
+	sVSOut output = (sVSOut)0;
+	float4x4 wvp = mul(sWorld, sLightVP);
 
 	output.PosH = mul(float4(input.PosL, 1.0f), wvp);
 
@@ -33,10 +41,10 @@ technique11 ShadowTech
 {
 	pass p0
 	{
-		SetVertexShader(CompileShader(vs_5_0, VSScene()));
+		SetVertexShader(CompileShader(vs_5_0, sVSScene()));
 		SetGeometryShader(NULL);
 		SetPixelShader(NULL);
 
-		SetRasterizerState(Backface);
+		//SetRasterizerState(Backface);
 	}
 };

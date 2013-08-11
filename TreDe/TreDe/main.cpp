@@ -121,12 +121,13 @@ bool Main::Initialize()
 	}
 
 	Text->Initialize(mDirect3D->GetDevice(), mDirect3D->GetDevCon());
-	Texture->Initialize(mDirect3D->GetDevice());
+	Texture->Initialize(mDirect3D->GetDevice(), mDirect3D->GetDevCon());
 	Effects::Initialize(mDirect3D->GetDevice());
 	InputLayouts::Initialize(mDirect3D->GetDevice());
 	Loader->Initialize(mDirect3D->GetDevice());
 	Model->Initialize(mDirect3D->GetDevice());
 	mLightHandler->Initialize(mDirect3D->GetDevice());
+
 	mSun->Initialize(
 		mDirect3D->GetDevice(), 
 		mDirect3D->GetDevCon(),
@@ -156,7 +157,6 @@ void Main::Update(float dt)
 
 void Main::Draw()
 {
-	mSun->Draw(mGame->GetPlayerCam());
 	switch(mCurrDraw)
 	{
 	case Solid:
@@ -195,6 +195,7 @@ void Main::Draw()
 		mGame->ShadowMapDraw(mDirect3D->GetDevCon());
 		break;
 	}
+	mSun->Draw(mGame->GetPlayerCam());
 
 	// If the text isn't drawn last, objects in the world might hide it
 	Text->Draw();

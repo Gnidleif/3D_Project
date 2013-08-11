@@ -11,9 +11,10 @@ TextureClass* TextureClass::GetInstance()
 }
 
 // Public functions
-void TextureClass::Initialize(ID3D11Device* device)
+void TextureClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* devCon)
 {
 	this->mDevice = device;
+	this->mDevCon = devCon;
 }
 
 void TextureClass::Shutdown()
@@ -34,9 +35,27 @@ ID3D11ShaderResourceView* TextureClass::GetTexture(std::string key)
 	return srv;
 }
 
+ID3D11ShaderResourceView* TextureClass::GetTexArray(std::string key)
+{
+	ID3D11ShaderResourceView* srv = nullptr;
+	if(!(srv = mTextureSRV[key]))
+	{
+		std::vector<LPCSTR> path;
+		path.push_back(key.c_str());
+		srv = d3dHelper::CreateTexture2DArraySRV(mDevice, mDevCon, path);
+	}
+	return srv;
+}
+
+ID3D11ShaderResourceView* TextureClass::GetRandomTex()
+{
+	return d3dHelper::CreateRandomTexture1DSRV(this->mDevice);
+}
+
 // Private functions
 TextureClass::TextureClass(void)
 	: 
-	mDevice(nullptr)
+	mDevice(nullptr),
+	mDevCon(nullptr)
 {
 }

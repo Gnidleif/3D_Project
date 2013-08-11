@@ -6,13 +6,14 @@
 #include "Camera.h"
 #include "VertexDef.h"
 #include "InputLayouts.h"
+#include "TextureClass.h"
 
 class ParticleSystem
 {
 public:
 	ParticleSystem();
 	~ParticleSystem();
-	void Initialize(ID3D11Device* device, ID3D11DeviceContext* devCon, ParticleEffect* effect, LPCSTR texPath, UINT maxParticles);
+	void Initialize(ID3D11Device* device, ID3D11DeviceContext* devCon, ParticleEffect* effect, std::string texPath, UINT maxParticles);
 	void Update(float dt, float gametime);
 	void Draw(Camera* camera);
 	void Reset();

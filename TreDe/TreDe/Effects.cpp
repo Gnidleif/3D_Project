@@ -183,8 +183,11 @@ ShadowMapEffect::ShadowMapEffect(ID3D11Device* device, std::string filename)
 {
 	this->mShadowTech = mFX->GetTechniqueByName("ShadowTech");
 	
-	this->mWorld = mFX->GetVariableByName("gWorld")->AsMatrix();
-	this->mLightVP = mFX->GetVariableByName("gLightVP")->AsMatrix();
+	this->mWorld = mFX->GetVariableByName("sWorld")->AsMatrix();
+	this->mLightVP = mFX->GetVariableByName("sLightVP")->AsMatrix();
+
+	this->mScreenX = mFX->GetVariableByName("gScreenX")->AsScalar();
+	this->mScreenY = mFX->GetVariableByName("gScreenY")->AsScalar();
 }
 
 // Particle effect constructor

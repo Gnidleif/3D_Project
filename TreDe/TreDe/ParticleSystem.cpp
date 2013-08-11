@@ -24,18 +24,15 @@ void ParticleSystem::Initialize(
 	ID3D11Device* device, 
 	ID3D11DeviceContext* devCon,
 	ParticleEffect* effect, 
-	LPCSTR texPath, 
+	std::string texPath,
 	UINT maxParticles)
 {
 	this->mDevice = device;
 	this->mDevCon = devCon;
 	this->mEffect = effect;
 
-	std::vector<LPCSTR> paths;
-	paths.push_back(texPath);
-
-	this->mTexArraySRV = d3dHelper::CreateTexture2DArraySRV(device, devCon, paths);
-	this->mRandomTexSRV = d3dHelper::CreateRandomTexture1DSRV(device);
+	this->mTexArraySRV = Texture->GetTexArray(texPath);
+	this->mRandomTexSRV = Texture->GetRandomTex();
 
 	this->mMaxParticles = maxParticles;
 	this->BuildVB(device);
