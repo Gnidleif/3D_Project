@@ -44,7 +44,5 @@ technique11 ShadowTech
 		SetVertexShader(CompileShader(vs_5_0, sVSScene()));
 		SetGeometryShader(NULL);
 		SetPixelShader(NULL);
-
-		//SetRasterizerState(Backface);
 	}
 };

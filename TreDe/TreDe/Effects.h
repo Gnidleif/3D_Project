@@ -57,7 +57,7 @@ public:
 	void SetTex1(ID3D11ShaderResourceView* t1) { this->mTex1->SetResource(t1); }
 	void SetTex2(ID3D11ShaderResourceView* t2) { this->mTex2->SetResource(t2); }
 	void SetTex3(ID3D11ShaderResourceView* t3) { this->mTex3->SetResource(t3); }
-	void SetShadowMap(ID3D11ShaderResourceView* sm) { this->mShadowMap->SetResource(sm); }
+	void SetShadowMap(ID3D11ShaderResourceView* shadMap) { this->mShadowMap->SetResource(shadMap); }
 
 	// Set lights
 	void SetDirLights(const DirectionalLight* lights, int amount) { this->mDirLights->SetRawValue(lights, 0, amount*sizeof(DirectionalLight)); }

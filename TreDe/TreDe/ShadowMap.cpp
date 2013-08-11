@@ -46,11 +46,11 @@ void ShadowMap::ResetMap()
 		SafeRelease(mDepthDSV);
 		mWidth = width;
 		mHeight = height;
-		Effects::ShadowFX->SetScreenX(static_cast<float>(mWidth));
-		Effects::ShadowFX->SetScreenY(static_cast<float>(mHeight));
 		CreateMap();
 		
 		cout << "Shadow map size: " << mWidth << "x" << mHeight << "..." << endl;
+		Effects::ShadowFX->SetScreenX(static_cast<float>(mWidth));
+		Effects::ShadowFX->SetScreenY(static_cast<float>(mHeight));
 	}
 }
 
